@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该模式下解决了主从同步和 哨兵模式 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis系列（三）：Redis Cluster集群模式">
+<meta property="og:url" content="http://phachon.github.io/redis/redis-3.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该模式下解决了主从同步和 哨兵模式 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://phachon.github.io/images/redis_cluster_slot.png">
+<meta property="og:image" content="http://phachon.github.io/images/redis_cluster2.png">
+<meta property="og:image" content="http://phachon.github.io/images/redis_slot_qy.png">
+<meta property="og:image" content="http://phachon.github.io/images/redis_cluster3.png">
+<meta property="article:published_time" content="2018-09-24T10:09:10.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.325Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://phachon.github.io/images/redis_cluster_slot.png">
+
+<link rel="canonical" href="http://phachon.github.io/redis/redis-3.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis系列（三）：Redis Cluster集群模式 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-3.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis系列（三）：Redis Cluster集群模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-24 18:09:10 18:09:10" itemprop="dateCreated datePublished" datetime="2018-09-24T18:09:10+08:00">2018-09-24 18:09:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该<br>模式下解决了<code>主从同步</code>和 <code>哨兵模式</code> 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。</p>
+<span id="more"></span>
+<h2 id="Redis-Cluster-介绍"><a href="#Redis-Cluster-介绍" class="headerlink" title="Redis Cluster 介绍"></a>Redis Cluster 介绍</h2><p>首先我们需要了解 Redis Cluster 的设计目标：</p>
+<ol>
+<li>高性能：高性能是 Redis 赖以生存的看家本领，增加集群之后不能对性能产生太大影响，否则会得不尝失。</li>
+<li>水平扩展：之前 Redis 集群不能水平扩展的缺点时常被人诟病，所以必须具备水平扩展。</li>
+<li>高可用：在之前，高可用主要是通过 Redis Sentinel 来保障，Cluster 集群也应该具备 Sentinel 的监控、提醒、自动故障转移等功能。</li>
+</ol>
+<p>有了 Cluster 的集群方案，使得 Redis 变成了真正的分布式 NoSql 数据库。</p>
+<h2 id="数据分区方案"><a href="#数据分区方案" class="headerlink" title="数据分区方案"></a>数据分区方案</h2><p>为了使得集群能够水平扩展，首要解决的问题就是<code>如何将整个数据集按照一定的规则分配到多个节点上</code>，常用的数据分区的方法有：</p>
+<h3 id="普通哈希分区"><a href="#普通哈希分区" class="headerlink" title="普通哈希分区"></a>普通哈希分区</h3><p>普通的哈希分区比较简单，就是根据规定的哈希函数将数据哈希到指定的节点上，例如：现在有 3 个 Redis 结点 node1、node2、node3。我们的哈希函数采用取余法哈希</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function hash(key) &#123;</span><br><span class="line">    return key % 3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当写数据的时候，根据哈希函数写到对应的节点中，读数据的时候先计算出数据在哪个节点，然后再去对应的节点去取。我们发现当节点数固定的时候，该种数据分区的方案没有问题，当增加一个节点或删除一个节点的时候。<br>取余哈希函数的分母会改变，导致之前已分配的数据分区大量改变，并且造成大量的数据获取不到。所以该种方案很少使用。</p>
+<h3 id="一致性哈希分区"><a href="#一致性哈希分区" class="headerlink" title="一致性哈希分区"></a>一致性哈希分区</h3><p>为了解决普通的哈希分区的缺点，提出了一致性哈希的概念。一致性哈希的核心原理是：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将数据 key 和节点都通过哈希函数映射到 2^32 次方的环上</span><br></pre></td></tr></table></figure><br>关于一致性哈希的原理，超出了本文探讨的范围，后续再写专门的文章来详解。<br>一致性哈希尽最大限度的解决了节点数改变带来的数据不一致的问题。</p>
+<h3 id="虚拟槽分区"><a href="#虚拟槽分区" class="headerlink" title="虚拟槽分区"></a>虚拟槽分区</h3><p>Cluster 采用的正是这种分区的方式。虚拟槽分区巧妙的使用了哈希空间，使用分散度良好的哈希函数把<br>所有的数据映射到一个固定范围内的整数集合，整数定义为槽（slot）,Redis Cluster 的槽范围是 0<br>~ 16383，槽是集群内的数据管理和迁移的基本单位。<code>每个节点负责一定数量的槽</code>。计算公式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CRC16(key)&amp;16383</span><br></pre></td></tr></table></figure>
+<p>每一个节点负责维护一部分槽及槽所映射的键值数据，如下图所示（图片来源于网络）：</p>
+<p><img src="/images/redis_cluster_slot.png" alt="Redis Cluster Slot 数据分布"></p>
+<p>采用 <code>哈希虚拟槽分区</code> 的特性：</p>
+<ul>
+<li>解耦了数据和节点之间的关系，简化了节点的扩容和收缩的难度</li>
+<li>节点自身来维护槽的映射关系，不需要客户端或者代理来维护槽分区的元数据</li>
+<li>至此节点、槽、键之间的映射查询。</li>
+</ul>
+<h2 id="节点增加和删除"><a href="#节点增加和删除" class="headerlink" title="节点增加和删除"></a>节点增加和删除</h2><p>采用 Cluster 的集群方案，当节点增加和删除时，集群又是如何工作来保证服务的高可用？</p>
+<p>下图展现一个 5 个节点构成的集群，每个节点平均大约负责 3276 个槽，以及通过计算公式映射到对应节点的对应槽的过程。</p>
+<p><img src="/images/redis_cluster2.png" alt="Redis Cluster Slot 数据分布(图片来源于网络)"></p>
+<ul>
+<li><p>增加节点<br>当增加一个节点 Node-6 时，只需要把其他节点的某些哈希槽<code>挪到新的节点</code>就可以了。</p>
+</li>
+<li><p>移除节点<br>移除一个节点 Node-5 时，只需要把该节点上的哈希槽<code>挪到其他的节点上</code>就可以了。</p>
+</li>
+</ul>
+<p>在增加和删除节点，redis 的其他节点都不需要停机。</p>
+<h2 id="数据迁移"><a href="#数据迁移" class="headerlink" title="数据迁移"></a>数据迁移</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">那么如何将槽的数据挪到其他的结点呢？</span><br></pre></td></tr></table></figure>
+<p>为了实现节点之间的数据迁移，节点之间必须相互连接。数据迁移分为两部分：</p>
+<h3 id="槽的迁移"><a href="#槽的迁移" class="headerlink" title="槽的迁移"></a>槽的迁移</h3><p>现在要将 Master A 节点中的编号为 1,2,3 的槽迁移到 Master B 中</p>
+<p><img src="/images/redis_slot_qy.png" alt="数据迁移状态"></p>
+<p>在迁移的中间状态下，槽 1,2,3 在 MasterA 节点的状态为 <code>MIGRATING（迁移）</code>，在 MasterB 节点的状态为 <code>IMPORTING（入口）</code>。<br><code>IMPORTING(入口)</code> 状态是被迁移的槽在目标节点中出现的一种状态，准备迁移从A到B的时候，被迁移的槽的状态首先变为 <code>IMPORTING(入口)</code><br>注意：<code>此时并不刷新 node 的映射关系</code></p>
+<h3 id="键空间的迁移"><a href="#键空间的迁移" class="headerlink" title="键空间的迁移"></a>键空间的迁移</h3><p>在满足了槽迁移的条件下，通过相关命令将 slot1, slot2, slot3 中的键空间从 A 迁移到B。迁移过程大概如下：</p>
+<ol>
+<li>Master A 节点执行 <code>DUMP</code> 命令，序列化要迁移的 key，并将数据发送给 Master B</li>
+<li>Master B 节点接受到要迁移的序列化的 key 之后执行 <code>RESTORE</code> 命令反序列化为 key, 并保存</li>
+<li>Master A 节点执行 <code>DEL</code> 命令删除掉已迁移的 key</li>
+</ol>
+<p><code>迁移完成之后，刷新 node 的映射关系</code></p>
+<p><em>需要注意的是</em>： MIGRATE（迁移） 并不是原子的，如果在 MIGRATE 出现错误的情况可能会导致下面问题：</p>
+<ul>
+<li>键空间在两个节点都存在；</li>
+<li>键空间只存在第一个节点；</li>
+</ul>
+<h3 id="深挖细节"><a href="#深挖细节" class="headerlink" title="深挖细节"></a>深挖细节</h3><ol>
+<li><p>为什么不用一致性哈希，而用槽哈希分区，原因是什么？<br>Redis 使用的是 crc16 的简单算法，Redis 的作者认为 <code>crc16(key) mod 16384</code> 的效果已经不错了，虽然可能没有一致性哈希灵活，但实现比较简单，节点的增加和删除都比较方便</p>
+</li>
+<li><p>节点增加和删除的过程中，数据会不会丢失？<br>节点在数据迁移的时候数据会有备份，不会丢失</p>
+</li>
+</ol>
+<h2 id="主从同步"><a href="#主从同步" class="headerlink" title="主从同步"></a>主从同步</h2><p>我们已经了解了 Cluster 的集群的工作方式，那使用 Cluster 模式如何来实现主从同步？</p>
+<p>其实主从同步还是使用的 Redis 本身的主从复制模式，将主从同步和 Cluster 模式结合起来的架构如下：</p>
+<p><img src="/images/redis_cluster3.png" alt="主从同步+Cluster集群（图片来源于网络）"></p>
+<p>从图中可以看出，将多个 Master 节点作为 Cluster 的节点，每个 Master 的节点又增加多个 Slave 节点。并且数据读写分离。<br>如果想水平扩展读的并发能力，可以增加多个 Slave, 想水平扩展写的并发能力，可以增加多个 Master, 并且任何一个 Master 和 Slave 宕掉都不会影响服务稳定性。</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><p>Redis Cluster 搭建这里篇幅有限，暂不介绍，需要请自行查找相关资料</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yejingtao703/article/details/78484151">三张图秒懂Redis集群设计原理</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/PatrickLiu/p/8458788.html">Redis的Cluster集群搭建</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/redis/redis-2.html" rel="prev" title="Redis系列（二）：Redis 哨兵集群模式">
+      <i class="fa fa-chevron-left"></i> Redis系列（二）：Redis 哨兵集群模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/redis/redis-4.html" rel="next" title="Redis系列（四）：Redis 持久化机制">
+      Redis系列（四）：Redis 持久化机制 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-Cluster-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">Redis Cluster 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">数据分区方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">2.1.</span> <span class="nav-text">普通哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">2.2.</span> <span class="nav-text">一致性哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E5%8C%BA"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟槽分区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%A2%9E%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">3.</span> <span class="nav-text">节点增加和删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">4.</span> <span class="nav-text">数据迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A7%BD%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">4.1.</span> <span class="nav-text">槽的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E7%A9%BA%E9%97%B4%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">4.2.</span> <span class="nav-text">键空间的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E6%8C%96%E7%BB%86%E8%8A%82"><span class="nav-number">4.3.</span> <span class="nav-text">深挖细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5"><span class="nav-number">5.</span> <span class="nav-text">主从同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

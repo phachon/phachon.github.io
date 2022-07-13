@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在操作系统的搭建的内核线程之上，go 语言搭建了一个特有的两极线程模型。首先来了解一下线程实现模型，然后再详细了解 go 语言实现的 线程实现模型线程的实现模型主要有三种：用户级线程模型、内核级线程模型、两极线程模型。它们之间的区别主要是线程与内核调度对象之间的的对应关系。内核调度象也就是内核线程。 用户级线程模型用户级线程模型是由用户级别的线程库来全权管理的。也就是说，用户级线程模型下的线程是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go runtime 系列之 - 并发机制">
+<meta property="og:url" content="http://phachon.github.io/go/go-runtime-concurrent.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="在操作系统的搭建的内核线程之上，go 语言搭建了一个特有的两极线程模型。首先来了解一下线程实现模型，然后再详细了解 go 语言实现的 线程实现模型线程的实现模型主要有三种：用户级线程模型、内核级线程模型、两极线程模型。它们之间的区别主要是线程与内核调度对象之间的的对应关系。内核调度象也就是内核线程。 用户级线程模型用户级线程模型是由用户级别的线程库来全权管理的。也就是说，用户级线程模型下的线程是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://phachon.github.io/images/usp.png">
+<meta property="og:image" content="http://phachon.github.io/images/ssp.png">
+<meta property="og:image" content="http://phachon.github.io/images/csp.png">
+<meta property="og:image" content="http://phachon.github.io/images/go_sp.png">
+<meta property="article:published_time" content="2018-09-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.320Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://phachon.github.io/images/usp.png">
+
+<link rel="canonical" href="http://phachon.github.io/go/go-runtime-concurrent.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Go runtime 系列之 - 并发机制 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-concurrent.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go runtime 系列之 - 并发机制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-03 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-03T00:00:00+08:00">2018-09-03 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>在操作系统的搭建的内核线程之上，go 语言搭建了一个特有的两极线程模型。首先来了解一下线程实现模型，然后再详细了解 go 语言实现的</p>
+<h2 id="线程实现模型"><a href="#线程实现模型" class="headerlink" title="线程实现模型"></a>线程实现模型</h2><p>线程的实现模型主要有三种：用户级线程模型、内核级线程模型、两极线程模型。它们之间的区别主要是线程与内核调度对象之间的的对应关系。内核调度象也就是内核线程。</p>
+<h3 id="用户级线程模型"><a href="#用户级线程模型" class="headerlink" title="用户级线程模型"></a>用户级线程模型</h3><p>用户级线程模型是由用户级别的线程库来全权管理的。也就是说，用户级线程模型下的线程是往往是通过应用程序的线程库来创建、切换、销毁的。与操作系统内核的线程没有关系。操作系统内核的线程调度器也无法<br>调度用户级线程模型创建的线程。内核线程调度器只能调度创建此线程的的应用程序的进程。一个进程对应多个用户级线程，所以这种线程模型又称为多对一（M:1）的线程模型, 如下图所示：<br><span id="more"></span><br><img src="/images/usp.png" alt="usp"></p>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ol>
+<li>对线程的各种管理调度与内核无关。应用程序对线程的创建、终止、切换等操作不需要让CPU从用户态切换到内核态。速度方面比较有优势</li>
+<li>由于不依赖内核，所以程序的一致性比较强</li>
+</ol>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ol>
+<li>由于此模型下内核调度的最小单位是进程。如果线程阻塞，则整个进程被阻塞。</li>
+<li>不能真正利用多核 CPU 来实现并发。进程中的多个线程无法被分配到多个 CPU 中去执行。</li>
+</ol>
+<p>综上所述，由于缺陷明显，所以现在的操作系统一般不使用此种模型来实现线程</p>
+<h3 id="内核级线程模型"><a href="#内核级线程模型" class="headerlink" title="内核级线程模型"></a>内核级线程模型</h3><p>和用户级线程相反，内核级线程是由内核来管理的，属于内核的一部分。应用程序对线程的创建、终止、切换等操作必须通过内核提供的系统调用来完成。进程中的每一个线程都与内核线程一一对应<br>由此，也称为一对一（1：1）的线程模型。如下图所示：</p>
+<p><img src="/images/ssp.png" alt="ssp"></p>
+<h3 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h3><ol>
+<li>一对一的线程模型消除了多对一的线程模型的不能真正并发的弊端，线程的管理由内核管理和调度，内核可以在不同的时间片内让CPU运行不同的线程。</li>
+<li>即使某一个线程收到阻塞，其他线程不受影响</li>
+</ol>
+<h3 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h3><ol>
+<li>创建线程和管理线程的成本加大，要经常去系统调用来管理线程，线程管理的时间耗费的时间相对比较大。</li>
+<li>如果一个进程包含大量的线程，将会给内核的调度器带来非常大的负担，甚至会影响操作系统的整体性能。</li>
+<li>消耗更多的内核资源</li>
+</ol>
+<p>尽管内核级线程也有劣势，但是相比用户级线程的优势还是比较明显的。很多的现代的操作系统都是以内核级线程模型来实现线程的。包括 Linux 操作系统。<br>需要注意的是，在使用内核级线程模型时，必须了解每个进程允许的线程的最大数目是多少。防止线程数过大造成操作系统性能下降甚至崩溃。</p>
+<h3 id="两极线程模型"><a href="#两极线程模型" class="headerlink" title="两极线程模型"></a>两极线程模型</h3><p>两极线程模型是根据用户级线程模型和内核级线程模型综合演变而来。可以说是取前两种模型之精华，去前两种模型之糟粕。在此模型下，一个进程可以与多个内核线程相关联。这与内核级线程相似。但与内核线程模型<br>不同的是，进程中的线程并不与内核线程一一对应，这些应用程序线程可以映射到同一个已关联的内核线程上。  </p>
+<p>首先实现了两极线程模型的线程库会通过操作系统调用创建多个内核线程。然后，它会通过这些内核线程对应用程序线程进行调度。大多数的此类线程库都可以将这些应用程序线程动态的与内核线程相关联。在这种实现中，进程有着自己的内核线程池。可运行的用户线程由运行时库分派并标记为准备好执行的可用线程。<br>操作系统选择用户线程并将它映射到线程池中的可用内核线程。多个用户线程可以分配给相同的内核线程。<br>如下图所示：</p>
+<p><img src="/images/csp.png" alt="ssp"></p>
+<h4 id="优势-2"><a href="#优势-2" class="headerlink" title="优势"></a>优势</h4><ol>
+<li>内核资源的消耗大大减少</li>
+<li>线程管理操作的效率提高</li>
+</ol>
+<h4 id="劣势-2"><a href="#劣势-2" class="headerlink" title="劣势"></a>劣势</h4><ol>
+<li>由于此种模型的线程设计使得管理工作变得更加复杂</li>
+</ol>
+<p>因为两极线程的复杂性，往往不会被操作系统所采用，但是，这样的模型却可以很好地在编程语言层面上实现并充分发挥作用。Go 语言的并发模型正是在该模型的基础上实现的。</p>
+<h2 id="Go-语言并发模型"><a href="#Go-语言并发模型" class="headerlink" title="Go 语言并发模型"></a>Go 语言并发模型</h2><p>Go 的线程实现模型。有三个必知的核心元素。他们支撑起了模型的主要框架。</p>
+<ul>
+<li>M （machine）一个 M 代表一个内核线程</li>
+<li>P （processor）一个 P 代表一个 Go 代码片段所必须的资源。goroutine依赖于 P 进行调度，P 是真正的并行单元；</li>
+<li>G （goroutine）一个 G 代表一个 Go 代码片段。</li>
+</ul>
+<p>简单来说，一个 G 的执行，需要 P 和 M 的支持。一个 M 在一个 P 关联之后就形成了一个有效的 G 的运行环境（内核线程 + 上下文环境）。</p>
+<p><img src="/images/go_sp.png" alt="go并发模型"></p>
+<p>对应关系：  </p>
+<ul>
+<li>M 与操作系统内核线程是一对一的关系。即一个 M 只能代表一个内核级线程。并且他们之间的关系一旦关联一般不可改变。</li>
+<li>M 与 P 之间的关系也是一对一的关系。但是他们之间的关联是易变的。会根据实际的调度来确定哪个 P 和 M 关联。</li>
+<li>P 与 G 之间的关系是一对多的关系。因为每个 P 中都有一个可运行的 G 队列。</li>
+</ul>
+<h3 id="M"><a href="#M" class="headerlink" title="M"></a>M</h3><p>上面已经讲了，一个 M 代表一个内核线程。一般情况下，创建 M 的时机一般是由于没有足够的 M 来管理 P ，并运行 P 中的可执行队列中的 G 。除此之外，在运行时系统执行监控和垃圾回收的过程中<br>也会导致新的 M 的创建。</p>
+<h4 id="M-的核心结构字段"><a href="#M-的核心结构字段" class="headerlink" title="M 的核心结构字段"></a>M 的核心结构字段</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">type M struct &#123;</span><br><span class="line">    g0          *g       // 特殊的 goroutine, 系统启动时创建，执行一些运行时任务</span><br><span class="line">    msstartfn   func()   // M 的其实函数。其实就是编写 go 语句时携带的函数</span><br><span class="line">    curg        *g       // 当前 M 正在执行的 G 指针</span><br><span class="line">    p           punittr  // 当前 M 关联的 P</span><br><span class="line">    nextp       punittr  // 当前 M 预关联的 P ，可以理解为提前关联</span><br><span class="line">    spinning    bool     // 当前 M 是否正在寻找可运行的 G</span><br><span class="line">    lockedg     *g       // 运行时系统可以把一个 M 和 一个 G 锁定在一起。那么这个 G 只能由这个 M 运行。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="M-的生命周期"><a href="#M-的生命周期" class="headerlink" title="M 的生命周期"></a>M 的生命周期</h4><ol>
+<li>创建 M，M 在创建后加入全局的 M 列表中。起始函数和预关联的 P 都会被设置好。</li>
+<li>运行时系统会为 M 专门创建一个新的内核线程并与之相关联。</li>
+<li>初始化 M （栈空间，信号等）</li>
+<li>开始执行起始函数（如果存在的话）</li>
+<li>起始函数执行完成后，当前 M 会与预关联的 P 完成关联，并准备执行其他任务。M 会依次在多处寻找可运行的 G 。</li>
+</ol>
+<p>单个 Go 程序的 M 的最大值是可以设置的，初始化调度器的时候，会对 M 最大数量初始化。最大值为 10000。也就是说最多有 10000 个内核级线程服务于当前的 Go。但是在真正的操作系统运行环境中，基本上很难达到如此的量级的线程共存。<br>所以可以忽略 Go 本身对于线程数量的限制。也可以通过标准库代码包 runtime/debug 中的 SetMaxThreads 函数来限制 M 的最大值。</p>
+<h3 id="P"><a href="#P" class="headerlink" title="P"></a>P</h3><p>P 是 G 能够在 M 中运行的桥梁，Go 的运行时系统会适时的让 P 与不同的 M 建立或断开连接，使得 P 中的那些 G 能够及时获得运行时机，就像是操作系统内核在 CPU 之上的适时切换不同的进程和线程的场景类似<br>改变 P 的最大数量有两种方法：</p>
+<ol>
+<li>调用函数 runtime.GOMAXPROCS 传入参数的方式</li>
+<li>在 Go 程序运行前设置环境变量 GOMAXPROCS 的值</li>
+</ol>
+<p>P 的最大值是 Go 程序并发规模的的限制。P 的数量即可运行的 G 的队列的数量。一个 G 被启动后，首先会被追加到某个 P 中的可运行 G 队列中，等待时机运行。<br>在设置 P 的最大值的时候，会检查该值的有效性，当前，Go 目前还不能保证在数量比 256 更多的 P 同时存在的情形下 Go 仍能保持高效，因此，只要不大于 256，都是被认为是有效的值。<br>一般情况下，P 设置为当前计算机的 CPU 核数。</p>
+<h3 id="G"><a href="#G" class="headerlink" title="G"></a>G</h3><p>每个 G 代表一个 goroutine, 编程时，我们使用 go 语句只是提交了一个并发任务。而 Go 的运行时系统则会安装要求并发执行它。那么当执行 go 关键字的时候发生了什么呢？<br>Go 编译器会把 go 语句变成对内部函数 newproc (runtime.proc.go) 的调用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">func newproc(siz int32, fn *funcval) &#123;</span><br><span class="line">	argp := add(unsafe.Pointer(&amp;fn), sys.PtrSize)</span><br><span class="line">	pc := getcallerpc(unsafe.Pointer(&amp;siz))</span><br><span class="line">	systemstack(func() &#123;</span><br><span class="line">		newproc1(fn, (*uint8)(argp), siz, 0, pc)</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>真正执行的函数在 newproc1(), 有需要请自行看源码，执行顺序如下：</p>
+<ol>
+<li>获得当前的 G 所在的 P，然后从空闲的 G 队列中取出一个 G</li>
+<li>如果 1 取到则对这个 G 进行参数配置，否则新建一个G</li>
+<li>将 G 加入 P 的可运行的 G 队列</li>
+</ol>
+<h3 id="调度器"><a href="#调度器" class="headerlink" title="调度器"></a>调度器</h3><p>在 Go 语言中，调度器的主要调度对象就是 M, P, G 的实例。调度器在调度过程中需要依赖全局的调度对象的容器。简单来说，为了方便调度，调度器会对 M,P,G 的实例存储在容器中。<br>调度器的容器包括：</p>
+<ul>
+<li>调度器的空闲 M 列表：存放空闲的 M 的单向链表</li>
+<li>调度器的空闲 P 列表：存放空闲的 P 的单向链表</li>
+<li>调度器的可运行 G 队列：存放可运行 G 的队列</li>
+<li>调度器的自由 G 列表：存放自由的 G 的单向链表</li>
+</ul>
+<p>调度器有自己的数据结构，形成此结构的主要目的是更加方便的管理和调度各个核心元素的实例。</p>
+<h4 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h4><h2 id="goroutine"><a href="#goroutine" class="headerlink" title="goroutine"></a>goroutine</h2><p>goroutine 的核心理念是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不要以共享内存的方式来通信。应该以通信作为手段来共享内存</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/go/go-app-mysql-table.html" rel="prev" title="Go 应用之 - mysql 建表问题的解决办法">
+      <i class="fa fa-chevron-left"></i> Go 应用之 - mysql 建表问题的解决办法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/linux/concurrrent-server.html" rel="next" title="并发服务器的实现方式">
+      并发服务器的实现方式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%9E%E7%8E%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">线程实现模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">用户级线程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">1.1.1.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A3%E5%8A%BF"><span class="nav-number">1.1.2.</span> <span class="nav-text">劣势</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E7%BA%A7%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">内核级线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF-1"><span class="nav-number">1.3.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A3%E5%8A%BF-1"><span class="nav-number">1.4.</span> <span class="nav-text">劣势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E6%9E%81%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">两极线程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">优势</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A3%E5%8A%BF-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">劣势</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go-%E8%AF%AD%E8%A8%80%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Go 语言并发模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#M"><span class="nav-number">2.1.</span> <span class="nav-text">M</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#M-%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84%E5%AD%97%E6%AE%B5"><span class="nav-number">2.1.1.</span> <span class="nav-text">M 的核心结构字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#M-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.1.2.</span> <span class="nav-text">M 的生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#P"><span class="nav-number">2.2.</span> <span class="nav-text">P</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#G"><span class="nav-number">2.3.</span> <span class="nav-text">G</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8"><span class="nav-number">2.4.</span> <span class="nav-text">调度器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">2.4.1.</span> <span class="nav-text">基本结构</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#goroutine"><span class="nav-number">3.</span> <span class="nav-text">goroutine</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

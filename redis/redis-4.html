@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Redis 作为最流行的非关系型数据库之一，既然是数据库就应该具备数据持久化的机制，本篇文章将针对 Redis 的数据持久化与数据恢复来进行讨论。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis系列（四）：Redis 持久化机制">
+<meta property="og:url" content="http://phachon.github.io/redis/redis-4.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="Redis 作为最流行的非关系型数据库之一，既然是数据库就应该具备数据持久化的机制，本篇文章将针对 Redis 的数据持久化与数据恢复来进行讨论。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://phachon.github.io/images/redis_hf.png">
+<meta property="og:image" content="http://phachon.github.io/images/redis_hf.png">
+<meta property="article:published_time" content="2018-09-25T09:41:47.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.325Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://phachon.github.io/images/redis_hf.png">
+
+<link rel="canonical" href="http://phachon.github.io/redis/redis-4.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redis系列（四）：Redis 持久化机制 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-4.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis系列（四）：Redis 持久化机制
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-25 17:41:47 17:41:47" itemprop="dateCreated datePublished" datetime="2018-09-25T17:41:47+08:00">2018-09-25 17:41:47</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>Redis 作为最流行的非关系型数据库之一，既然是数据库就应该具备数据持久化的机制，本篇文章将针对 Redis 的数据持久化与数据恢复来进行讨论。</p>
+<span id="more"></span>
+<h2 id="什么是持久化？"><a href="#什么是持久化？" class="headerlink" title="什么是持久化？"></a>什么是持久化？</h2><p>简单来说，持久化就是将数据放到即使断电后数据也不会丢失的设备中，一般是物理设备，通常理解为硬盘</p>
+<h2 id="Redis-持久化机制"><a href="#Redis-持久化机制" class="headerlink" title="Redis 持久化机制"></a>Redis 持久化机制</h2><p>Redis 提供了两种持久化机制，分别是 Snapshotting（快照&amp;RDB）和 AOF（Append Only File）持久化机制。</p>
+<h2 id="快照持久化"><a href="#快照持久化" class="headerlink" title="快照持久化"></a>快照持久化</h2><p>快照是 Redis 默认的持久化方式，这种方式就是将内存中的数据以快照的方式写入到二进制文件中，默认的文件名为 dump.rdb，默认文件在 Redis 启动的当前目录下，rdb 文件的路径可通过配置文件更改。我们也可以配置 <code>Redis 在 n 秒内如果超过 m 个 key 被修改</code>就自动做快照，默认的快照持久化的配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 快照持久化的配置</span><br><span class="line">save 900 1 // 900 秒内超过 1 个 key 被修改就执行快照</span><br><span class="line">save 300 10 // 300 秒内超过 10 个 key 被修改就执行快照</span><br><span class="line">save 60 10000 // 60 秒内超过 10000 个 key 被修改就执行快照</span><br><span class="line"></span><br><span class="line"># 快照 rdb 文件的位置</span><br><span class="line">dbfilename dump.rdb</span><br></pre></td></tr></table></figure>
+<p>快照的执行过程：</p>
+<ol>
+<li>客户端手动执行 <code>save</code> 或 <code>bgsave</code> 命令发起执行快照的请求或者 redis 触发了执行快照的条件发起快照请求</li>
+<li>redis 调用 fork 函数，创建新的子进程</li>
+<li>为了不影响 redis 的本身的工作，父进程继续处理 Client 的请求，子进程负责将内存中的内容写到临时文件中。 <code>这里需要注意的是，由于操作系统的写时复制机制，也就是说发生 fork 的时候，父进程和子进程是共享相同的内存空间，当父进程接受到写处理请求时，操作系统会为主进程创建要修改的数据的副本，而不影响子进程的数据。所以子进程快照的数据是 fork 那一刻整个数据库的数据</code></li>
+<li>当子进程写完临时文件之后，用临时文件替换掉原来的快照文件，然后子进程退出。</li>
+</ol>
+<p>注意点：</p>
+<ol>
+<li>快照持久化方式是每次都将内存中的数据持久化数据完整的写入到磁盘，并不是只同步增量的数据，如果数据量很大的话，写操作比较多，会引起大量的磁盘 I/O, 可能会严重影响性能。</li>
+<li>关于 <code>save</code> 和 <code>bgsave</code> 命令，都是用来快照镜像的操作.<code>save</code> 命令是在 redis 主线程中操作的，会阻塞所有的 Client 的请求。不推荐使用 <code>bgsave</code> 命令是非阻塞的方式来对数据快照。是推荐的使用快照的方式。</li>
+</ol>
+<h2 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a>AOF 持久化</h2><p>既然已经有了快照的持久化方式，还需要 AOF 持久化吗？我们来分析一种情况：<br>由于 Redis 快照的方式并不是实时的，是在一定的时间间隔内才执行快照操作，事实上也不能实时快照，数据量比较大的情况下，磁盘 I/O 会严重影响性能。<br>如果在 Redis 上一次持久化之后到下一次持久化之间，Redis 突然 down 掉了。那岂不是有部分数据没有持久化到磁盘，操作数据丢失。如此一来，就需要依靠 AOF 的持久化机制来保证数据的完整性。</p>
+<p>Append Only File，读取字面意思，就是将数据追加到文件中。其工作原理是<br><code>Redis 在执行完一个写命令之后，会以协议的格式将被执行的写命令追加到服务器的 aof_buf 缓冲区的末尾</code></p>
+<h3 id="AOF-文件的写入与同步"><a href="#AOF-文件的写入与同步" class="headerlink" title="AOF 文件的写入与同步"></a>AOF 文件的写入与同步</h3><p>Redis 的服务器进程是一个事件轮训（loop），这个循环中的 <code>文件事件</code> 负责接受客户端的命令请求，以及向客户端发送命令回复，<code>时间事件</code>则负责执行定时运行的一些函数。在处理文件事件时，会执行一些写命令，这些写命令被追加到 aof_buf 缓冲区中。服务器在事件执行完毕后都会调用 flushAppendOnlyFile() 函数来判断是否将 aof 缓冲区的数据写入和保存到 AOF 文件中，默写入的文件是 appendonly.aof。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">eventLoop</span>():</span><br><span class="line">  <span class="comment"># 开始事件轮询</span></span><br><span class="line">  <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 文件事件</span></span><br><span class="line">    fileEvents()</span><br><span class="line">    <span class="comment"># 定时事件</span></span><br><span class="line">    cronEvents()</span><br><span class="line">    <span class="comment"># 其他事件</span></span><br><span class="line">    otherEvents()</span><br><span class="line">    <span class="comment"># 判断是否将 aof 缓冲区的数据写入和同步到 aof文件中</span></span><br><span class="line">    flushAppendOnlyFile()</span><br></pre></td></tr></table></figure><br>flushAppendOnlyFile() 函数的写入和同步行为由 Redis 服务端的配置来决定的：</p>
+<blockquote>
+<p>关于写入和同步：<br>为了提高文件的写入效率，现在的操作系统中，当用户调用 write 函数，将一些数据写入到文件中，操作系统通常会将写入数据暂时保存在一个内存缓冲区里，等到缓冲区填满或者超过里指定的时限之后，才真正的将缓冲区的数据同步到磁盘里。这种做法虽然提高里效率，但是同样带来了数据丢失的风险，所以，系统提供了 fasync 和 fdatasync 的两个同步函数，可以将缓冲区里的数据写入（同步到）到磁盘里，从而确保数据的安全性。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 启用 aof 的持久化机制</span><br><span class="line">appendonly yes</span><br><span class="line"># aof 文件的位置</span><br><span class="line">appendfilename &quot;appendonly.aof&quot;</span><br><span class="line"># 持久化的时机：always、everysec、no</span><br><span class="line">appendfsync everysec</span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br><span class="line"># redis在恢复时，会忽略最后一条可能存在问题的指令。默认值yes。</span><br><span class="line"># aof 写入时，可能存在指令写错的问题(突然断电，写了一半)，</span><br><span class="line"># 这种情况下，yes会log并继续，而no会直接恢复失败.</span><br><span class="line">aof-load-truncated yes</span><br></pre></td></tr></table></figure>
+<ul>
+<li>always 将 aof_buf 缓冲区的所有内容写入 aof 文件，并完成磁盘的同步，速度最慢，但是最安全，不会丢失数据</li>
+<li>everysec 将 aof_bug 缓冲区所有内容写入 aof 文件，如果上次同步 aof 文件的时间距离现在超过1秒，那么再次执行同步。默认的配置，最多会有 1 秒的数据丢失</li>
+<li>no 将 aof_buf 缓冲区的所有内容写入 aof 文件，但是并不对 aof 文件进行同步，何时同步由操作系统同步。速度最快，可能会丢失计较多的数据</li>
+</ul>
+<p><code>注意：</code> del 命令如果删除一个不存在的 key 并不会被记录在 aof 日志中因为 redis 判断出该操作并没有对数据集做出修改。</p>
+<h3 id="AOF-持久化的问题"><a href="#AOF-持久化的问题" class="headerlink" title="AOF 持久化的问题"></a>AOF 持久化的问题</h3><p>持久化的 aof 文件越来越大，所有的写操作都会追加到 aof 日志文件里，但其实恢复数据只往往需要最后的几条写命令。所以为了解决这个问题，redis 提供了 <code>BGREWRITEAOF</code> 命令压缩持久化文件。</p>
+<h3 id="AOF-文件重写压缩原理"><a href="#AOF-文件重写压缩原理" class="headerlink" title="AOF 文件重写压缩原理"></a>AOF 文件重写压缩原理</h3><p>收到此命令之后，redis 会使用和快照类似的方式将内存中的数据以命令的方式保存到临时文件中，最后替换原来的 aof 文件。具体的过程如下：</p>
+<ul>
+<li>redis 收到 <code>BGREWRITEAOF</code>命令</li>
+<li>redis 调用 fork 函数，创建新的子进程</li>
+<li>父进程继续处理 client 请求，除了把命令继续写入到 aof 文件中，同时把写命令写入到缓存中，保证子进程重写失败的话不会出问题。</li>
+<li>子进程把快照的内容以命令的方式写到临时文件后，子进程发信号通知父进程，父进程把缓存的写命令也写入到临时文件中</li>
+<li>父进程用临时文件替换掉旧的 aof 文件，并重新命名，后面收到的命令也重新往新的 aof 文件中追加</li>
+</ul>
+<p>aof 文件压缩相关配置：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 是否不使用 fsync 的方式重写</span><br><span class="line">no-appendfsync-on-rewrite no</span><br><span class="line"># aof 文件增长的比例</span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line"># aof 文件重写的最小大小</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure></p>
+<h3 id="深挖-BGREWRITEAOF-配置"><a href="#深挖-BGREWRITEAOF-配置" class="headerlink" title="深挖 BGREWRITEAOF 配置"></a>深挖 BGREWRITEAOF 配置</h3><ul>
+<li><p>no-appendfsync-on-rewrite 参数<br>当进行 <code>bgrewriteof</code> 命令操作的时候，主进程也会继续写 aof 文件，子进程会写临时的 aof 文件，只要是写文件就会进行磁盘的 I/O 操作，如此一来，就会两个进程就会竞争磁盘。为了解决不竞争磁盘，<code>bgrewriteof</code> 同时也可以配置是否是采用 <code>fsync</code> 方式来强制写入磁盘，具体的配置字段是 <code>no-appendfsync-on-rewrite</code>:<br><code>no-appendfsync-on-rewrite no</code>：意思是 <code>appendfsync</code> 是 <code>yes</code>, 也就是说会采用 <code>fsync</code> 每次都强制写磁盘，该种方式比较安全，不会造成数据丢失，但是磁盘的写入操作会和主进程的磁盘写入造成竞争，会阻塞主进程的磁盘写入<br><code>no-appendfsync-on-rewrite yes</code>：意思是  <code>appendfsync</code> 是 <code>no</code>, 也就是说不会采用 <code>fsync</code> 不是每次强制写入磁盘，而是先写入到缓冲区，这样就不会和主进程的写入造成竞争，但是，如果这个时候 Redis 挂掉来，那就会造成数据丢失，默认在 Linux 操作系统写会丢失 <code>30s</code> 的数据。所以，如果无法忍受延迟，而可以容忍少量的数据丢失，则设置为 <code>yes</code>；如果无法忍受数据丢失，则设置为 <code>no</code></p>
+</li>
+<li><p>auto-aof-rewrite-percentage 参数<br>aof 文件增长的比例，即当前的 aof 文件的大小相比上一次重写时候的 aof 文件的比例大小。默认是 100%，也就是 1 倍。当增长到 1 倍的时候。Redis 就会启动 aof 重写来压缩文件大小</p>
+</li>
+<li><p>auto-aof-rewrite-min-size 参数<br>aof 文件重写的最小的文件大小。即最开始的 aof 重写当文件必须要到达配置的大小时才会触发。后面每次的重写就不会根据这个变量来，会根据上面的重写文件增长比例 <code>auto-aof-rewrite-percentage</code>来触发</p>
+</li>
+</ul>
+<h2 id="数据恢复机制"><a href="#数据恢复机制" class="headerlink" title="数据恢复机制"></a>数据恢复机制</h2><p>我们首先要明白为什么要持久化，持久化的核心就是当 <code>服务崩溃之后数据不至于不丢失</code>。那么如何来对数据进行恢复呢？</p>
+<p><img src="/images/redis_hf.png" alt="Redis 数据恢复流程"></p>
+<p>从流程图可以看出，Redis 在启动服务的时候是自动的进程数据恢复。不需要手动操作。</p>
+<p>两种数据文件的恢复过程，相对来说RDB的启动恢复可能会更短一些，原因有两个:</p>
+<ul>
+<li>RDB 的文件中每一条数据只有一条记录，不会像 AOF 日志那样可能存在一条数据有多此操作记录的情况。</li>
+<li>RDB 的文件存储格式与 Redis 数据在内存中的编码格式一致，不需要再进行数据编码工作，CPU 消耗较小。</li>
+</ul>
+<p>下面是 AOF 文件的载入与还原过程：</p>
+<p><img src="/images/redis_hf.png" alt="AOF 文件恢复流程"></p>
+<h2 id="两种持久化方式的对比"><a href="#两种持久化方式的对比" class="headerlink" title="两种持久化方式的对比"></a>两种持久化方式的对比</h2><h3 id="Snapshotting-快照"><a href="#Snapshotting-快照" class="headerlink" title="Snapshotting 快照"></a>Snapshotting 快照</h3><p>优点：</p>
+<ul>
+<li>性能最大化，采用 fork 子进程的方式快照，主进程继续处理命令</li>
+<li>文件的数据格式和内存的编码一直，恢复数据快速方便</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>由于是不定时的进行快照，会造成数据丢失，数据安全性低</li>
+</ul>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>优点：</p>
+<ul>
+<li>数据安全性高，aof 持久化可以配置 appendfsync ，每次强制写入磁盘。</li>
+<li>采用 append 模式写文件，即使中途宕机，可以通过 redis-check-aof 工具解决一致性问题</li>
+<li>aof 机制提供 rewrite 重写模式来压缩 aof 文件。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>可能文件会比 rdb 文件要大</li>
+<li>数据集大的时候，服务启动数据恢复时间比rdb时间长</li>
+</ul>
+<h3 id="如何选择？"><a href="#如何选择？" class="headerlink" title="如何选择？"></a>如何选择？</h3><p>那么到底该如何选择使用那种持久化机制？<br>通常来说，如果想要提供很高的数据保障性，那么同时使用两种方式持久化机制。<br>如果可以接受带来的几分钟的数据丢失，那么可以直接使用默认的持久化机制 <code>快照</code>。</p>
+<p>个人建议，生产环境使用持久化机制，最好两种方式都开启。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以看到，Redis 的持久化机制是可以保证数据可靠性。在使用 Redis 的时候可以根据实际的业务场景来合理的选择不同的持久化方案。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tr1912/article/details/70197085?">redis的持久化和缓存机制</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/gangchengzhong/article/details/52859225">Redis的2种持久化方式对比</a><br><a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog_14e63d3fe0102we43.html">redis的no-appendfsync-on-rewrite参数</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xingzc/p/5988080.html">Redis提供的持久化机制（RDB和AOF）</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/redis/" rel="tag"><i class="fa fa-tag"></i> redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/redis/redis-3.html" rel="prev" title="Redis系列（三）：Redis Cluster集群模式">
+      <i class="fa fa-chevron-left"></i> Redis系列（三）：Redis Cluster集群模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/redis/redis-5.html" rel="next" title="Redis系列（五）：Redis 缓存机制与淘汰策略">
+      Redis系列（五）：Redis 缓存机制与淘汰策略 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是持久化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">Redis 持久化机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%AB%E7%85%A7%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">快照持久化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">AOF 持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-%E6%96%87%E4%BB%B6%E7%9A%84%E5%86%99%E5%85%A5%E4%B8%8E%E5%90%8C%E6%AD%A5"><span class="nav-number">4.1.</span> <span class="nav-text">AOF 文件的写入与同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-%E6%8C%81%E4%B9%85%E5%8C%96%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.2.</span> <span class="nav-text">AOF 持久化的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF-%E6%96%87%E4%BB%B6%E9%87%8D%E5%86%99%E5%8E%8B%E7%BC%A9%E5%8E%9F%E7%90%86"><span class="nav-number">4.3.</span> <span class="nav-text">AOF 文件重写压缩原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E6%8C%96-BGREWRITEAOF-%E9%85%8D%E7%BD%AE"><span class="nav-number">4.4.</span> <span class="nav-text">深挖 BGREWRITEAOF 配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">5.</span> <span class="nav-text">数据恢复机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.</span> <span class="nav-text">两种持久化方式的对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Snapshotting-%E5%BF%AB%E7%85%A7"><span class="nav-number">6.1.</span> <span class="nav-text">Snapshotting 快照</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF"><span class="nav-number">6.2.</span> <span class="nav-text">AOF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%EF%BC%9F"><span class="nav-number">6.3.</span> <span class="nav-text">如何选择？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

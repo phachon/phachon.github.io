@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="PHPUnit 基本用法+实例详解上一篇文章介绍了 PHPUnit 在 windows  的安装和配置。今天我们来介绍一下 PHPUnit 如何编写一些基本的测试用例。我也是在最近才开始慢慢使用的 PHPUnit , 用不足之处，欢迎指正。  编写规范 测试类一般以***Test 命名； 该类必须继承 PHPUnit_Framework_TestCase 类； 类里的测试用例方法一般以test">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHPUnit 学习实例代码">
+<meta property="og:url" content="http://phachon.github.io/php/PHPUnit-Lean1.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="PHPUnit 基本用法+实例详解上一篇文章介绍了 PHPUnit 在 windows  的安装和配置。今天我们来介绍一下 PHPUnit 如何编写一些基本的测试用例。我也是在最近才开始慢慢使用的 PHPUnit , 用不足之处，欢迎指正。  编写规范 测试类一般以***Test 命名； 该类必须继承 PHPUnit_Framework_TestCase 类； 类里的测试用例方法一般以test">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-10-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.324Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="PHPUnit">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phachon.github.io/php/PHPUnit-Lean1.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>PHPUnit 学习实例代码 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/php/PHPUnit-Lean1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PHPUnit 学习实例代码
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-20 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2017-10-20T00:00:00+08:00">2017-10-20 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<blockquote>
+<p>PHPUnit 基本用法+实例详解<br>上一篇文章介绍了 PHPUnit 在 windows  的安装和配置。今天我们来介绍一下 PHPUnit 如何编写一些基本的测试用例。我也是在最近才开始慢慢使用的 PHPUnit , 用不足之处，欢迎指正。</p>
+</blockquote>
+<h1 id="编写规范"><a href="#编写规范" class="headerlink" title="编写规范"></a>编写规范</h1><ol>
+<li>测试类一般以***Test 命名；</li>
+<li>该类必须继承 PHPUnit_Framework_TestCase 类；</li>
+<li>类里的测试用例方法一般以test开头，当然也可以通过@test注释来定义一个名字不为test开头的方法为测试方法；</li>
+<li>测试方法中需要使用断言方法来断言实际传入的参数与期望的参数是否一致来达到测试的目的；</li>
+</ol>
+<span id="more"></span>
+<h1 id="测试用例"><a href="#测试用例" class="headerlink" title="测试用例"></a>测试用例</h1><ol>
+<li>基本的demo</li>
+</ol>
+<p>定义一个类 DemoTest 并保存到 DemoTest.php 文件中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * phpunit test demo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * test</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testPushAndPop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$stack</span> = <span class="keyword">array</span> ();</span><br><span class="line">        <span class="comment">//断言 $stack 的长度为0</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">0</span>, <span class="title function_ invoke__">count</span>(<span class="variable">$stack</span>));</span><br><span class="line">        <span class="title function_ invoke__">array_push</span>(<span class="variable">$stack</span>, <span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//断言 $stack 的长度为 1</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">1</span>, <span class="title function_ invoke__">count</span>(<span class="variable">$stack</span>));</span><br><span class="line">        <span class="comment">//断言 $stack 的最后一个值为foo</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="variable">$stack</span>[<span class="title function_ invoke__">count</span>(<span class="variable">$stack</span>)-<span class="number">1</span>]);</span><br><span class="line">        <span class="comment">//断言 $stack 出栈的值为 foo</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="title function_ invoke__">array_pop</span>(<span class="variable">$stack</span>));</span><br><span class="line">        <span class="comment">//断言 $stack 的长度为 0</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">0</span>, <span class="title function_ invoke__">count</span>(<span class="variable">$stack</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 定义test标签来声明是测试方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@test</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">indexEquals</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$stack</span> = <span class="keyword">array</span> (<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</span><br><span class="line">        <span class="comment">//断言 $stack 索引 0 的值为2</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">2</span>, <span class="variable">$stack</span>[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码中定义了两种测试用例的方法，一种是开头为test, 一种是定义@test标签；两种都可以。<br>然后运行测试这个类；打开命令窗口，进入该代码保存的文件目录输入:phpunit DemoTest.php<br>运行结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Time:825 ms, Memory: 8.25Mb</span><br><span class="line">There was 1 failure:</span><br><span class="line">1) DemoTest::indexEquals</span><br><span class="line">Failed asserting that 0 matches expected 2.</span><br><span class="line">D:\server\apache\htdocs\my_php_code\phpunit\stack\DemoTest.php:32</span><br><span class="line">FAILURES!</span><br><span class="line">Tests: 2, Assertions: 6, Failures: 1.</span><br></pre></td></tr></table></figure>
+<p>解释一下：最上面的是一些耗时，内存消耗的多少。往下看测试结果说有一个错误，也就是测试未通过，在文件的32行。32行的意思是断言这个数组中索引为0的值为2，显然不是，这里我故意写错，所以测试失败。如果改为0则会显示OK;最后是显示2个测试用例，6个断言，其中一个失败。</p>
+<ol start="2">
+<li>方法依赖关系</li>
+</ol>
+<p>在测试类中，测试用例方法可以有依赖关系。通过依赖关系可以传一些参数到方法中；因为默认的测试用例方法是不能有参数的。<br>定义一个FunTest 类保存到文件中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试方法依赖关系</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FuncTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testEmpty</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable">$stack</span> = <span class="keyword">array</span> ();</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEmpty</span>(<span class="variable">$stack</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$stack</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * depends 方法用来表示依赖的方法名</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@depends</span> testEmpty</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> array $stack</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testPush</span>(<span class="params"><span class="keyword">array</span> <span class="variable">$stack</span></span>) </span>&#123;</span><br><span class="line">		<span class="title function_ invoke__">array_push</span>(<span class="variable">$stack</span>, <span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="variable">$stack</span>[<span class="title function_ invoke__">count</span>(<span class="variable">$stack</span>)-<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$stack</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@depends</span> testPush</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> array $stack</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testPop</span>(<span class="params"><span class="keyword">array</span> <span class="variable">$stack</span></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="title function_ invoke__">array_pop</span>(<span class="variable">$stack</span>));</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEmpty</span>(<span class="variable">$stack</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>标签@depends是表示依赖关系，上面的代码中testPop()依赖testPush(),testPush()依赖testEmpty(), 所以当testEmpty()测试通过后返回的变量可以作为testPush(array $stack)的参数。同理，testPop()也是一样。<br>运行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time: 726 ms, Memory: 8.25Mb</span><br><span class="line">OK (3 tests, 4 assertions)</span><br></pre></td></tr></table></figure>
+<p>测试通过</p>
+<ol start="3">
+<li>测试非依赖关系的方法传入参数</li>
+</ol>
+<p>如果非依赖关系的方法，默认是不能有参数的，这个时候怎么样才能传参，PHPUnit 提供给了一个标签，@dataProvider<br>定义一个DataTest类保存到文件中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试非依赖关系的方法传入参数</span></span><br><span class="line"><span class="comment"> * 方法提供者</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * dataProvider 标签用来提供数据的方法名</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@dataProvider</span> add_provider</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testAdd</span>(<span class="params"><span class="variable">$a</span>, <span class="variable">$b</span>, <span class="variable">$c</span></span>) </span>&#123;</span><br><span class="line">		<span class="comment">//断言 a + b = c</span></span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="variable">$c</span>, <span class="variable">$a</span> + <span class="variable">$b</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 数据提供者的方法</span></span><br><span class="line"><span class="comment">	 * 格式：</span></span><br><span class="line"><span class="comment">	 * return array(</span></span><br><span class="line"><span class="comment">	 *      array(参数1,参数2,参数3,参数4,参数N),</span></span><br><span class="line"><span class="comment">	 *      array(参数1,参数2,参数3,参数4,参数N),</span></span><br><span class="line"><span class="comment">	 * );</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add_provider</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">array</span> (</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>),</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看上面代码应该就能明白。直接运行phpunit DataTest.php<br>运行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time: 379 ms, Memory: 8.25Mb</span><br><span class="line">OK (3 tests, 4 assertions)</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>数据提供者方法和依赖关系的限制</li>
+</ol>
+<p>这个听起来有点绕口，意思是如果方法依赖和方法提供者同时使用的话，是有限制的。说半天我估计还是一塌糊涂，不解释，直接看代码<br>定义一个 Data2Test 类保存到文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据提供者方法和依赖关系的限制</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 当一个测试方法依赖于另外一个使用data providers测试方法时,</span></span><br><span class="line"><span class="comment"> * 这个测试方法将会在它依赖的方法至少测试成功一次后运行,</span></span><br><span class="line"><span class="comment"> * 同时使用data providers的测试方法的执行的结果不能传入一个依赖它的测试方法中</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data2Test</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testA</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">78</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@dataProvider</span> add_provider</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@depends</span> testB</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testB</span>(<span class="params"><span class="variable">$a</span>, <span class="variable">$b</span>, <span class="variable">$c</span></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="variable">$c</span>, <span class="variable">$a</span> + <span class="variable">$b</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="variable">$a</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@depneds</span> testB</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testC</span>(<span class="params"><span class="variable">$a</span></span>) </span>&#123;</span><br><span class="line">		<span class="title function_ invoke__">var_dump</span>(<span class="variable">$a</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add_provider</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">array</span> (</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>),</span><br><span class="line">		);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解释一下：<br>testB 依赖于 testA (testA 使用了dataProvider 提供数据)<br>如果 add_provider 提供的数据至少有一次是成功的，则在成功一次后运行 testC<br>如果 add_provider 提供的数据没有一次是成功的，则 testC 一次也不会执行<br>但是 testC 执行的结果永远是 null, 因为 $a 是通过 dataProvider 提供的。不能传入依赖它的测试方法中<br>好像还是不太明白，反正我是尽力了。慢慢理解吧。</p>
+<ol start="5">
+<li>通过构造迭代器来为方法提供数据</li>
+</ol>
+<p>通过标签 @dataProvider 来直接返回数据作为数据提供者，PHPUnit 也可以通过返回构造器对象来提供数据。上代码<br>新建 IteratorTest.php 文件 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过构造迭代器来为方法提供数据</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">myIterator</span> <span class="keyword">implements</span> <span class="title">Iterator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_position</span> = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$_array</span> = <span class="keyword">array</span> (</span><br><span class="line">		<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),</span><br><span class="line">		<span class="keyword">array</span> (<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>),</span><br><span class="line">		<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">		<span class="keyword">array</span> (<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">	);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">current</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;_array[<span class="variable language_">$this</span>-&gt;_position];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">key</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="number">1</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;_position;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="number">2</span>;</span><br><span class="line">		++<span class="variable language_">$this</span>-&gt;_position;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">valid</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="number">3</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">isset</span>(<span class="variable language_">$this</span>-&gt;_array[<span class="variable language_">$this</span>-&gt;_position]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rewind</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="number">4</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;_position = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IteratorTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@dataProvider</span> add_provider</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testAdd</span>(<span class="params"><span class="variable">$a</span>, <span class="variable">$b</span>, <span class="variable">$c</span></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="variable">$c</span>, <span class="variable">$a</span> + <span class="variable">$b</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add_provider</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title function_ invoke__">myIterator</span>();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先定义了一个构造器，然后返回这个构造器对象，同样也能提供数据。运行 phpunit IteratorTest.php<br>运行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Time: 408 ms, Memory: 8.25Mb</span><br><span class="line">OK (4 tests, 4 assertions)</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>异常测试</li>
+</ol>
+<p>有时候我们希望能够抛出我们所期待的异常。这里有三种方法来测试异常，上代码<br>定义 ThrowTest 类保存到文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试异常</span></span><br><span class="line"><span class="comment"> * 三种方法</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThrowTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 1.注释法: expectedException 期待的异常</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@expectedExeption</span> My_Exception</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testException1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 2.设定法：$this-&gt;setExpectedException 期待的异常</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testException2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">setExpectedException</span>(<span class="string">&#x27;My_Exception&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 3.捕获法：try catch</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testException3</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">//代码</span></span><br><span class="line">		&#125; <span class="keyword">catch</span> (My_Exception <span class="variable">$e</span>) &#123;</span><br><span class="line">			<span class="comment">//捕获到异常测试通过，否则失败</span></span><br><span class="line">			<span class="keyword">return</span> ;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">fail</span>(<span class="string">&#x27;一个期望的异常没有被捕获&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码应该很明白了，不用解释了。</p>
+<ol start="7">
+<li>错误测试</li>
+</ol>
+<p>有时候代码会发生错误，比如某个php文件找不到，文件不可读，php 文件加载失败等。这个时候我们也能进行测试，是否发生错误；PHPUnit 会把错误直接转化为异常PHPUnit_Framework_Error并抛出；我们要做到的是捕获这个异常。上代码。<br>定义 ErrorTest 类保存到文件中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 错误测试</span></span><br><span class="line"><span class="comment"> * phpunit 会把错误直接转化为异常PHPUnit_Framework_Error并抛出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ErrorTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 期待捕获 PHPUnit_Framework_Error 的异常</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@expectedException</span> PHPUnit_Framework_Error</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testError</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="comment">//如果文件不存在就会抛出异常，我们需要捕获异常</span></span><br><span class="line">		<span class="keyword">include</span> <span class="string">&#x27;../test.php&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试显示OK,则证明已经捕获。</p>
+<ol start="8">
+<li>对输出进行测试</li>
+</ol>
+<p>有时候我们需要对程序的指定输出进行测试。比如echo 还是 print() 指定的值是否正确。<br>定义类 OutputTest 类保存到文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 输出测试</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> phachon@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OutputTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testExpectFooActualFoo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">expectOutputString</span>(<span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line">		<span class="keyword">print</span> <span class="string">&#x27;foo&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testExpectBarActualBaz</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">expectOutputString</span>(<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line">		<span class="keyword">print</span> <span class="string">&#x27;baz&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意: 在严格模式下，本身产生输出的测试将会失败。</p>
+<ol start="9">
+<li>基镜（fixture）</li>
+</ol>
+<p>PHPUnit 支持共享建立基境的代码。在运行某个测试方法前，会调用一个名叫 setUp() 的模板方法。setUp() 是创建测试所用对象的地方。当测试方法运行结束后，不管是成功还是失败，都会调用另外一个名叫 tearDown() 的模板方法。tearDown() 是清理测试所用对象的地方。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FixTureTest</span> <span class="keyword">extends</span> <span class="title">PHPUnit_Framework_TestCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> <span class="variable">$stack</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">setUp</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;stack = <span class="keyword">array</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testEmpty</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertTrue</span>(<span class="keyword">empty</span>(<span class="variable">$this</span>-&gt;stack));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testPush</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="title function_ invoke__">array_push</span>(<span class="variable">$this</span>-&gt;stack, <span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="variable">$this</span>-&gt;stack[<span class="title function_ invoke__">count</span>(<span class="variable">$this</span>-&gt;stack)-<span class="number">1</span>]);</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertFalse</span>(<span class="keyword">empty</span>(<span class="variable">$this</span>-&gt;stack));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">testPop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="title function_ invoke__">array_push</span>(<span class="variable">$this</span>-&gt;stack, <span class="string">&#x27;foo&#x27;</span>);</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="string">&#x27;foo&#x27;</span>, <span class="title function_ invoke__">array_pop</span>(<span class="variable">$this</span>-&gt;stack));</span><br><span class="line">		<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertTrue</span>(<span class="keyword">empty</span>(<span class="variable">$this</span>-&gt;stack));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是PHPUnit 官方的一个代码示例。<br>测试类的每个测试方法都会运行一次 setUp() 和 tearDown() 模板方法（同时，每个测试方法都是在一个全新的测试类实例上运行的）。<br>另外，setUpBeforeClass() 与 tearDownAfterClass() 模板方法将分别在测试用例类的第一个测试运行之前和测试用例类的最后一个测试运行之后调用。</p>
+<p>setUp() 多 tearDown() 少<br>理论上说，setUp() 和 tearDown() 是精确对称的，但是实践中并非如此。实际上，只有在 setUp() 中分配了诸如文件或套接字之类的外部资源时才需要实现 tearDown() 。如果 setUp() 中只创建纯 PHP 对象，通常可以略过 tearDown()。不过，如果在 setUp() 中创建了大量对象，你可能想要在 tearDown() 中 unset() 指向这些对象的变量，这样它们就可以被垃圾回收机制回收掉。对测试用例对象的垃圾回收动作则是不可预知的。 —PHPUnit 官方网站</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>好了，今天大概就先介绍这些，已经可以大概写一些测试用例了。当然还有更高级的测试使用方法。现在为什么不讲呢，因为我也不会。。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag"></i> PHP</a>
+              <a href="/tags/PHPUnit/" rel="tag"><i class="fa fa-tag"></i> PHPUnit</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/php/PHPUnit-install-windows.html" rel="prev" title="PHPUnit windows 下的安装">
+      <i class="fa fa-chevron-left"></i> PHPUnit windows 下的安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/go/go-app-mysql-table.html" rel="next" title="Go 应用之 - mysql 建表问题的解决办法">
+      Go 应用之 - mysql 建表问题的解决办法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E5%86%99%E8%A7%84%E8%8C%83"><span class="nav-number">1.</span> <span class="nav-text">编写规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">测试用例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

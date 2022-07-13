@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="上一篇文章讲解了 Mysql 在不同的存储引擎下索引的实现，在开始讲解索引的策略以及如何优化索引之前，我觉得有必要先来了解以下如何去使用 EXPLAIN 命令来查看sql 语句的查询方式，因为在后续的文章中，我们会经常使用该命令来调试和分析。除此之外，我们在工作中，也应该习惯去使用 EXPLAIN命令来分析和优化索引。 本示例中使用的 Mysql 版本是： 5.7.23">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql 索引系列（二）：了解并使用 EXPLAIN 命令">
+<meta property="og:url" content="http://phachon.github.io/mysql/mysql-index-2.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="上一篇文章讲解了 Mysql 在不同的存储引擎下索引的实现，在开始讲解索引的策略以及如何优化索引之前，我觉得有必要先来了解以下如何去使用 EXPLAIN 命令来查看sql 语句的查询方式，因为在后续的文章中，我们会经常使用该命令来调试和分析。除此之外，我们在工作中，也应该习惯去使用 EXPLAIN命令来分析和优化索引。 本示例中使用的 Mysql 版本是： 5.7.23">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-09-28T02:25:15.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.322Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phachon.github.io/mysql/mysql-index-2.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mysql 索引系列（二）：了解并使用 EXPLAIN 命令 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql 索引系列（二）：了解并使用 EXPLAIN 命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-28 10:25:15 10:25:15" itemprop="dateCreated datePublished" datetime="2018-09-28T10:25:15+08:00">2018-09-28 10:25:15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>上一篇文章讲解了 Mysql 在不同的存储引擎下索引的实现，在开始讲解索引的策略以及如何优化索引之<br>前，我觉得有必要先来了解以下如何去使用 <code>EXPLAIN</code> 命令来查看sql 语句的查询方式，因为在后续的<br>文章中，我们会经常使用该命令来调试和分析。除此之外，我们在工作中，也应该习惯去使用 <code>EXPLAIN</code><br>命令来分析和优化索引。</p>
+<p>本示例中使用的 Mysql 版本是： <code>5.7.23</code></p>
+<span id="more"></span>
+<h2 id="EXPLAIN-命令简介"><a href="#EXPLAIN-命令简介" class="headerlink" title="EXPLAIN 命令简介"></a>EXPLAIN 命令简介</h2><p>EXPLAIN 命令用来查看 SQL 语句的执行计划。简单来说，就是通过和这个命令就可以查看该查询执行的<br>详细信息，通过查看并分析这些信息，我们可以优化我们的 SQL 语句和索引，最终来提高我们的查询效率。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user id=1\G</span><br></pre></td></tr></table></figure>
+<p>使用比较简单，直接在要查询的 select 语句前加上 explain </p>
+<h2 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h2><p>为了演示，这里新建数据库和表并插入一些数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `first_name` char(10) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;姓&#x27;,</span><br><span class="line">  `last_name` varchar(10) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;名&#x27;,</span><br><span class="line">  `age` int(3) NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;年龄&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY `firstName_lastName_age_index` (`first_name`, `last_name`, `age`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=&#x27;用户表&#x27;;</span><br><span class="line"></span><br><span class="line">CREATE TABLE `video` (</span><br><span class="line">  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT &#x27;role id&#x27;,</span><br><span class="line">  `user_id` int(10) NOT NULL COMMENT &#x27;user id&#x27;,</span><br><span class="line">  `title` char(100) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;视频标题&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  KEY (`user_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=&#x27;视频表&#x27;;</span><br><span class="line"></span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;zhang&#x27;,&#x27;san&#x27;, 1);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;li&#x27;,&#x27;si&#x27;, 18);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;wang&#x27;,&#x27;wu&#x27;, 21);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;pan&#x27;,&#x27;liu&#x27;, 41);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;jin&#x27;,&#x27;qi&#x27;, 16);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;yang&#x27;,&#x27;ba&#x27;, 8);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;yu&#x27;,&#x27;jiu&#x27;, 9);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;ding&#x27;,&#x27;q&#x27;, 10);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;wu&#x27;,&#x27;w&#x27;, 13);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;zhao&#x27;,&#x27;u&#x27;, 51);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;qian&#x27;,&#x27;k&#x27;, 61);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;zheng&#x27;,&#x27;o&#x27;, 31);</span><br><span class="line">insert into `user` (first_name, last_name, age) values (&#x27;zhou&#x27;,&#x27;z&#x27;, 10);</span><br><span class="line"></span><br><span class="line">insert into `video` (user_id, title) values (1, &#x27;v1&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (1, &#x27;v2&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (2, &#x27;v3&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (2, &#x27;v3&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (7, &#x27;v9&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (1, &#x27;v0&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (3, &#x27;v1&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (4, &#x27;v8&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (6, &#x27;v9&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (8, &#x27;v14&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (5, &#x27;v3&#x27;);</span><br><span class="line">insert into `video` (user_id, title) values (4, &#x27;v11&#x27;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where id=1\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: const</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: const</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+<h2 id="列字段解释"><a href="#列字段解释" class="headerlink" title="列字段解释"></a>列字段解释</h2><h3 id="id"><a href="#id" class="headerlink" title="id"></a>id</h3><p>select 查询的标识符，每个 select 都会自动分配一个唯一的标示符</p>
+<h3 id="select-type"><a href="#select-type" class="headerlink" title="select_type"></a>select_type</h3><p>select_type 表示查询的类型，通常有如下值：</p>
+<ul>
+<li>SIMPLE 表示此查询是简单查询，即不包含 UNION 或子查询</li>
+<li>PRIMARY 表示此查询是最外层的查询</li>
+<li>UNION 表示此查询是 UNION 的第二个或者随后的查询</li>
+<li>DEPENDENT UNION 表示 UNION 的第二个或后面的查询，取决于外面的查询</li>
+<li>UNION RESULT 表示 UNION 的结果</li>
+<li>SUBQUERY 子查询中的第一个 SELECT </li>
+<li>DEPENDENT SUBQUERY 子查询中的第一个 SELECT ,取决于外面的查询，即子查询依赖于外层的查询结果</li>
+</ul>
+<p>最常见的就是 SIMPLE 查询，查询没有子查询，也没有 UNION 查询时，通常就是 SIMPLE<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where id=1\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: const</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: const</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>使用了 UNION 查询，输出结果如下：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain (select * from user where id=1) union (select * from user where id=2);</span><br><span class="line">+----+--------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-----------------+</span><br><span class="line">| id | select_type  | table      | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra           |</span><br><span class="line">+----+--------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-----------------+</span><br><span class="line">|  1 | PRIMARY      | user       | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL            |</span><br><span class="line">|  2 | UNION        | user       | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL            |</span><br><span class="line">| NULL | UNION RESULT | &lt;union1,2&gt; | NULL       | ALL   | NULL          | NULL    | NULL    | NULL  | NULL |     NULL | Using temporary |</span><br><span class="line">+----+--------------+------------+------------+-------+---------------+---------+---------+-------+------+----------+-----------------+</span><br><span class="line">3 rows in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<h3 id="table"><a href="#table" class="headerlink" title="table"></a>table</h3><p>查询涉及的表或者衍生表</p>
+<h3 id="partitions"><a href="#partitions" class="headerlink" title="partitions"></a>partitions</h3><p>匹配的分区</p>
+<h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><p>type 字段比较重要，表示数据的查询类型，根据 type 字段判断是全表扫描还是索引扫描</p>
+<ul>
+<li>system：表中只有一条数据，是特殊的 const</li>
+<li><p>const：针对<code>主键</code>或<code>唯一索引</code>的<code>等值查询</code>扫描，最多只返回一条数据。const 查询速度非常快，因为仅仅读取一次即可。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where id=1\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: const</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: const</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">1 row in set, 1 warning (0.04 sec)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>eq_ref：此类型通常出现在多表的 join 查询，表示前表的每一个结果，都只能匹配到后表的一行结果，查询的操作符通常是 <code>=</code>，查询效率比较高：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user,video where user.id=video.user_id\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: video</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: index</span><br><span class="line">possible_keys: user_id,user_id_2</span><br><span class="line">          key: user_id_2</span><br><span class="line">      key_len: 304</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 12</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using index</span><br><span class="line">*************************** 2. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: eq_ref</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: test.video.user_id</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: NULL</span><br><span class="line">2 rows in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ref：此类型通常出现在多表的 join 查询，针对于非唯一索引或主键索引，或者是使用了 <code>最左前缀</code> 规则索引的查询。</p>
+</li>
+<li><p>range：表示使用的是范围查询，通过索引字段范围获取表中部分数据记录，这个类型通常出现在 =，&lt;&gt;,&gt;,&lt;=,&gt;=, IS NULL, &lt;=&gt;, between, in() 操作中。<br>type 是 range，explain 输出的 ref 字段为 NULL，并且 key_len 字段是此次查询中使用到的最长的那个索引。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where user.id &gt; 0 and user.id &lt;40\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: range</span><br><span class="line">possible_keys: PRIMARY</span><br><span class="line">          key: PRIMARY</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 13</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using where</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br><span class="line">mysql&gt; explain select age from user where age between 0 and 40\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: range</span><br><span class="line">possible_keys: age</span><br><span class="line">          key: age</span><br><span class="line">      key_len: 4</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 10</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using where; Using index</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>index：表示全索引扫描，和 all 类型类似，只不过 all 类型是全表扫描，而 index 类型只扫描所有的索引，而不是扫描数据。通常情况下，index 出现在所要查询的<br>数据直接出现在索引树中就可以直接获取到，而不需要扫描数据。一般 Extra 字段会显示 Using index。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where age between 0 and 40\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: index</span><br><span class="line">possible_keys: age</span><br><span class="line">          key: first_name_2</span><br><span class="line">      key_len: 64</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 13</span><br><span class="line">     filtered: 76.92</span><br><span class="line">        Extra: Using where; Using index</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>从 range 里面的示例和上面的示例我们可以看到两条相似的语句使用的查询类型不一样，原因是：<br>因为 age 是索引，当使用 select age，直接可以通过二级索引树查到范围数据，所以是 range<br>当使用 select * , 因为二级索引只能查到 age 和主键，想要查到所有数据集，需要再次回到主索引树查找，因此退化成了 index, 也就是需要全索引扫描</p>
+<ul>
+<li>all：表示全表扫描，这个是最差的扫描。如果出现了 all，那么我们应该优化掉。对于大数据量的情况下，这将是灾难。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from video where video.title=&quot;v1&quot;\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: video</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: ALL</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: NULL</span><br><span class="line">      key_len: NULL</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 12</span><br><span class="line">     filtered: 10.00</span><br><span class="line">        Extra: Using where</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+title 不是索引，所以只能全表扫描。</li>
+</ul>
+<p>type 的性能比较：</p>
+<p><code>all &lt; index &lt; range &lt; ref &lt; eq_ref &lt; const &lt; system</code></p>
+<h3 id="possible-keys"><a href="#possible-keys" class="headerlink" title="possible_keys"></a>possible_keys</h3><p>表示在 Mysql 查询时可能使用到的索引，注意，即使有些索引在 possible_key 出现，但是并不表示此索引会被真正的被 Mysql 用到。具体使用的是哪些索引，由字段 key 表示</p>
+<h3 id="key"><a href="#key" class="headerlink" title="key"></a>key</h3><p>表示 Mysql 在查询中真正使用到的索引。</p>
+<h3 id="key-len"><a href="#key-len" class="headerlink" title="key_len"></a>key_len</h3><p>表示查询优化器在使用了索引的字节数，这个字段可以评估组合索引是否完全被使用，或者是只使用了最左部分，key_len 的计算规则如下：</p>
+<ul>
+<li><p>字符串类型</p>
+<ul>
+<li>char(n): 如果是 uft8 编码，则是 3n 字节; utf8mb4 编码，则是 4n 字节</li>
+<li>varchar(n): 如果是 uft8 编码，则是 3n+2 字节; utf8mb4 编码，则是 4n+2 字节<br>注意：如果属性不是 NOT NULL, 则需要多加 1 个字节。</li>
+</ul>
+</li>
+<li><p>数值类型</p>
+<ul>
+<li>TINYINT: 1 字节</li>
+<li>SMALLINT: 2 字节</li>
+<li>MEDIUMINT: 3 字节</li>
+<li>INT: 4 字节</li>
+<li>BIGINT: 8 字节</li>
+</ul>
+</li>
+<li><p>时间类型</p>
+<ul>
+<li>DATE: 3 字节</li>
+<li>TIMESTAMP: 4 字节</li>
+<li>DATETIME: 8 字节</li>
+</ul>
+</li>
+</ul>
+<p>在 user 表中我们有联合索引 <code>KEY (first_name, last_name, age)</code> 举例说明:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where first_name=&#x27;yu&#x27;\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: ref</span><br><span class="line">possible_keys: firstName_lastName_age_index</span><br><span class="line">          key: firstName_lastName_age_index</span><br><span class="line">      key_len: 30</span><br><span class="line">          ref: const</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using index</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure><br>我们的查询语句使用的是 <code>first_name=&#39;yu&#39;</code>，根据<code>最左匹配原则</code>，只匹配了第一列 first_name, first_name 的字段类型是 char, 且是 NOT NULL, 所以 key_len 是 30, 表示只使用了 30 字节的索引长度。<br>再来看一个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user where first_name=&#x27;yu&#x27; and last_name=&quot;jiu&quot;\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: ref</span><br><span class="line">possible_keys: firstName_lastName_age_index</span><br><span class="line">          key: firstName_lastName_age_index</span><br><span class="line">      key_len: 62</span><br><span class="line">          ref: const,const</span><br><span class="line">         rows: 1</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using index</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>这个例子中匹配了前两列，所以是 key_len(first_name) + key_len(last_name) 等于 3 <em> 10 + 3 </em> 10 + 2 = 62 字节</p>
+<h3 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h3><p>哪个字段或常数与 key 一起被使用</p>
+<h3 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h3><p>rows 也是一个重要的字段. MySQL 查询优化器根据统计信息, 估算 SQL 要查找到结果集需要扫描读取的数据行数。</p>
+<h3 id="filtered"><a href="#filtered" class="headerlink" title="filtered"></a>filtered</h3><p>表示此查询条件所过滤的数据的百分比</p>
+<h3 id="Extra"><a href="#Extra" class="headerlink" title="Extra"></a>Extra</h3><p>Extra 的信息表示额外的信息。常见的有以下几种内容：</p>
+<ul>
+<li>Using filesort<br>当出现 Using filesort 时，表示需要额外的排序操作，不能通过索引顺序达到排序的效果，这种情况下一般都建议优化掉。例如：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select * from user order by age desc\G</span><br><span class="line">*************************** 1. row ***************************</span><br><span class="line">           id: 1</span><br><span class="line">  select_type: SIMPLE</span><br><span class="line">        table: user</span><br><span class="line">   partitions: NULL</span><br><span class="line">         type: index</span><br><span class="line">possible_keys: NULL</span><br><span class="line">          key: firstName_lastName_age_index</span><br><span class="line">      key_len: 66</span><br><span class="line">          ref: NULL</span><br><span class="line">         rows: 13</span><br><span class="line">     filtered: 100.00</span><br><span class="line">        Extra: Using index; Using filesort</span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>Using index<br>“覆盖索引扫描”, 表示查询在索引树中就可查找所需数据, 不用扫描表数据文件, 一般性能不错</p>
+</li>
+<li><p>Using temporary<br>查询有使用临时表, 一般出现于排序, 分组和多表 join 的情况, 查询效率不高, 建议优化.</p>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>简单的介绍了以下 explain 的使用方法以及各种参数的意义。通常，我们应该经常来使用 explain 语句来分析我们的查询语句是否可以优化。尤其是判断索引的创建是否合理。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000008131735">MySQL 性能优化神器 Explain 使用分析</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/mysql/" rel="tag"><i class="fa fa-tag"></i> mysql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/mysql/mysql-deploy-1.html" rel="prev" title="Mysql 部署系列 - 主从同步">
+      <i class="fa fa-chevron-left"></i> Mysql 部署系列 - 主从同步
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/mysql/mysql-index-3.html" rel="next" title="Mysql 索引系列（三）：索引的策略">
+      Mysql 索引系列（三）：索引的策略 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#EXPLAIN-%E5%91%BD%E4%BB%A4%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">EXPLAIN 命令简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">使用方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE"><span class="nav-number">2.</span> <span class="nav-text">准备数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A"><span class="nav-number">3.</span> <span class="nav-text">列字段解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#id"><span class="nav-number">3.1.</span> <span class="nav-text">id</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select-type"><span class="nav-number">3.2.</span> <span class="nav-text">select_type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#table"><span class="nav-number">3.3.</span> <span class="nav-text">table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#partitions"><span class="nav-number">3.4.</span> <span class="nav-text">partitions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#type"><span class="nav-number">3.5.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#possible-keys"><span class="nav-number">3.6.</span> <span class="nav-text">possible_keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#key"><span class="nav-number">3.7.</span> <span class="nav-text">key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#key-len"><span class="nav-number">3.8.</span> <span class="nav-text">key_len</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ref"><span class="nav-number">3.9.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rows"><span class="nav-number">3.10.</span> <span class="nav-text">rows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filtered"><span class="nav-number">3.11.</span> <span class="nav-text">filtered</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Extra"><span class="nav-number">3.12.</span> <span class="nav-text">Extra</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

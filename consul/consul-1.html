@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key&#x2F;Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Consul系列（一）：Consul 的介绍与使用">
+<meta property="og:url" content="http://phachon.github.io/consul/consul-1.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key&#x2F;Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://phachon.github.io/images/consul.png">
+<meta property="article:published_time" content="2018-11-26T05:51:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.319Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="consul">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://phachon.github.io/images/consul.png">
+
+<link rel="canonical" href="http://phachon.github.io/consul/consul-1.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Consul系列（一）：Consul 的介绍与使用 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/consul/consul-1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Consul系列（一）：Consul 的介绍与使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-11-26 13:51:00 13:51:00" itemprop="dateCreated datePublished" datetime="2018-11-26T13:51:00+08:00">2018-11-26 13:51:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Consul/" itemprop="url" rel="index"><span itemprop="name">Consul</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<p>Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key/Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。</p>
+<span id="more"></span>
+<h2 id="Consul-介绍"><a href="#Consul-介绍" class="headerlink" title="Consul 介绍"></a>Consul 介绍</h2><p>Consul是一个分布式高可用的系统。相比其他的服务发现方案，Consul 的服务发现方案更”一站式”，内置服务发现与注册、分布式一致性协议实现、健康检查、Key/Value 存储，多数据中心方案。使用 Go 语言编写，因此，可编译成多个平台（Linux，Windows，Mac OS）</p>
+<h2 id="Consul-特性"><a href="#Consul-特性" class="headerlink" title="Consul 特性"></a>Consul 特性</h2><p><img src="/images/consul.png" alt=""></p>
+<ul>
+<li>服务发现 </li>
+<li>健康检查</li>
+<li>Key/Value存储 </li>
+<li>多数据中心</li>
+</ul>
+<ol>
+<li>支持多个数据中心， 上图有两个数据中心</li>
+<li>每个数据中心一般有 N个服务器，服务器数目要在可用性和性能上进行平衡，客户端数量没有限制。分布在不同的物理机上。</li>
+<li>一个集群中的所有节点都添加到 gossip protocol（通过这个协议进行成员管理和信息广播）中</li>
+<li>数据中心的所有服务端节点组成一个raft集合， 他们会选举出一个leader，leader服务所有的请求和事务， 如果非leader收到请求，把所有的改变同步(复制)给非leader.</li>
+<li>所有数据中心的服务器组成了一个 WAN gossip pool，他存在目的就是使数据中心可以相互交流，增加一个数据中心就是加入一个 WAN gossip pool，</li>
+<li>当一个服务端节点收到其他数据中心的请求， 会转发给对应数据中心的服务端。</li>
+</ol>
+<h2 id="Consul-安装"><a href="#Consul-安装" class="headerlink" title="Consul 安装"></a>Consul 安装</h2><p><a target="_blank" rel="noopener" href="https://www.consul.io/downloads.html">https://www.consul.io/downloads.html</a> </p>
+<p>不需要安装，解压后直接运行。</p>
+<p>我这里下载的版本是 consul-1.5.2</p>
+<h2 id="Consul-Agent"><a href="#Consul-Agent" class="headerlink" title="Consul Agent"></a>Consul Agent</h2><p>运行 consul agent<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 开发模式运行，-node 指定节点名</span><br><span class="line">consul agent -node consul.node.1 -dev</span><br></pre></td></tr></table></figure><br>观察日志输出</p>
+<h2 id="Web-管理界面"><a href="#Web-管理界面" class="headerlink" title="Web 管理界面"></a>Web 管理界面</h2><p>浏览器打开：<a target="_blank" rel="noopener" href="http://127.0.0.1:8500">http://127.0.0.1:8500</a></p>
+<h2 id="查看集群成员"><a href="#查看集群成员" class="headerlink" title="查看集群成员"></a>查看集群成员</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consul members</span><br></pre></td></tr></table></figure>
+<p>会输出我们自己的节点，运行的地址，健康状态，自己在集群中的角色，版本信息<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Node        Address         Status  Type    Build  Protocol  DC   Segment</span><br><span class="line">consul.node.1  127.0.0.1:8301  alive   server  1.5.2  2         dc1  &lt;all&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="HTTP-查询节点"><a href="#HTTP-查询节点" class="headerlink" title="HTTP 查询节点"></a>HTTP 查询节点</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl 127.0.0.1:8500/v1/catalog/nodes</span><br></pre></td></tr></table></figure>
+<p>输出<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#123;&quot;ID&quot;:&quot;d68bd1c6-65dd-0a7e-97b0-c7dc409f9c91&quot;,&quot;Node&quot;:&quot;consul.node.1&quot;,&quot;Address&quot;:&quot;127.0.0.1&quot;,&quot;Datacenter&quot;:&quot;dc1&quot;,&quot;TaggedAddresses&quot;:&#123;&quot;lan&quot;:&quot;127.0.0.1&quot;,&quot;wan&quot;:&quot;127.0.0.1&quot;&#125;,&quot;Meta&quot;:&#123;&quot;consul-network-segment&quot;:&quot;&quot;&#125;,&quot;CreateIndex&quot;:9,&quot;ModifyIndex&quot;:10&#125;]</span><br></pre></td></tr></table></figure></p>
+<h3 id="DNS-查询节点"><a href="#DNS-查询节点" class="headerlink" title="DNS 查询节点"></a>DNS 查询节点</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dig @127.0.0.1 -p 8600 consul.node.1</span><br></pre></td></tr></table></figure>
+<h2 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h2><p>假如现在有一个 8088 的服务需要注册到 consul 中，我们先来定义一下服务</p>
+<h3 id="服务定义"><a href="#服务定义" class="headerlink" title="服务定义"></a>服务定义</h3><p>服务定义最好是根据服务的所属业务线，业务模块，项目，以及服务属性来划分，例如，我们定义如下服务：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;service&quot;: &#123;</span><br><span class="line">    &quot;name&quot;: &quot;video.user.info&quot;,</span><br><span class="line">    &quot;tags&quot;: [&quot;go&quot;],</span><br><span class="line">    &quot;port&quot;: 8088</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>新建配置文件  /etc/consul.d/news.user.info.json，将服务信息写入</p>
+<p>重启 agent<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">consul agent -config-dir /etc/consul.d -node consul.node.1 -dev</span><br></pre></td></tr></table></figure><br>通过读取配置文件的服务定义信息，将服务 video.user.info 注册到了 consul 中</p>
+<h2 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h2><p>通过 http 方式来发现服务<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># video.user.info 是服务名</span><br><span class="line">curl http://127.0.0.1:8500/v1/catalog/service/video.user.info</span><br></pre></td></tr></table></figure><br>返回服务信息</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了 Consul 的安装和使用，总体看 Consul 的安装和使用都比较简单。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/consul/" rel="tag"><i class="fa fa-tag"></i> consul</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/consul/consul-5.html" rel="prev" title="Consul系列（五）：Consul 的一致性算法">
+      <i class="fa fa-chevron-left"></i> Consul系列（五）：Consul 的一致性算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/redis/redis-6.html" rel="next" title="Redis系列（六）：Redis 数据结构之 SDS">
+      Redis系列（六）：Redis 数据结构之 SDS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">Consul 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul-%E7%89%B9%E6%80%A7"><span class="nav-number">2.</span> <span class="nav-text">Consul 特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul-%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">Consul 安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul-Agent"><span class="nav-number">4.</span> <span class="nav-text">Consul Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-%E7%AE%A1%E7%90%86%E7%95%8C%E9%9D%A2"><span class="nav-number">5.</span> <span class="nav-text">Web 管理界面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E9%9B%86%E7%BE%A4%E6%88%90%E5%91%98"><span class="nav-number">6.</span> <span class="nav-text">查看集群成员</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E6%9F%A5%E8%AF%A2%E8%8A%82%E7%82%B9"><span class="nav-number">6.1.</span> <span class="nav-text">HTTP 查询节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E6%9F%A5%E8%AF%A2%E8%8A%82%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">DNS 查询节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="nav-number">7.</span> <span class="nav-text">服务注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%B9%89"><span class="nav-number">7.1.</span> <span class="nav-text">服务定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="nav-number">8.</span> <span class="nav-text">服务发现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

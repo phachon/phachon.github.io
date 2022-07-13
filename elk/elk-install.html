@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="简介工作工程中，不论是开发还是运维，都会遇到各种各样的日志，主要包括系统日志、应用程序日志和安全日志，对于开发人员来说，查看日志，可以实时查看程序的运行错误，以及性能分析，通常，一个大中型的应用程序会被部署到多台服务器，那日志文件也会分散到不同的机器上，这样查看日志难道要一台一台去查看？显然是太麻烦了，开源的日志分析系统 ELK 完美的解决了这个问题。ELK  并不是一个独立的系统，她是由 El">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK 实时日志分析系统平台的学习与使用">
+<meta property="og:url" content="http://phachon.github.io/elk/elk-install.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="简介工作工程中，不论是开发还是运维，都会遇到各种各样的日志，主要包括系统日志、应用程序日志和安全日志，对于开发人员来说，查看日志，可以实时查看程序的运行错误，以及性能分析，通常，一个大中型的应用程序会被部署到多台服务器，那日志文件也会分散到不同的机器上，这样查看日志难道要一台一台去查看？显然是太麻烦了，开源的日志分析系统 ELK 完美的解决了这个问题。ELK  并不是一个独立的系统，她是由 El">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113309605">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113529720">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113659904">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113728826">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113810546">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113836334">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113919343">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922113936492">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114217980">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114030368">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114055328">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114123360">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114438389">
+<meta property="og:image" content="http://img.blog.csdn.net/20160922114331767">
+<meta property="article:published_time" content="2016-09-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.319Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="ELK">
+<meta property="article:tag" content="ElasticSearch">
+<meta property="article:tag" content="LogStash">
+<meta property="article:tag" content="Kibana">
+<meta property="article:tag" content="Marvel">
+<meta property="article:tag" content="Log">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160922113309605">
+
+<link rel="canonical" href="http://phachon.github.io/elk/elk-install.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ELK 实时日志分析系统平台的学习与使用 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/elk/elk-install.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ELK 实时日志分析系统平台的学习与使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-09-22 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-22T00:00:00+08:00">2016-09-22 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>工作工程中，不论是开发还是运维，都会遇到各种各样的日志，主要包括系统日志、应用程序日志和安全日志，对于开发人员来说，查看日志，可以实时查看程序的运行错误，以及性能分析，通常，一个大中型的应用程序会被部署到多台服务器，那日志文件也会分散到不同的机器上，这样查看日志难道要一台一台去查看？显然是太麻烦了，开源的日志分析系统 ELK 完美的解决了这个问题。<br>ELK  并不是一个独立的系统，她是由 ElasticSearch、Logstash、Kibana 三个开源的工具组成。</p>
+<ul>
+<li>ElasticSearch<br>ElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。</li>
+<li>Logstash<br>Logstash 是一个开源的日志分析、收集工具，并将日志存储以供以后使用。</li>
+<li>Kibana<br>Kibana 是一个为 Logstash 和 ElasticSearch 提供的日志分析的 Web 接口。可使用它对日志进行高效的搜索、可视化、分析等各种操作。</li>
+</ul>
+<span id="more"></span>
+<h2 id="搭建方法"><a href="#搭建方法" class="headerlink" title="搭建方法"></a>搭建方法</h2><p>基于一台主机的搭建，没有使用多台集群，logstah 收集日志后直接写入 elasticseach，可以用 redis 来作为日志队列</p>
+<h3 id="jdk-安装"><a href="#jdk-安装" class="headerlink" title="jdk 安装"></a>jdk 安装</h3><p>jdk 1.8 安装</p>
+<h3 id="elasticseach-安装"><a href="#elasticseach-安装" class="headerlink" title="elasticseach 安装"></a>elasticseach 安装</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/downloads，选择相应的版本">https://www.elastic.co/downloads，选择相应的版本</a> 我这里的版本是 elasticsearch-2.4.0</p>
+<p>解压目录:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">[phachon@localhost elk]$ tar -zxf elasticsearch-2.4.0</span><br><span class="line">[phachon@localhost elasticsearch-2.4.0]$</span><br><span class="line"># 安装 head 插件</span><br><span class="line">[phachon@localhost elasticsearch-2.4.0]$./bin/plugin install mobz/elasticsearch-head</span><br><span class="line">[phachon@localhost elasticsearch-2.4.0]$ ls plugins/</span><br><span class="line">head</span><br><span class="line">编辑 elasticseach 的配置文件</span><br><span class="line"></span><br><span class="line">[phachon@localhost elasticsearch-2.4.0]$ vim config/elasticseach.yml</span><br><span class="line">13 # ---------------------------------- Cluster -----------------------------------</span><br><span class="line">14 #</span><br><span class="line">15 # Use a descriptive name for your cluster:</span><br><span class="line">16 #</span><br><span class="line">17  cluster.name: es_cluster #这里是你的el集群的名称</span><br><span class="line">18 #</span><br><span class="line">19 # ------------------------------------ Node ------------------------------------</span><br><span class="line">20 #</span><br><span class="line">21 # Use a descriptive name for the node:</span><br><span class="line">22 #</span><br><span class="line">23  node.name: node0 # elseach 集群中的节点</span><br><span class="line">24 #</span><br><span class="line">25 # Add custom attributes to the node:</span><br><span class="line">26 #</span><br><span class="line">27 # node.rack: r1</span><br><span class="line">28 #</span><br><span class="line">29 # ----------------------------------- Paths ------------------------------------</span><br><span class="line">30 #</span><br><span class="line">31 # Path to directory where to store the data (separate multiple locations by comma):</span><br><span class="line">32 #</span><br><span class="line">33  path.data: /tmp/elasticseach/data #设置 data 目录</span><br><span class="line">34 #</span><br><span class="line">35 # Path to log files:</span><br><span class="line">36 #</span><br><span class="line">37  path.logs: /tmp/elasticseach/logs # 设置 logs 目录</span><br><span class="line">#</span><br><span class="line">39 # ----------------------------------- Memory -----------------------------------</span><br><span class="line">40 #</span><br><span class="line">41 # Lock the memory on startup:</span><br><span class="line">42 #</span><br><span class="line">43 # bootstrap.memory_lock: true</span><br><span class="line">44 #</span><br><span class="line">45 # Make sure that the `ES_HEAP_SIZE` environment variable is set to about half the memory</span><br><span class="line">46 # available on the system and that the owner of the process is allowed to use this limit.</span><br><span class="line">47 #</span><br><span class="line">48 # Elasticsearch performs poorly when the system is swapping the memory.</span><br><span class="line">49 #</span><br><span class="line">50 # ---------------------------------- Network -----------------------------------</span><br><span class="line">51 #</span><br><span class="line">52 # Set the bind address to a specific IP (IPv4 or IPv6):</span><br><span class="line">53 #</span><br><span class="line">54 # network.host: 192.168.0.1</span><br><span class="line">55  network.host: 192.168.30.128  # 这里配置本机的 ip 地址,这个是我的虚拟机的 ip </span><br><span class="line">56 #</span><br><span class="line">57 # Set a custom port for HTTP:</span><br><span class="line">58 #</span><br><span class="line">59  http.port: 9200 # 默认的端口</span><br></pre></td></tr></table></figure></p>
+<p>其他配置可先不设置<br>启动 elstaicseach</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elasticsearch-2.4.0]$ ./bin/elasticsearch</span><br></pre></td></tr></table></figure>
+<p>注意，这里肯定会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elasticsearch-2.4.0]# ./bin/elasticsearch</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.RuntimeException: don&#x27;t run elasticsearch as root.</span><br><span class="line">at org.elasticsearch.bootstrap.Bootstrap.initializeNatives(Bootstrap.java:94)</span><br><span class="line">at org.elasticsearch.bootstrap.Bootstrap.setup(Bootstrap.java:160)</span><br><span class="line">at org.elasticsearch.bootstrap.Bootstrap.init(Bootstrap.java:286)</span><br><span class="line">at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:35)</span><br><span class="line">Refer to the log for complete error details.</span><br></pre></td></tr></table></figure>
+<p>之前在网上搜的教程这里都没有详细说明，导致花了很长时间卡在这里安装不成功。<br>提示的原因已经说的很清楚了，不能以 root 权限来安装 elasticseach<br>为 elsearch 添加专门的用户组和用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elasticsearch-2.4.0]# groupadd elsearch</span><br><span class="line">[root@localhost elasticsearch-2.4.0]# adduser -G elsearch elsearch</span><br><span class="line">[root@localhost elasticsearch-2.4.0]# passwd elsearch 123456</span><br></pre></td></tr></table></figure>
+<p>将 elasticseach 的安装目录设置为 elsearch 用户组和用户所有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elk]# chown -R elsearch:elsearch elasticsearch-2.4.0/</span><br></pre></td></tr></table></figure>
+<p>别忘了将 /tmp/elasticseach/data 和 /tmp/elasticseach/logs 目录也设置为 elsearch 用户所有,要不然会没有权限读写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost tmp]# chown -R elsearch:elsearch elasticseach/</span><br></pre></td></tr></table></figure>
+<p>好了。终于设置完毕。切换到 elsearch 重新启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[elsearch@localhost elasticsearch-2.4.0]# ./bin/elasticsearch</span><br><span class="line">[2016-09-22 01:51:42,102][WARN ][bootstrap] unable to install syscall filter: seccomp unavailable: requires kernel 3.5+ </span><br><span class="line">with CONFIG_SECCOMP andCONFIG_SECCOMP_FILTER compiled in</span><br><span class="line">[2016-09-22 01:51:42,496][INFO ][node] [node0] version[2.4.0], pid[4205], build[ce9f0c7/2016-08-29T09:14:17Z]</span><br><span class="line">[2016-09-22 01:51:42,496][INFO ][node] [node0] initializing ...</span><br><span class="line">[2016-09-22 01:51:43,266][INFO ][plugins] [node0] modules [reindex, lang-expression, lang-groovy], plugins [head], </span><br><span class="line">sites [head]</span><br><span class="line">[2016-09-22 01:51:43,290][INFO ][env] [node0] using [1] data paths, mounts [[/ (/dev/sda5)]], net usable_space [8.4gb], </span><br><span class="line">net total_space [14.6gb], spins?[possibly], types [ext4]</span><br><span class="line">[2016-09-22 01:51:43,290][INFO ][env] [node0] heap size [998.4mb], compressed ordinary object pointers [unknown]</span><br><span class="line">[2016-09-22 01:51:43,290][WARN ][env] [node0] max file descriptors [4096] for elasticsearch process likely too low, consider </span><br><span class="line">increasing to at least[65536]</span><br><span class="line">[2016-09-22 01:51:45,697][INFO ][node] [node0] initialized</span><br><span class="line">[2016-09-22 01:51:45,697][INFO ][node] [node0] starting ...</span><br><span class="line">[2016-09-22 01:51:45,832][INFO ][transport] [node0] publish_address &#123;192.168.30.128:9300&#125;, bound_addresses &#123;192.168.30.128:9300&#125;</span><br><span class="line">[2016-09-22 01:51:45,839][INFO ][discovery] [node0] es_cluster/kJMDfFMwQXGrigfknNs-_g</span><br><span class="line">[2016-09-22 01:51:49,039][INFO ][cluster.service] [node0] new_master &#123;node0&#125;&#123;kJMDfFMwQXGrigfknNs-_g&#125;&#123;192.168.30.128&#125;</span><br><span class="line">&#123;192.168.30.128:9300&#125;, reason:zen-disco-join(elected_as_master, [0] joins received)</span><br><span class="line">[2016-09-22 01:51:49,109][INFO ][http] [node0] publish_address &#123;192.168.30.128:9200&#125;, bound_addresses &#123;192.168.30.128:9200&#125;</span><br><span class="line">[2016-09-22 01:51:49,109][INFO ][node] [node0] started</span><br><span class="line">[2016-09-22 01:51:49,232][INFO ][gateway] [node0] recovered [2] indices into cluster_state</span><br></pre></td></tr></table></figure>
+<p>启动成功<br>在本机浏览器访问 <a target="_blank" rel="noopener" href="http://192.168.30.128:9200">http://192.168.30.128:9200</a></p>
+<p><img src="http://img.blog.csdn.net/20160922113309605" alt="这里写图片描述"></p>
+<p>说明搜索引擎 API 返回正常。注意要在服务器将 9200 端口打开，否则访问失败。</p>
+<p>打开我们刚刚安装的 head 插件<br><a target="_blank" rel="noopener" href="http://192.168.30.128:9200/_plugin/head/">http://192.168.30.128:9200/_plugin/head/</a></p>
+<p><img src="http://img.blog.csdn.net/20160922113529720" alt="这里写图片描述"></p>
+<p>如果是第一次搭建好，里面是没有数据的，node0 节点也没有集群信息，这里我搭建完成后已经添加了数据。所以显示的有信息</p>
+<h3 id="Logstash安装"><a href="#Logstash安装" class="headerlink" title="Logstash安装"></a>Logstash安装</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://www.elastic.co/downloads，选择相应的版本">https://www.elastic.co/downloads，选择相应的版本</a> 我这里的版本是 logstash-2.4.0.tar.gz<br>解压目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elk]# tar -zxvf logstash-2.4.0</span><br><span class="line">[root@localhost elk]# cd logstash-2.4.0</span><br></pre></td></tr></table></figure>
+<p>编辑 logstash 配置文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost logstash-2.4.0]# mkdir config</span><br><span class="line">[root@localhost logstash-2.4.0]# vim config/logstash.conf</span><br></pre></td></tr></table></figure>
+<p>这里因为为了简单来显示一下数据，我这里将 apache 的日志作为数据源，也就是 logstash 的 input，直接输出到 elstaticseach 里，即 ouput</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">     # For detail config for log4j as input,</span><br><span class="line">     # See: https://www.elastic.co/guide/en/logstash/</span><br><span class="line">     file &#123;</span><br><span class="line">           type =&gt; &quot;apache-log&quot; # log 名</span><br><span class="line">           path =&gt; &quot;/etc/httpd/logs/access_log&quot; # log 路径</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter &#123;</span><br><span class="line">    #Only matched data are send to output. 这里主要是用来过滤数据</span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">   # For detail config for elasticsearch as output,</span><br><span class="line">   # See: https://www.elastic.co/guide/en/logstash/current</span><br><span class="line">   elasticsearch &#123;</span><br><span class="line">     action =&gt; &quot;index&quot;          #The operation on ES</span><br><span class="line">     hosts  =&gt; &quot;192.168.30.128:9200&quot;   #ElasticSearch host, can be array. # elasticseach 的 host </span><br><span class="line">     index  =&gt; &quot;apachelog&quot;         #The index to write data to. </span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用命令来检测配置文件是否正确</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost logstash-2.4.0]# ./bin/logstash -f config/logstash.conf --configtest</span><br><span class="line">Configuration OK</span><br></pre></td></tr></table></figure>
+<p>启动 logstash 来收集日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost logstash-2.4.0]# ./bin/logstash -f config/logstash.conf</span><br><span class="line">Settings: Default pipeline workers: 4</span><br><span class="line">Pipeline main started</span><br></pre></td></tr></table></figure>
+<p>好了，logstash 可以开始收集日志了，当日志文件有变化时，会动态的写入到 elastaticseach 中，先让我们来产生一些日志吧。<br>刷新 <a target="_blank" rel="noopener" href="http://192.168.30.128/">http://192.168.30.128/</a> 一直刷新，apache 产生访问日志。ok，打开我们的 elasticseach 的 web 页面 <a target="_blank" rel="noopener" href="http://192.168.30.128:9200/_plugin/head/">http://192.168.30.128:9200/_plugin/head/</a></p>
+<p><img src="http://img.blog.csdn.net/20160922113659904" alt="这里写图片描述"></p>
+<p>这里就出现了我们刚刚配置的 apachelog 的日志，点开数据浏览</p>
+<p><img src="http://img.blog.csdn.net/20160922113728826" alt="这里写图片描述"></p>
+<p>这里很详细的列出了我们的日志文件，还有字段，左边可进行相应的搜索，右边点击可查看具体的日志信息。<br>至此我们已经能够收集日志，并进行搜索，接下来我们来将搜索数据可视化成图表</p>
+<h3 id="Kibana-的安装"><a href="#Kibana-的安装" class="headerlink" title="Kibana 的安装"></a>Kibana 的安装</h3><p>下载：<a target="_blank" rel="noopener" href="https://www.elastic.co/downloads">https://www.elastic.co/downloads</a> 对应自己的版本, 这里我的版本是：kibana-4.6.1-linux-x86</p>
+<p>解压目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost elk]# tar -zxvf kibana-4.6.1-linux-x86</span><br><span class="line">[root@localhost elk]# cd kibana-4.6.1-linux-x86</span><br></pre></td></tr></table></figure>
+<p>编辑配置文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> [root@localhost kibana-4.6.1-linux-x86]# vim config/kibana.yml</span><br><span class="line"> # Kibana is served by a back end server. This controls which port to use.</span><br><span class="line"> server.port: 5601  # kibaba 服务 port </span><br><span class="line"> # The host to bind the server to.</span><br><span class="line"> server.host: &quot;192.168.30.128&quot;  # 你的kibaba 的服务host</span><br><span class="line"> # If you are running kibana behind a proxy, and want to mount it at a path,</span><br><span class="line"> # specify that path here. The basePath can&#x27;t end in a slash.</span><br><span class="line"> # server.basePath: &quot;&quot;</span><br><span class="line"> # The maximum payload size in bytes on incoming server requests.</span><br><span class="line"> # server.maxPayloadBytes: 1048576</span><br><span class="line"> # The Elasticsearch instance to use for all your queries.</span><br><span class="line"> elasticsearch.url: &quot;http://192.168.30.128:9200&quot;  # elastaticseach 的host</span><br><span class="line"> # preserve_elasticsearch_host true will send the hostname specified in `elasticsearch`. If you set it to false,</span><br><span class="line"> # then the host you use to connect to *this* Kibana instance will be sent.</span><br><span class="line"> # elasticsearch.preserveHost: true</span><br><span class="line"></span><br><span class="line"># Kibana uses an index in Elasticsearch to store saved searches, visualizations</span><br><span class="line"># and dashboards. It will create a new index if it doesn&#x27;t already exist.</span><br><span class="line">kibana.index: &quot;.kibana&quot; # kibana</span><br><span class="line"></span><br><span class="line"># The default application to load.</span><br><span class="line"># kibana.defaultAppId: &quot;discover&quot;</span><br><span class="line"></span><br><span class="line"># If your Elasticsearch is protected with basic auth, these are the user credentials</span><br><span class="line"># used by the Kibana server to perform maintenance on the kibana_index at startup. Your Kibana</span><br></pre></td></tr></table></figure>
+<p>配置比较简单<br>配置完成后开始运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost kibana-4.6.1-linux-x86]# ./bin/kibana</span><br><span class="line">log   [02:48:34.732] [info][status][plugin:kibana@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.771] [info][status][plugin:elasticsearch@1.0.0] Status changed from uninitialized to yellow - Waiting for Elasticsearch</span><br><span class="line">log   [02:48:34.803] [info][status][plugin:kbn_vislib_vis_types@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.823] [info][status][plugin:markdown_vis@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.827] [info][status][plugin:metric_vis@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.835] [info][status][plugin:elasticsearch@1.0.0] Status changed from yellow to green - Kibana index ready</span><br><span class="line">log   [02:48:34.840] [info][status][plugin:spyModes@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.847] [info][status][plugin:statusPage@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.857] [info][status][plugin:table_vis@1.0.0] Status changed from uninitialized to green - Ready</span><br><span class="line">log   [02:48:34.867] [info][listening] Server running at http://192.168.30.128:5601</span><br></pre></td></tr></table></figure>
+<p>在浏览器运行  <a target="_blank" rel="noopener" href="http://192.168.30.128:5601">http://192.168.30.128:5601</a></p>
+<p><img src="http://img.blog.csdn.net/20160922113810546" alt="这里写图片描述"></p>
+<p>这里要先添加 index，在 输入框输入我们刚刚收集的 apachelog 作为 index 名称</p>
+<p><img src="http://img.blog.csdn.net/20160922113836334" alt="这里写图片描述"></p>
+<p>点击 create 创建</p>
+<p><img src="http://img.blog.csdn.net/20160922113919343" alt="这里写图片描述"></p>
+<p>右上角选择时间来显示我们的数据访问，下面是数据的访问量</p>
+<p>中间的搜索框可输入搜索条件搜索，搜索完成后点击右上角的 save seach 保存搜索数据 </p>
+<p><img src="http://img.blog.csdn.net/20160922113936492" alt="这里写图片描述"></p>
+<p>点击 visualize 可以画出其他的数据分析图，比如饼状图</p>
+<p><img src="http://img.blog.csdn.net/20160922114217980" alt="这里写图片描述"></p>
+<p>选择我们刚刚保存的 chrome 的文件来生成饼状图</p>
+<p>因为数据没什么变化，所以只能全部是一样的。还是点击右上角的保存按钮，将饼状图保存为 test</p>
+<p><img src="http://img.blog.csdn.net/20160922114030368" alt="这里写图片描述"></p>
+<p>添加到 面板中，点击 dashboard<br>点击 + 号添加</p>
+<p><img src="http://img.blog.csdn.net/20160922114055328" alt="这里写图片描述"></p>
+<p>选择 test 来显示到面板，效果如下</p>
+<p><img src="http://img.blog.csdn.net/20160922114123360" alt="这里写图片描述"></p>
+<p>这样简单的 ELK 系统就搭建起来了，当然，正真的使用环境中，我们会使用集群搭建。利用 redis 来处理日志队列。</p>
+<h2 id="marvel-插件"><a href="#marvel-插件" class="headerlink" title="marvel 插件"></a>marvel 插件</h2><p>Marvel是Elasticsearch的管理和监控工具，在开发环境下免费使用。拥有更好的数据图表界面。</p>
+<p>首先在 elastaticsearch 下安装 marvel-agent 插件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[elsearch@localhost elasticsearch-2.4.0]$ ./bin/plugin install license</span><br><span class="line">[elsearch@localhost elasticsearch-2.4.0]$ ./plugin install marvel-agent</span><br></pre></td></tr></table></figure>
+<p>这里注意，必须先执行 license 安装，再执行 marvel-agent 安装，安装完成后重启  elastaticseach<br>接下来 kibana 来安装 marvel 插件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost kibana-4.6.1-linux-x86]# cd bin</span><br><span class="line">[root@localhost bin]# ./kibana plugin --install elasticsearch/marvel/latest</span><br></pre></td></tr></table></figure>
+<p>安装完成后重启 kibana，选择 marvel 插件</p>
+<p><img src="http://img.blog.csdn.net/20160922114438389" alt="这里写图片描述"></p>
+<p><img src="http://img.blog.csdn.net/20160922114331767" alt="这里写图片描述"></p>
+<p>是不是感觉有点高大上。。。</p>
+<p>好了 ELK 的基本搭建就算是完成了，接下来我们考虑如何集群来使用这个系统。</p>
+<p>欢迎指正， Thanks….</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/ELK/" rel="tag"><i class="fa fa-tag"></i> ELK</a>
+              <a href="/tags/ElasticSearch/" rel="tag"><i class="fa fa-tag"></i> ElasticSearch</a>
+              <a href="/tags/LogStash/" rel="tag"><i class="fa fa-tag"></i> LogStash</a>
+              <a href="/tags/Kibana/" rel="tag"><i class="fa fa-tag"></i> Kibana</a>
+              <a href="/tags/Marvel/" rel="tag"><i class="fa fa-tag"></i> Marvel</a>
+              <a href="/tags/Log/" rel="tag"><i class="fa fa-tag"></i> Log</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/Redis/" rel="tag"><i class="fa fa-tag"></i> Redis</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/live/hls.html" rel="prev" title="点直播流媒体传输协议之 —— HLS（HTTP Live Streaming）">
+      <i class="fa fa-chevron-left"></i> 点直播流媒体传输协议之 —— HLS（HTTP Live Streaming）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/opensource/phaChat.html" rel="next" title="一个基于 node.js 搭建的web聊天系统">
+      一个基于 node.js 搭建的web聊天系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">搭建方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk-%E5%AE%89%E8%A3%85"><span class="nav-number">2.1.</span> <span class="nav-text">jdk 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elasticseach-%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">elasticseach 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Logstash%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">Logstash安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kibana-%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">2.4.</span> <span class="nav-text">Kibana 的安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#marvel-%E6%8F%92%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">marvel 插件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

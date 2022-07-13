@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="系统环境 虚拟机VMware 下CentOS 6.3最小化安装。 PHP版本：php-5.3.8.tar.gz Apache版本：httpd-2.2.31.tar.gz MySql版本：MySql-5.5.45.tar.gz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境">
+<meta property="og:url" content="http://phachon.github.io/install/lump-install.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="系统环境 虚拟机VMware 下CentOS 6.3最小化安装。 PHP版本：php-5.3.8.tar.gz Apache版本：httpd-2.2.31.tar.gz MySql版本：MySql-5.5.45.tar.gz">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-07-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.321Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="CentOS">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Apache">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phachon.github.io/install/lump-install.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/lump-install.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-29 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-29T00:00:00+08:00">2016-07-29 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Install/" itemprop="url" rel="index"><span itemprop="name">Install</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<h2 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h2><ul>
+<li>虚拟机VMware 下CentOS 6.3最小化安装。</li>
+<li>PHP版本：php-5.3.8.tar.gz</li>
+<li>Apache版本：httpd-2.2.31.tar.gz</li>
+<li>MySql版本：MySql-5.5.45.tar.gz</li>
+</ul>
+<span id="more"></span>
+<h2 id="安装前准备"><a href="#安装前准备" class="headerlink" title="安装前准备"></a>安装前准备</h2><h3 id="安装所需要的库文件"><a href="#安装所需要的库文件" class="headerlink" title="安装所需要的库文件"></a>安装所需要的库文件</h3><p>在安装PHP之前，应先安装PHP5需要的最新版本库文件，例如libxml2、libmcrypt以及GD2库等文件。安装GD2库是为了让PHP5支 持GIF、PNG和JPEG图片格式，所以在安装GD2库之前还要先安装最新的zlib、libpng、freetype和jpegsrc等库文件。</p>
+<ul>
+<li>autoconf-2.61.tar.gz</li>
+<li>freetype-2.3.5.tar.gz</li>
+<li>gd-2.0.35.tar.gz</li>
+<li>jpegsrc.v6b.tar.gz</li>
+<li>libmcrypt-2.5.8.tar.gz</li>
+<li>libpng-1.2.31.tar.gz</li>
+<li>libxml2-2.6.30.tar.gz</li>
+<li>zlib-1.2.3.tar.gz</li>
+</ul>
+<p>下载安装包有两种方式：</p>
+<p>(1).利用wget 工具 </p>
+<p>先 yum install –y wget 安装wget .然后用 wget<br><a target="_blank" rel="noopener" href="http://www.......com./ksk">http://www.......com./ksk</a> 下载</p>
+<p>(2).利用 rz sz 命令将windows 下载好的包上传到 linux下 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install –y lrzsz  输入rz 弹出windows框选好安装包上传。</span><br><span class="line">cd  /usr/local/src 进入到src目录下，将所有的安装包都放在这个目录下（方便管理）。</span><br></pre></td></tr></table></figure>
+<h3 id="必须先安装gcc、gc-c-用来编译-这里采用yum安装即可。"><a href="#必须先安装gcc、gc-c-用来编译-这里采用yum安装即可。" class="headerlink" title="必须先安装gcc、gc-c++用来编译 这里采用yum安装即可。"></a>必须先安装gcc、gc-c++用来编译 这里采用yum安装即可。</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install –y gcc</span><br><span class="line">yum install –y gcc-c++</span><br></pre></td></tr></table></figure>
+<p>会自动安装成功。</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>命令：tar –zxvf autoconf-2.61.tar.gz<br>其他安装包一样。依次解压。</p>
+<h3 id="make-命令"><a href="#make-命令" class="headerlink" title="make 命令"></a>make 命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Yum install -y make</span><br></pre></td></tr></table></figure>
+<h2 id="安装库文件"><a href="#安装库文件" class="headerlink" title="安装库文件"></a>安装库文件</h2><h3 id="安装libxml2"><a href="#安装libxml2" class="headerlink" title="安装libxml2"></a>安装libxml2</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/libxml2-2.6.30​</span><br><span class="line"># ./configure --prefix=/usr/local/libxml2</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装libmcrypt"><a href="#安装libmcrypt" class="headerlink" title="安装libmcrypt"></a>安装libmcrypt</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/libmcrypt-2.5.8</span><br><span class="line"># ./configure --prefix=/usr/local/libmcrypt</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装zlib"><a href="#安装zlib" class="headerlink" title="安装zlib"></a>安装zlib</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/zlib-1.2.3</span><br><span class="line"># ./configure    注意：这里直接./configure 不用--prefix</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装libpng"><a href="#安装libpng" class="headerlink" title="安装libpng"></a>安装libpng</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/libpng-1.2.31</span><br><span class="line"># ./configure --prefix=/usr/local/libpng 注意：安装失败。原因很有可能是zlib 没有安装上</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装jpeg6"><a href="#安装jpeg6" class="headerlink" title="安装jpeg6"></a>安装jpeg6</h3><p>这个软件包安装有些特殊，其它软件包安装时如果目录不存在，会自动创建，但这个软件包安装时需要手动创建。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># mkdir /usr/local/jpeg6</span><br><span class="line"># mkdir /usr/local/jpeg6/bin</span><br><span class="line"># mkdir /usr/local/jpeg6/lib</span><br><span class="line"># mkdir /usr/local/jpeg6/include</span><br><span class="line"># mkdir -p /usr/local/jpeg6/man/man1</span><br><span class="line"># cd /usr/local/src/jpeg-6b</span><br><span class="line"># ./configure --prefix=/usr/local/jpeg6/ --enable-shared --enable-static</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装freetype"><a href="#安装freetype" class="headerlink" title="安装freetype"></a>安装freetype</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/freetype-2.3.5</span><br><span class="line"># ./configure --prefix=/usr/local/freetype</span><br><span class="line"># make</span><br><span class="line"># make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装autoconf"><a href="#安装autoconf" class="headerlink" title="安装autoconf"></a>安装autoconf</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/autoconf-2.61</span><br><span class="line"># ./configure</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="安装GD库"><a href="#安装GD库" class="headerlink" title="安装GD库"></a>安装GD库</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/gd-2.0.35</span><br><span class="line"># ./configure \</span><br><span class="line">​--prefix=/usr/local/gd2/ \</span><br><span class="line">​--enable-m4_pattern_allow \</span><br><span class="line">​--with-zlib=/usr/local/zlib/ \</span><br><span class="line"> --with-jpeg=/usr/local/jpeg6/ \</span><br><span class="line"> --with-png=/usr/local/libpng/ \</span><br><span class="line"> --with-freetype=/usr/local/freetype/</span><br><span class="line"># make</span><br></pre></td></tr></table></figure>
+<p>出现错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">make[2]: *** [gd_png.lo] Error 1</span><br><span class="line">make[2]: Leaving directory `/usr/local/src/gd-2.0.35&#x27;</span><br><span class="line">make[1]: *** [all-recursive] Error 1</span><br><span class="line">make[1]: Leaving directory `/usr/local/src/gd-2.0.35&#x27;make: *** [all] Error 2</span><br></pre></td></tr></table></figure>
+<p>分析：这个问题是因为gd库中的gd_png.c这个源文件中包含png.h时，png.h没有找到导致的。</p>
+<p>解决：在编译文件里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># vi gd_png.c</span><br><span class="line"># 将include “png.h” 改成 include “/usr/local/libpng/include/png.h”</span><br></pre></td></tr></table></figure>
+<p>其中/usr/local/libpng/为libpng安装路径。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># make install</span><br></pre></td></tr></table></figure>
+<h3 id="开启80、3306端口"><a href="#开启80、3306端口" class="headerlink" title="开启80、3306端口"></a>开启80、3306端口</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/iptables</span><br></pre></td></tr></table></figure>
+<p>添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT</span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>重启防火墙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
+<h3 id="关闭selinux"><a href="#关闭selinux" class="headerlink" title="关闭selinux"></a>关闭selinux</h3><p>修改/etc/selinux/config 文件 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/selinux/config</span><br><span class="line"># 将SELINUX=enforcing改为SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<p>重启防火墙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
+<h2 id="安装-Apache"><a href="#安装-Apache" class="headerlink" title="安装 Apache"></a>安装 Apache</h2><h3 id="安装Apache"><a href="#安装Apache" class="headerlink" title="安装Apache"></a>安装Apache</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/httpd-2.2.9</span><br><span class="line"># ./configure \</span><br><span class="line">  --prefix=/usr/local/apache2 \</span><br><span class="line">  --sysconfdir=/etc/httpd \</span><br><span class="line">  --with-z=/usr/local/zlib \</span><br><span class="line">  --with-included-apr \</span><br><span class="line">  --enable-so \</span><br><span class="line">  --enable-deflate=shared \</span><br><span class="line">  --enable-expires=shared \</span><br><span class="line">  --enable-rewrite=shared \</span><br><span class="line">  --enable-static-support</span><br><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="配置Apache"><a href="#配置Apache" class="headerlink" title="配置Apache"></a>配置Apache</h3><p>启动Apache</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#/usr/local/apache2/bin/apachectl start</span><br></pre></td></tr></table></figure>
+<p>如果提示httpd: Could not reliably determine the server’s fully qualified domain name, using ::1 for ServerName</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/http/httpd.conf </span><br></pre></td></tr></table></figure>
+<p>将里面的#ServerName <a href="http://www.example.com:80注释去掉,改成ServerName">www.example.com:80注释去掉,改成ServerName</a> localhost:80 即可。再启动httpd</p>
+<p>关闭Apache</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/apache2/bin/apachectl stop</span><br></pre></td></tr></table></figure>
+<p>查看80端口是否开启 ，之前我们已经开启</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># netstat -tnl|grep 80</span><br></pre></td></tr></table></figure>
+<p>然后可以通过浏览器访问<a href="http://localhost:80，如果页面显示正常显示测试页面，即表示apache已安装并启动成功。">http://localhost:80，如果页面显示正常显示测试页面，即表示apache已安装并启动成功。</a></p>
+<p>添加自启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;/usr/local/apache2/bin/apachectl start&quot; &gt;&gt; /etc/rc.d/rc.local</span><br></pre></td></tr></table></figure>
+<h2 id="安装-Mysql"><a href="#安装-Mysql" class="headerlink" title="安装 Mysql"></a>安装 Mysql</h2><h3 id="cmake的安装"><a href="#cmake的安装" class="headerlink" title="cmake的安装"></a>cmake的安装</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# tar -zxv -f cmake-2.8.10.2.tar.gz // 解压压缩包</span><br><span class="line">[root@localhost local]# cd cmake-2.8.10.2</span><br><span class="line">[root@localhost cmake-2.8.10.2]# ./configure</span><br><span class="line">[root@localhost cmake-2.8.10.2]# make</span><br><span class="line">[root@localhost cmake-2.8.10.2]# make install</span><br></pre></td></tr></table></figure>
+<h3 id="将cmake永久加入系统环境变量"><a href="#将cmake永久加入系统环境变量" class="headerlink" title="将cmake永久加入系统环境变量"></a>将cmake永久加入系统环境变量</h3><p>用vi在文件/etc/profile文件中增加变量，使其永久有效，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost local]# vi /etc/profile</span><br></pre></td></tr></table></figure>
+<p>在文件末尾追加以下两行代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PATH=/usr/local/cmake-2.8.10.2/bin:$PATHexport PATH</span><br></pre></td></tr></table></figure>
+<p>执行以下代码使刚才的修改生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost local]# source /etc/profile</span><br></pre></td></tr></table></figure>
+<p>用 export 命令查看PATH值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost local]# echo $PATH</span><br></pre></td></tr></table></figure>
+<p>注意：也可以直接yum install –y cmake 安装</p>
+<h3 id="yum-install-y-ncurses-devel"><a href="#yum-install-y-ncurses-devel" class="headerlink" title="yum install -y ncurses-devel"></a>yum install -y ncurses-devel</h3><p>必须安装，不然会出错</p>
+<h3 id="创建mysql的安装目录及数据库存放目录"><a href="#创建mysql的安装目录及数据库存放目录" class="headerlink" title="创建mysql的安装目录及数据库存放目录"></a>创建mysql的安装目录及数据库存放目录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# mkdir -p /usr/local/mysql //安装mysql</span><br><span class="line">[root@localhost]# mkdir -p /usr/local/mysql/data //存放数据库</span><br></pre></td></tr></table></figure>
+<h3 id="创建mysql用户及用户组"><a href="#创建mysql用户及用户组" class="headerlink" title="创建mysql用户及用户组"></a>创建mysql用户及用户组</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost] groupadd mysql[root@localhost] useradd -r -g mysql mysql</span><br></pre></td></tr></table></figure>
+<h3 id="编译安装mysql"><a href="#编译安装mysql" class="headerlink" title="编译安装mysql"></a>编译安装mysql</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost local]# tar -zxv -f mysql-5.5.45.tar.gz //解压</span><br><span class="line">[root@localhost local]# cd mysql-5.5.45</span><br><span class="line"> cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \</span><br><span class="line"> -DMYSQL_UNIX_ADDR=/tmp/mysql.sock \</span><br><span class="line"> -DDEFAULT_CHARSET=utf8 \</span><br><span class="line"> -DDEFAULT_COLLATION=utf8_general_ci \</span><br><span class="line"> -DWITH_EXTRA_CHARSETS=all \</span><br><span class="line"> -DWITH_MYISAM_STORAGE_ENGINE=1 \</span><br><span class="line"> -DWITH_INNOBASE_STORAGE_ENGINE=1 \</span><br><span class="line"> -DWITH_MEMORY_STORAGE_ENGINE=1 \</span><br><span class="line"> -DWITH_READLINE=1 \</span><br><span class="line"> -DENABLED_LOCAL_INFILE=1 \</span><br><span class="line"> -DMYSQL_DATADIR=/usr/local/mysql/data \</span><br><span class="line"> -DMYSQL_USER=mysql</span><br><span class="line">[root@localhost mysql-5.5.45]# make</span><br><span class="line">[root@localhost mysql-5.5.45]# make install</span><br></pre></td></tr></table></figure>
+<h3 id="检验是否安装成功"><a href="#检验是否安装成功" class="headerlink" title="检验是否安装成功"></a>检验是否安装成功</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql-5.5.45]</span><br><span class="line"># cd /usr/local/mysql/</span><br><span class="line">[root@localhost mysql]# ls</span><br><span class="line">bin COPYING data docs include INSTALL-BINARY lib man mysql-test README scripts share sql-bench support-files</span><br></pre></td></tr></table></figure>
+<p>有bin等以上文件的话，恭喜你已经成功安装了mysql。</p>
+<h3 id="设置mysql目录权限"><a href="#设置mysql目录权限" class="headerlink" title="设置mysql目录权限"></a>设置mysql目录权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]</span><br><span class="line"># cd /usr/local/mysql //把当前目录中所有文件的所有者设为root，所属组为mysql</span><br><span class="line">[root@localhost mysql]</span><br><span class="line"># chown -R root:mysql .</span><br><span class="line">[root@localhost mysql]# chown -R mysql:mysql data</span><br></pre></td></tr></table></figure>
+<h3 id="将mysql的启动服务添加到系统服务中"><a href="#将mysql的启动服务添加到系统服务中" class="headerlink" title="将mysql的启动服务添加到系统服务中"></a>将mysql的启动服务添加到系统服务中</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# cp support-files/my-medium.cnf /etc/my.cnfcp：是否覆盖&quot;/etc/my.cnf&quot;？ y</span><br></pre></td></tr></table></figure>
+<h3 id="创建系统数据库的表"><a href="#创建系统数据库的表" class="headerlink" title="创建系统数据库的表"></a>创建系统数据库的表</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# cd /usr/local/mysql</span><br><span class="line">[root@localhost mysql]# scripts/mysql_install_db --user=mysql</span><br></pre></td></tr></table></figure>
+<h3 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vi /root/.bash_profile</span><br></pre></td></tr></table></figure>
+<p>修改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PATH=$PATH:$HOME/bin:/usr/local/mysql/bin:/usr/local/mysql/lib</span><br><span class="line">[root@localhost ~]# source /root/.bash_profile //使刚才的修改生效</span><br></pre></td></tr></table></figure>
+<h3 id="手动启动mysql"><a href="#手动启动mysql" class="headerlink" title="手动启动mysql"></a>手动启动mysql</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# cd /usr/local/mysql</span><br><span class="line">[root@localhost mysql]# ./bin/mysqld_safe --user=mysql &amp; //启动MySQL，但不能停止</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin -u root -p shutdown //此时root还没密码，所以为空值，提示输入密码时，直接回车即可。</span><br></pre></td></tr></table></figure>
+<h3 id="将mysql的启动服务添加到系统服务中-1"><a href="#将mysql的启动服务添加到系统服务中-1" class="headerlink" title="将mysql的启动服务添加到系统服务中"></a>将mysql的启动服务添加到系统服务中</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# cp support-files/mysql.server /etc/init.d/mysql</span><br></pre></td></tr></table></figure>
+<h3 id="启动mysql"><a href="#启动mysql" class="headerlink" title="启动mysql"></a>启动mysql</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# service mysql startStarting MySQL... ERROR! The server quit without updating PID file (/usr/local/mysql/data/localhost.localdomain.pid).</span><br></pre></td></tr></table></figure>
+<p>启动失败：我这里是权限问题，先改变权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# chown -R mysql:mysql /usr/local/mysql</span><br></pre></td></tr></table></figure>
+<p>接着启动服务器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# /etc/init.d/mysql start</span><br></pre></td></tr></table></figure>
+<h3 id="修改MySQL的root用户的密码以及打开远程连接"><a href="#修改MySQL的root用户的密码以及打开远程连接" class="headerlink" title="修改MySQL的root用户的密码以及打开远程连接"></a>修改MySQL的root用户的密码以及打开远程连接</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# mysql -u root mysql</span><br><span class="line"></span><br><span class="line">mysql&gt; use mysql;</span><br><span class="line">mysql&gt; desc user;</span><br><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO root@&quot;%&quot; IDENTIFIED BY &quot;root&quot;; //为root添加远程连接的能力</span><br><span class="line">mysql&gt; update user set Password = password(&#x27;123456&#x27;) where User=&#x27;root&#x27;; //设置root用户密码</span><br><span class="line">mysql&gt; select Host,User,Password from user where User=&#x27;root&#x27;;</span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt; exit;</span><br></pre></td></tr></table></figure>
+<h3 id="重新登录"><a href="#重新登录" class="headerlink" title="重新登录"></a>重新登录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost mysql]# mysql -u root -pEnter password:123456</span><br></pre></td></tr></table></figure>
+<p>若还不能进行远程连接，关闭防火墙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost]# /etc/rc.d/init.d/iptables stop</span><br></pre></td></tr></table></figure>
+<h2 id="安装-php"><a href="#安装-php" class="headerlink" title="安装 php"></a>安装 php</h2><h3 id="安装PHP"><a href="#安装PHP" class="headerlink" title="安装PHP"></a>安装PHP</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># cd /usr/local/src/php-5.3.8</span><br><span class="line"># ./configure \</span><br><span class="line"> --prefix=/usr/local/php \</span><br><span class="line"> --with-config-file-path=/usr/local/php/etc \</span><br><span class="line"> --with-apxs2=/usr/local/apache2/bin/apxs \</span><br><span class="line"> --with-mysql=/usr/local/mysql/ \</span><br><span class="line"> --with-libxml-dir=/usr/local/libxml2/ \</span><br><span class="line"> --with-png-dir=/usr/local/libpng/ \</span><br><span class="line"> --with-jpeg-dir=/usr/local/jpeg6/ \</span><br><span class="line"> --with-freetype-dir=/usr/local/freetype/ \</span><br><span class="line">​--with-gd=/usr/local/gd2/ \</span><br><span class="line"> --with-zlib-dir=/usr/local/zlib/ \</span><br><span class="line">​--with-mcrypt=/usr/local/libmcrypt/ \</span><br><span class="line">​--with-mysqli=/usr/local/mysql/bin/mysql_config \</span><br><span class="line">​--enable-mbstring=all \</span><br><span class="line">​--enable-sockets</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h3 id="配置PHP"><a href="#配置PHP" class="headerlink" title="配置PHP"></a>配置PHP</h3><p>创建配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp php.ini-development /usr/local/php/etc/php.ini</span><br></pre></td></tr></table></figure>
+<p>使用vi编辑apache配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># vi /etc/httpd/httpd.conf</span><br></pre></td></tr></table></figure>
+<p>最后一行添加这一条代码 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Addtype application/x-httpd-php .php .phtml</span><br></pre></td></tr></table></figure>
+<p>重启Apache</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># /usr/local/apache2/bin/apachectl restart</span><br></pre></td></tr></table></figure>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><h3 id="编写info-php文件，查看php配置详细"><a href="#编写info-php文件，查看php配置详细" class="headerlink" title="编写info.php文件，查看php配置详细"></a>编写info.php文件，查看php配置详细</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#vi /usr/local/apache2/htdocs/info.php</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Mysql/" rel="tag"><i class="fa fa-tag"></i> Mysql</a>
+              <a href="/tags/CentOS/" rel="tag"><i class="fa fa-tag"></i> CentOS</a>
+              <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag"></i> PHP</a>
+              <a href="/tags/Apache/" rel="tag"><i class="fa fa-tag"></i> Apache</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/php/php-run-type.html" rel="prev" title="浅析 PHP 的几种运行方式">
+      <i class="fa fa-chevron-left"></i> 浅析 PHP 的几种运行方式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/linux/crontab.html" rel="next" title="CronTab 解决周期内未执行完重复执行">
+      CronTab 解决周期内未执行完重复执行 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">系统环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%89%8D%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">安装前准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-number">2.1.</span> <span class="nav-text">安装所需要的库文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%85%E9%A1%BB%E5%85%88%E5%AE%89%E8%A3%85gcc%E3%80%81gc-c-%E7%94%A8%E6%9D%A5%E7%BC%96%E8%AF%91-%E8%BF%99%E9%87%8C%E9%87%87%E7%94%A8yum%E5%AE%89%E8%A3%85%E5%8D%B3%E5%8F%AF%E3%80%82"><span class="nav-number">2.2.</span> <span class="nav-text">必须先安装gcc、gc-c++用来编译 这里采用yum安装即可。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%8E%8B%E7%BC%A9"><span class="nav-number">2.3.</span> <span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#make-%E5%91%BD%E4%BB%A4"><span class="nav-number">2.4.</span> <span class="nav-text">make 命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%BA%93%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">安装库文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85libxml2"><span class="nav-number">3.1.</span> <span class="nav-text">安装libxml2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85libmcrypt"><span class="nav-number">3.2.</span> <span class="nav-text">安装libmcrypt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85zlib"><span class="nav-number">3.3.</span> <span class="nav-text">安装zlib</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85libpng"><span class="nav-number">3.4.</span> <span class="nav-text">安装libpng</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85jpeg6"><span class="nav-number">3.5.</span> <span class="nav-text">安装jpeg6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85freetype"><span class="nav-number">3.6.</span> <span class="nav-text">安装freetype</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85autoconf"><span class="nav-number">3.7.</span> <span class="nav-text">安装autoconf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85GD%E5%BA%93"><span class="nav-number">3.8.</span> <span class="nav-text">安装GD库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AF80%E3%80%813306%E7%AB%AF%E5%8F%A3"><span class="nav-number">3.9.</span> <span class="nav-text">开启80、3306端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%ADselinux"><span class="nav-number">3.10.</span> <span class="nav-text">关闭selinux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Apache"><span class="nav-number">4.</span> <span class="nav-text">安装 Apache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Apache"><span class="nav-number">4.1.</span> <span class="nav-text">安装Apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEApache"><span class="nav-number">4.2.</span> <span class="nav-text">配置Apache</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Mysql"><span class="nav-number">5.</span> <span class="nav-text">安装 Mysql</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cmake%E7%9A%84%E5%AE%89%E8%A3%85"><span class="nav-number">5.1.</span> <span class="nav-text">cmake的安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86cmake%E6%B0%B8%E4%B9%85%E5%8A%A0%E5%85%A5%E7%B3%BB%E7%BB%9F%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">5.2.</span> <span class="nav-text">将cmake永久加入系统环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yum-install-y-ncurses-devel"><span class="nav-number">5.3.</span> <span class="nav-text">yum install -y ncurses-devel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAmysql%E7%9A%84%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E6%94%BE%E7%9B%AE%E5%BD%95"><span class="nav-number">5.4.</span> <span class="nav-text">创建mysql的安装目录及数据库存放目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAmysql%E7%94%A8%E6%88%B7%E5%8F%8A%E7%94%A8%E6%88%B7%E7%BB%84"><span class="nav-number">5.5.</span> <span class="nav-text">创建mysql用户及用户组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85mysql"><span class="nav-number">5.6.</span> <span class="nav-text">编译安装mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A3%80%E9%AA%8C%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F"><span class="nav-number">5.7.</span> <span class="nav-text">检验是否安装成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEmysql%E7%9B%AE%E5%BD%95%E6%9D%83%E9%99%90"><span class="nav-number">5.8.</span> <span class="nav-text">设置mysql目录权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86mysql%E7%9A%84%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E4%B8%AD"><span class="nav-number">5.9.</span> <span class="nav-text">将mysql的启动服务添加到系统服务中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%A1%A8"><span class="nav-number">5.10.</span> <span class="nav-text">创建系统数据库的表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">5.11.</span> <span class="nav-text">设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E5%90%AF%E5%8A%A8mysql"><span class="nav-number">5.12.</span> <span class="nav-text">手动启动mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86mysql%E7%9A%84%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E6%B7%BB%E5%8A%A0%E5%88%B0%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1%E4%B8%AD-1"><span class="nav-number">5.13.</span> <span class="nav-text">将mysql的启动服务添加到系统服务中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8mysql"><span class="nav-number">5.14.</span> <span class="nav-text">启动mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9MySQL%E7%9A%84root%E7%94%A8%E6%88%B7%E7%9A%84%E5%AF%86%E7%A0%81%E4%BB%A5%E5%8F%8A%E6%89%93%E5%BC%80%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">5.15.</span> <span class="nav-text">修改MySQL的root用户的密码以及打开远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E6%96%B0%E7%99%BB%E5%BD%95"><span class="nav-number">5.16.</span> <span class="nav-text">重新登录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-php"><span class="nav-number">6.</span> <span class="nav-text">安装 php</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85PHP"><span class="nav-number">6.1.</span> <span class="nav-text">安装PHP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPHP"><span class="nav-number">6.2.</span> <span class="nav-text">配置PHP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-number">7.</span> <span class="nav-text">测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E5%86%99info-php%E6%96%87%E4%BB%B6%EF%BC%8C%E6%9F%A5%E7%9C%8Bphp%E9%85%8D%E7%BD%AE%E8%AF%A6%E7%BB%86"><span class="nav-number">7.1.</span> <span class="nav-text">编写info.php文件，查看php配置详细</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

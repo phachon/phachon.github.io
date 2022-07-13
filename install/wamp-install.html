@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Apache下载Apache是一种b&#x2F;s结构的软件，Apache属于s服务端 下载地址：http:&#x2F;&#x2F;httpd.apache.org&#x2F;download.cgi 选择相应的版本下载 我这里下载的是 httpd-2.2.22-win32-x86-no_ssl.msi解释一下下载的文件：版本：2.2.22操作系统：win32 x86是否提供ssl: no_ssl 不提供">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wamp 环境的搭建">
+<meta property="og:url" content="http://phachon.github.io/install/wamp-install.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="Apache下载Apache是一种b&#x2F;s结构的软件，Apache属于s服务端 下载地址：http:&#x2F;&#x2F;httpd.apache.org&#x2F;download.cgi 选择相应的版本下载 我这里下载的是 httpd-2.2.22-win32-x86-no_ssl.msi解释一下下载的文件：版本：2.2.22操作系统：win32 x86是否提供ssl: no_ssl 不提供">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726105923921">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726110132719">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726110226955">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726110753503">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726111119301">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726112532329">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726112622574">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726113926564">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114012955">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114215284">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114318206">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114504747">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114622061">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114718625">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114758798">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114852599">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726114939037">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115039880">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115144085">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115223320">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115259524">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115344086">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115423167">
+<meta property="og:image" content="http://img.blog.csdn.net/20160726115550278">
+<meta property="article:published_time" content="2016-07-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.321Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Apache">
+<meta property="article:tag" content="Windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160726105923921">
+
+<link rel="canonical" href="http://phachon.github.io/install/wamp-install.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Wamp 环境的搭建 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/wamp-install.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Wamp 环境的搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-26 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-26T00:00:00+08:00">2016-07-26 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Install/" itemprop="url" rel="index"><span itemprop="name">Install</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>Apache是一种b/s结构的软件，Apache属于s服务端</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a> 选择相应的版本下载</p>
+<p>我这里下载的是 httpd-2.2.22-win32-x86-no_ssl.msi<br>解释一下下载的文件：<br>版本：2.2.22<br>操作系统：win32 x86<br>是否提供ssl: no_ssl 不提供</p>
+<span id="more"></span>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>(1) 双击点击下载好的文件：httpd-2.2.22-win32-x86-no_ssl.msi</p>
+<p>(2) 点击 next,进入协议页面，勾选同意。</p>
+<p><img src="http://img.blog.csdn.net/20160726105923921" alt="这里写图片描述"></p>
+<p>(3) 点击两次 next 进入到服务器配置页面</p>
+<p><img src="http://img.blog.csdn.net/20160726110132719" alt="这里写图片描述"></p>
+<p>(4) 点击next，进入配置模式，选择自定义配置模式</p>
+<p><img src="http://img.blog.csdn.net/20160726110226955" alt="这里写图片描述"></p>
+<p>(5) 点击next，进入路径配置界面</p>
+<p>在 D 盘下创建一个server 目录（不要使用中文）<br>将安装路劲选择到创建是server目录，并在server目录下创建一个Apache目录</p>
+<p><img src="http://img.blog.csdn.net/20160726110753503" alt="这里写图片描述"></p>
+<p>(6) 点击next，进入到准备安装界面，点击install进行安装，之后点击finish完成,在电脑的任务栏会出现 apache 的图标，绿色代表已开启</p>
+<p><img src="http://img.blog.csdn.net/20160726111119301" alt="这里写图片描述"></p>
+<p>(7) 验证是否成功</p>
+<p>在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost">http://localhost</a> ，页面 输出 It, works! 证明安装成功。</p>
+<p>(8) apache 安装后的目录结构说明</p>
+<p>D:/server/apache 下</p>
+<ul>
+<li>bin: Apache 的可执行文件</li>
+<li>cgi-bin：CGI 可执行文件</li>
+<li>conf：配置文件</li>
+<li>error：错误日志</li>
+<li>htdocs：网站默认根目录</li>
+<li>icons：图标</li>
+<li>logs：日志</li>
+<li>modules：Apache 可加载的模块</li>
+</ul>
+<p>D:server/apache/bin</p>
+<ul>
+<li>httpd.exe apache 的服务端</li>
+</ul>
+<p>(9) 几个简单的 httpd 命令</p>
+<ul>
+<li>M：Apache可以加载的模块（功能）</li>
+<li>l：当前Apache已经加载的模块</li>
+<li>t：验证配置文件的语法错误</li>
+</ul>
+<p>在cmd控制台下，进入到 Apache 的bin目录，使用 httpd.exe 或者httpd 命令+空格+参数</p>
+<p><img src="http://img.blog.csdn.net/20160726112532329" alt="这里写图片描述"></p>
+<p>配置文件验证</p>
+<p><img src="http://img.blog.csdn.net/20160726112622574" alt="这里写图片描述"></p>
+<p>修改Apache配置文件：Apache/conf/httpd.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Servername www.test.com:80 #将前面的&#x27;#&#x27;号去掉即可开启</span><br></pre></td></tr></table></figure>
+<p>修改完配置文件后记得要重启 apache ,否则配置不会生效。</p>
+<h2 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h2><h3 id="下载-1"><a href="#下载-1" class="headerlink" title="下载"></a>下载</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql是一种c/s结构的软件。</span><br></pre></td></tr></table></figure>
+<p>当前是在为web服务器增加可以访问数据库的能力。<br>下载地址：<a target="_blank" rel="noopener" href="http://www.mysql.com/downloads/">http://www.mysql.com/downloads/</a><br>我这里下载的是:mysql-5.5-win32</p>
+<h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>(1) 双击文件，进入安装界面</p>
+<p><img src="http://img.blog.csdn.net/20160726113926564" alt="这里写图片描述"></p>
+<p>(2) 点击next，进入协议界面，选中同意协议，点击next进入配置模式</p>
+<p><img src="http://img.blog.csdn.net/20160726114012955" alt="这里写图片描述"></p>
+<p>(3) 点击自定义安装，进入路径配置界面</p>
+<p>在 D 盘 server 下创建一个目录 mysql<br>修改mysql的安装目录</p>
+<p><img src="http://img.blog.csdn.net/20160726114215284" alt="这里写图片描述"></p>
+<p>修改数据路径</p>
+<p><img src="http://img.blog.csdn.net/20160726114318206" alt="这里写图片描述"></p>
+<p>(4) 点击 next 进入到准备安装界面，点击install进行安装，安装完成之后进入到安装完成页面,勾选 finish 完成</p>
+<p><img src="http://img.blog.csdn.net/20160726114504747" alt="这里写图片描述"></p>
+<p>(5) 点击next进行配置，进入到配置选择界面</p>
+<p><img src="http://img.blog.csdn.net/20160726114622061" alt="这里写图片描述">    </p>
+<p>(6) 选择详细配置，点击next，进入到服务器类型配置界面</p>
+<p><img src="http://img.blog.csdn.net/20160726114718625" alt="这里写图片描述"></p>
+<p>(7) 选择开发者机器，点击next，进入数据库用途配置</p>
+<p><img src="http://img.blog.csdn.net/20160726114758798" alt="这里写图片描述"></p>
+<p>(8) 选择多功能数据库，点击next，进入到InnoDB驱动选择界面，可以直接点击next跳过</p>
+<p><img src="http://img.blog.csdn.net/20160726114852599" alt="这里写图片描述"></p>
+<p>(9) 配置并发选项</p>
+<p><img src="http://img.blog.csdn.net/20160726114939037" alt="这里写图片描述"></p>
+<p>(10) 选择手动选择，设置为默认的并发量15个，点击next，进入网络设置界面</p>
+<p><img src="http://img.blog.csdn.net/20160726115039880" alt="这里写图片描述"></p>
+<p>(11) 勾选防火墙放行，其他默认，点击next进入到字符集设置界面</p>
+<p><img src="http://img.blog.csdn.net/20160726115144085" alt="这里写图片描述"></p>
+<p>(12) 选择手动选择，设置字符集为utf8，点击next进入windows设置</p>
+<p><img src="http://img.blog.csdn.net/20160726115223320" alt="这里写图片描述"></p>
+<p>(13) 勾选设置环境变量，点击next进入安全选项配置</p>
+<p><img src="http://img.blog.csdn.net/20160726115259524" alt="这里写图片描述"></p>
+<p>(14) 输入root用户的密码，点击next进入到准备配置的界面</p>
+<p><img src="http://img.blog.csdn.net/20160726115344086" alt="这里写图片描述"></p>
+<p>(15) 点击excute执行配置项，需要上面的四项都成功打上勾才算配置成功,点击finish完成安装。</p>
+<p><img src="http://img.blog.csdn.net/20160726115423167" alt="这里写图片描述"></p>
+<p>(16) 检测是否安装成功</p>
+<p>cmd控制台输入mysql –uroot –proot</p>
+<p><img src="http://img.blog.csdn.net/20160726115550278" alt="这里写图片描述"></p>
+<p>(17) mysql 安装目录结构解释</p>
+<ul>
+<li>bin：执行文件</li>
+<li>data：数据存放目录</li>
+<li>include：包含文件</li>
+<li>lib：核心文件</li>
+<li>share：共享文件</li>
+<li>my.ini：mysql 核心配置文件</li>
+</ul>
+<p>mysql 的 bin 目录</p>
+<ul>
+<li>mysql.exe mysql 的客户端</li>
+<li>mysqld.exe mysql 服务器端</li>
+</ul>
+<h2 id="配置PHP"><a href="#配置PHP" class="headerlink" title="配置PHP"></a>配置PHP</h2><h3 id="下载-2"><a href="#下载-2" class="headerlink" title="下载"></a>下载</h3><p>php 下载地址：<a target="_blank" rel="noopener" href="http://www.php.net/downloads.php">http://www.php.net/downloads.php</a></p>
+<p>选择对应的版本下载</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在 D:server/ 下创建 php 目录,将下载的 php 文件压缩包解压到该文件夹下</p>
+<p>(1) 配置 apache,让 apache 能够识别 php<br>在Apache中加载PHP模块（把PHP当做Apache的一个模块来运行）。/apache/conf/httpd.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LoadModule php5_module d:/server/php/php5apache2_2.dll #加载PHP，当做Apache的模块 加载模式：LoadModule 模块名（不能随意） 模块的动态链接库所在的</span><br><span class="line">AddType application/x-httpd-php .php #增加PHP处理模块需要处理的文件,将以.php结尾的文件交给PHP模块去处理</span><br></pre></td></tr></table></figure>
+<p>(2) 配置 php ，让  php 去连接 mysql</p>
+<p>PHP本身没有能力去操作mysql，需要借助外部扩展才可以。在PHP中，提供一套mysql的扩展，能够连接mysql服务器。</p>
+<p>在 php 的安装目录下有两个配置文件 php.ini-development php.ini-production,复制一份，修改为 php.ini 文件。打开 php.ini</p>
+<p>将php的配置文件，加载到Apache的配置文件中。 /apache/conf/httpd.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHPIniDir d:/server/php/php.ini #增加php配置文件的路径</span><br></pre></td></tr></table></figure>
+<p>开启mysql扩展。/php/php.ini</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">;extesion=php_mysql.dll #将前面的 ; 号去掉即可开启</span><br></pre></td></tr></table></figure>
+<p>指定扩展文件所在的目录。/php/php.ini</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;extension_dir = &quot;ext&quot;</span><br><span class="line">extension_dir = d:server/php/ext</span><br></pre></td></tr></table></figure>
+<p>修改 php 时区</p>
+<p>在php的配置文件中去修改。/php/php.ini</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">;date_timezone = </span><br><span class="line">date_timezone = PRC #中国时区</span><br></pre></td></tr></table></figure>
+<h2 id="配置虚拟主机"><a href="#配置虚拟主机" class="headerlink" title="配置虚拟主机"></a>配置虚拟主机</h2><p>Apache的虚拟主机分为两种：基于IP地址的虚拟主机，基于域名的虚拟主机</p>
+<p>基于域名的虚拟主机：通过域名来是的Apache区分对应的网站（文件夹）</p>
+<p>Apache提供了多个位置可以用来配置虚拟主机，httpd.conf和/extra/httpd_vhost.conf<br>httpd.conf配置之后，只需要直接重启Apache即可生效<br>/extra/httpd_vhost.conf配置之后，需要在httpd.conf下加载对应的配置文件</p>
+<h3 id="先加载虚拟主机配置文件"><a href="#先加载虚拟主机配置文件" class="headerlink" title="先加载虚拟主机配置文件"></a>先加载虚拟主机配置文件</h3><p>找到 Include conf/extra/http-vhosts.conf,并开启</p>
+<h3 id="创建虚拟主机"><a href="#创建虚拟主机" class="headerlink" title="创建虚拟主机"></a>创建虚拟主机</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName www.test.com #域名</span><br><span class="line">    DocumentRoot &quot;d:code/php/test&quot; #路径</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="重启-apache"><a href="#重启-apache" class="headerlink" title="重启 apache"></a>重启 apache</h3><h3 id="修改-hosts-文件"><a href="#修改-hosts-文件" class="headerlink" title="修改 hosts 文件"></a>修改 hosts 文件</h3><p>hosts文件路径：C:\Windows\System32\drivers\etc\hosts</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1 localhost</span><br><span class="line">127.0.0.1 test.com</span><br></pre></td></tr></table></figure>
+<h3 id="设置访问权限"><a href="#设置访问权限" class="headerlink" title="设置访问权限"></a>设置访问权限</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Directory &quot;d:code/php/test&quot;&gt; # 目录访问权限</span><br><span class="line">    Order Deny,Allow #设置顺序</span><br><span class="line">    Deny from all</span><br><span class="line">    Allow from all </span><br><span class="line">    DirectoryIndex indexs #指定访问方式，如果没有请求文件，而默认的文件又不存在，则显示所有的文件列表（在开发环境中应该禁用）</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>注意：一旦开启虚拟主机，那么默认的localhost会被覆盖，被第一个虚拟主机覆盖，为了解决不被覆盖的问题，需要额外增加一个localhost的虚拟主机。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName localhost</span><br><span class="line">    DocumentRoot &quot;d:server/apache/htdocs&quot; #网站根目录</span><br><span class="line">    </span><br><span class="line">    &lt;Directory &quot;d:code/php/test&quot;&gt; # 目录访问权限</span><br><span class="line">        Order Deny,Allow #设置顺序</span><br><span class="line">        Deny from all</span><br><span class="line">        Allow from all</span><br><span class="line">    </span><br><span class="line">        DirectoryIndex indexs #指定访问方式，如果没有请求文件，而默认的文件又不存在，则显示所有的文件列表（在开发环境中应该禁用）</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="更加清晰的配置方法"><a href="#更加清晰的配置方法" class="headerlink" title="更加清晰的配置方法"></a>更加清晰的配置方法</h3><p>上面的配置方法是通用的配置虚拟主机的方式，但是随着越来越多的开发应用，会发现 Include conf/extra/http-vhosts.conf 里面会有越来越多的配置写在一起,有些早已不用的和正在使用的配置都加载在一起，不利于管理和修改。因此还可以采取以下的方式配置。</p>
+<p>重新回到第1步中，打开 http.conf 文件，这次不要打开 Include conf/extra/http-vhosts.conf 的配置。而是在 http.conf 的最后一行添加 Include conf/extra/test.com.conf。</p>
+<p>在 conf/extra 下面创建一个 test.com.conf 文件，然后将配置信息写入到文件中。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">NameVirtualHost *:80</span><br><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin phachon@163.com</span><br><span class="line">    DocumentRoot &quot;D:/server/apache/htdocs/test&quot;</span><br><span class="line">    DirectoryIndex index.php</span><br><span class="line">    ServerName test.com</span><br><span class="line">    &lt;Directory &quot;D:/server/apache/htdocs/test&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride None</span><br><span class="line">        Order allow,deny</span><br><span class="line">        Allow from all</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>以后每新增一个虚拟主机配置就在 http.conf 的最后一行加载一下，并在 conf/extra 下创建对应的 conf 文件。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Mysql/" rel="tag"><i class="fa fa-tag"></i> Mysql</a>
+              <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag"></i> PHP</a>
+              <a href="/tags/Apache/" rel="tag"><i class="fa fa-tag"></i> Apache</a>
+              <a href="/tags/Windows/" rel="tag"><i class="fa fa-tag"></i> Windows</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/network/web-work.html" rel="prev" title="Web 网站的基本工作原理">
+      <i class="fa fa-chevron-left"></i> Web 网站的基本工作原理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/install/centos-install-memcache.html" rel="next" title="CentOS 下安装 Memcache 和 php 扩展">
+      CentOS 下安装 Memcache 和 php 扩展 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache"><span class="nav-number">1.</span> <span class="nav-text">Apache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql"><span class="nav-number">2.</span> <span class="nav-text">Mysql</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-1"><span class="nav-number">2.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-1"><span class="nav-number">2.2.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEPHP"><span class="nav-number">3.</span> <span class="nav-text">配置PHP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-2"><span class="nav-number">3.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">3.2.</span> <span class="nav-text">配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="nav-number">4.</span> <span class="nav-text">配置虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%8A%A0%E8%BD%BD%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">先加载虚拟主机配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA"><span class="nav-number">4.2.</span> <span class="nav-text">创建虚拟主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%90%AF-apache"><span class="nav-number">4.3.</span> <span class="nav-text">重启 apache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9-hosts-%E6%96%87%E4%BB%B6"><span class="nav-number">4.4.</span> <span class="nav-text">修改 hosts 文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="nav-number">4.5.</span> <span class="nav-text">设置访问权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E5%8A%A0%E6%B8%85%E6%99%B0%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">4.6.</span> <span class="nav-text">更加清晰的配置方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

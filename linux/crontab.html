@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="crontab 执行 php 脚本linux 下的 crontab 定时任务服务，可以用来定时运行脚本。工作中经常会用到这样的服务，使用起来比较简单。 12345678&#x2F;sbin&#x2F;service crond start  # 开启服务&#x2F;sbin&#x2F;service crond stop  # 停止服务&#x2F;sbin&#x2F;service crond restart #重启服务&#x2F;sbin&#x2F;service cro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CronTab 解决周期内未执行完重复执行">
+<meta property="og:url" content="http://phachon.github.io/linux/crontab.html">
+<meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="crontab 执行 php 脚本linux 下的 crontab 定时任务服务，可以用来定时运行脚本。工作中经常会用到这样的服务，使用起来比较简单。 12345678&#x2F;sbin&#x2F;service crond start  # 开启服务&#x2F;sbin&#x2F;service crond stop  # 停止服务&#x2F;sbin&#x2F;service crond restart #重启服务&#x2F;sbin&#x2F;service cro">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-08-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-11T01:59:03.322Z">
+<meta property="article:author" content="phachon">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="CronTab">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://phachon.github.io/linux/crontab.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CronTab 解决周期内未执行完重复执行 | phachon's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">phachon's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">notes blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404.html" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/phachon" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/linux/crontab.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CronTab 解决周期内未执行完重复执行
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-08-23 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-08-23T00:00:00+08:00">2016-08-23 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <hr>
+<h2 id="crontab-执行-php-脚本"><a href="#crontab-执行-php-脚本" class="headerlink" title="crontab 执行 php 脚本"></a>crontab 执行 php 脚本</h2><p>linux 下的 crontab 定时任务服务，可以用来定时运行脚本。工作中经常会用到这样的服务，使用起来比较简单。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/sbin/service crond start  # 开启服务</span><br><span class="line">/sbin/service crond stop  # 停止服务</span><br><span class="line">/sbin/service crond restart #重启服务</span><br><span class="line">/sbin/service crond reload #重新加载服务</span><br><span class="line"></span><br><span class="line">sudo crontab -e #插入一条定时任务</span><br><span class="line">sudo crontab -l #查看所有的 root 用户下的定时任务列表</span><br><span class="line">tail -f /var/log/cron # 实时查看定时任务日志</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 例如，添加如下一条定时任务</span><br><span class="line"># 分 时 日 月 周</span><br><span class="line">*  *  *  *  *   php test.php</span><br></pre></td></tr></table></figure>
+<h2 id="重复执行问题"><a href="#重复执行问题" class="headerlink" title="重复执行问题"></a>重复执行问题</h2><p>最近在工作中经常会用到定时任务，发现当我们的脚步的执行时间（假设：130s）大于定时任务的设定时间（假设：1分钟）时，定时任务会重复开始执行，即上次的任务还没有执行完，下次的任务的又开始执行。往往执行的脚本里的资源是不允许同时两个脚本同时共享资源，即保证操作的原子性。这样会造成执行出错，下面我们来验证一下。</p>
+<p>以下是一个测试的 php 脚本，该脚本执行一次需要 130s </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$time = time();</span><br><span class="line">$id = uniqid(); //一次执行的唯一标示</span><br><span class="line">file_put_contents(&#x27;/home/phachon/cron/test.log&#x27;, &quot;id: &quot;.$id.&quot; 时间：&quot;.date(&#x27;Y-m-d H:i:s&#x27;, $time).&quot;-开始\n&quot;, FILE_APPEND);</span><br><span class="line">while(time() - $time &lt; 130) &#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">file_put_contents(&#x27;/home/phachon/cron/test.log&#x27;, &quot;id: &quot;.$id.&quot; 时间：&quot;.date(&#x27;Y-m-d H:i:s&#x27;, time()).&quot;-结束\n&quot;, FILE_APPEND);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>然后添加定时任务，每分钟（60s）执行一次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/1 * * * * php /home/phachon/cron/test.php</span><br></pre></td></tr></table></figure>
+<p>过一段时间后，查看日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">id: 57bbcd4d10262 时间：2016-08-23 12:13:01-开始</span><br><span class="line">id: 57bbcd890e7f7 时间：2016-08-23 12:14:01-开始</span><br><span class="line">id: 57bbcdc510685 时间：2016-08-23 12:15:01-开始</span><br><span class="line">id: 57bbcd4d10262 时间：2016-08-23 12:15:11-结束</span><br><span class="line">id: 57bbce010a78d 时间：2016-08-23 12:16:01-开始</span><br><span class="line">id: 57bbcd890e7f7 时间：2016-08-23 12:16:11-结束</span><br><span class="line">id: 57bbce3d0f68e 时间：2016-08-23 12:17:01-开始</span><br><span class="line">id: 57bbcdc510685 时间：2016-08-23 12:17:11-结束</span><br><span class="line">id: 57bbce790d90f 时间：2016-08-23 12:18:01-开始</span><br><span class="line">id: 57bbce010a78d 时间：2016-08-23 12:18:11-结束</span><br><span class="line">id: 57bbceb50eef8 时间：2016-08-23 12:19:01-开始</span><br><span class="line">id: 57bbce3d0f68e 时间：2016-08-23 12:19:11-结束</span><br><span class="line">id: 57bbce790d90f 时间：2016-08-23 12:20:11-结束</span><br><span class="line">id: 57bbceb50eef8 时间：2016-08-23 12:21:11-结束</span><br></pre></td></tr></table></figure>
+<p>分析日志我们会发现 id = 57bbcd4d10262 的任务在 12:13:01 开始，但是还没有结束的时候，id=57bbcd890e7f7 和 id=57bbcdc510685 的任务就已经开始了，这样明显存在问题。我们想要的是每次单独执行完后，下一个执行开始:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id: 57bbcd4d10262 时间：2016-08-23 12:13:01-开始</span><br><span class="line">id: 57bbcd4d10262 时间：2016-08-23 12:15:11-结束</span><br><span class="line">id: 57bbcd890e7f7 时间：2016-08-23 12:14:01-开始</span><br><span class="line">id: 57bbcd890e7f7 时间：2016-08-23 12:16:11-结束</span><br></pre></td></tr></table></figure>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ol>
+<li>利用临时文件</li>
+</ol>
+<p>思路很简单，在执行文件的开头先判断是否有一个 test.lock 的文件，如果有 test.lock 文件，则 exit()，如果没有的话，创建 test.lock 文件，然后执行脚本文件，执行完毕删除 test.lock;<br>实现后代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">   <span class="variable">$time</span> = <span class="title function_ invoke__">time</span>();</span><br><span class="line">   <span class="variable">$id</span> = <span class="title function_ invoke__">uniqid</span>();</span><br><span class="line">   <span class="variable">$lock</span> = <span class="string">&#x27;/home/phachon/cron/lock/test.lock&#x27;</span>;</span><br><span class="line">   <span class="keyword">if</span>(<span class="title function_ invoke__">file_exists</span>(<span class="variable">$lock</span>)) &#123;</span><br><span class="line">       <span class="keyword">exit</span>(<span class="string">&#x27;no&#x27;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="title function_ invoke__">touch</span>(<span class="variable">$lock</span>);</span><br><span class="line"></span><br><span class="line">   <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;/home/phachon/cron/test2.log&#x27;</span>, <span class="string">&quot;id: &quot;</span>.<span class="variable">$id</span>.<span class="string">&quot; 时间：&quot;</span>.<span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>, <span class="variable">$time</span>).<span class="string">&quot;-开始\n&quot;</span>, FILE_APPEND);</span><br><span class="line">   <span class="keyword">while</span>(<span class="title function_ invoke__">time</span>() - <span class="variable">$time</span> &lt; <span class="number">130</span>) &#123;</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&#x27;/home/phachon/cron/test2.log&#x27;</span>, <span class="string">&quot;id: &quot;</span>.<span class="variable">$id</span>.<span class="string">&quot; 时间：&quot;</span>.<span class="title function_ invoke__">date</span>(<span class="string">&#x27;Y-m-d H:i:s&#x27;</span>, <span class="title function_ invoke__">time</span>()).<span class="string">&quot;-结束\n&quot;</span>, FILE_APPEND);</span><br><span class="line">   <span class="title function_ invoke__">unlink</span>(<span class="variable">$lock</span>);</span><br></pre></td></tr></table></figure>
+<p>查看日志如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id: 57bbdd3d6b5e8 时间：2016-08-23 13:21:01-开始</span><br><span class="line">id: 57bbdd3d6b5e8 时间：2016-08-23 13:23:11-结束</span><br><span class="line">id: 57bbddf10ecb9 时间：2016-08-23 13:24:01-开始</span><br><span class="line">id: 57bbddf10ecb9 时间：2016-08-23 13:26:11-结束</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>利用脚本加锁</li>
+</ol>
+<p>思路和第一种方式类似，只是不是用文件判断的方式，而是给文件加锁的方式</p>
+<p>实现代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$fp</span> = <span class="title function_ invoke__">fopen</span>(<span class="string">&quot;/tmp/lock.txt&quot;</span>, <span class="string">&quot;w+&quot;</span>);</span><br><span class="line"><span class="comment">// 进行排它型锁定</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">flock</span>(<span class="variable">$fp</span>, LOCK_EX | LOCK_NB)) &#123;</span><br><span class="line">   <span class="comment">//执行任务</span></span><br><span class="line">   <span class="title function_ invoke__">run</span>(); </span><br><span class="line">   <span class="comment">// 释放锁定</span></span><br><span class="line">   <span class="title function_ invoke__">flock</span>(<span class="variable">$fp</span>, LOCK_UN); </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">   <span class="keyword">echo</span> <span class="string">&quot;文件被锁定&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">fclose</span>(<span class="variable">$fp</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>第一种和第二种方法本质思路一样，确实也解决了问题，但是这样需要加代码在我们的脚本里，而且，这样其实 crontab 服务还是多了很多不必要的执行，浪费资源。<br>我们需要找到更加好的方法，在执行代码前就已经判断是否可以执行脚本。</p>
+<ol start="3">
+<li>利用 linux flock 锁机制</li>
+</ol>
+<p>利用 flock（FreeBSD lockf，CentOS下为 flock），在脚本执行前先检测能否获取某个文件锁，以防止脚本运行冲突。</p>
+<p>格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flock [-sxun][-w #] fd#</span><br><span class="line">flock [-sxon][-w #] file [-c] command</span><br></pre></td></tr></table></figure>
+<p>选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-s, --shared:    获得一个共享锁 </span><br><span class="line">-x, --exclusive: 获得一个独占锁 </span><br><span class="line">-u, --unlock:    移除一个锁，脚本执行完会自动丢弃锁 </span><br><span class="line">-n, --nonblock:  如果没有立即获得锁，直接失败而不是等待 </span><br><span class="line">-w, --timeout:   如果没有立即获得锁，等待指定时间 </span><br><span class="line">-o, --close:     在运行命令前关闭文件的描述符号。用于如果命令产生子进程时会不受锁的管控 </span><br><span class="line">-c, --command:   在shell中运行一个单独的命令 </span><br><span class="line">-h, --help       显示帮助 </span><br><span class="line">-V, --version:   显示版本</span><br></pre></td></tr></table></figure>
+<p>锁类型：</p>
+<ul>
+<li>共享锁：多个进程可以使用同一把锁，常被用作读共享锁</li>
+<li>独占锁：同时只允许一个进程使用，又称排他锁，写锁。</li>
+</ul>
+<p>这里我们需要同时只允许一个进程使用，所以使用独占锁。</p>
+<p>修改后的定时任务如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/1 * * * *  flock -xn /tmp/test.lock -c &#x27;php /home/phachon/cron/test.php&#x27; &gt;&gt; /home/phachon/cron/cron.log&#x27;</span><br></pre></td></tr></table></figure>
+<p>日志如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id: 57bbf255e4b2b 时间：2016-08-23 14:51:01-开始</span><br><span class="line">id: 57bbf255e4b2b 时间：2016-08-23 14:53:11-结束</span><br><span class="line">id: 57bbf3090eca0 时间：2016-08-23 14:54:01-开始</span><br><span class="line">id: 57bbf3090eca0 时间：2016-08-23 14:56:11-结束</span><br></pre></td></tr></table></figure>
+<p>完美的解决了我们的问题</p>
+<p>总体看来，还是用第三种方法比较好，而且也方便.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag"></i> PHP</a>
+              <a href="/tags/CronTab/" rel="tag"><i class="fa fa-tag"></i> CronTab</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/install/lump-install.html" rel="prev" title="CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境">
+      <i class="fa fa-chevron-left"></i> CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/linux/io.html" rel="next" title="IO 模型简介">
+      IO 模型简介 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#crontab-%E6%89%A7%E8%A1%8C-php-%E8%84%9A%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">crontab 执行 php 脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%A4%8D%E6%89%A7%E8%A1%8C%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">重复执行问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">解决办法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="phachon"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">phachon</p>
+  <div class="site-description" itemprop="description">I am a free Goper/Phper</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/phachon" title="GitHub → https://github.com/phachon" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:phachon@163.com" title="E-Mail → mailto:phachon@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://studygolang.com/" title="https://studygolang.com/" rel="noopener" target="_blank">Go语言中文网</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://xiaorui.cc/" title="http://xiaorui.cc/" rel="noopener" target="_blank">xiaorui</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://colobu.com/" title="https://colobu.com/" rel="noopener" target="_blank">鸟窝</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://crossoverjie.top/" title="https://crossoverjie.top/" rel="noopener" target="_blank">crossoverjie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://fangjian0423.github.io/" title="http://fangjian0423.github.io/" rel="noopener" target="_blank">fangjian0423</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">phachon</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">170k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:35</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
