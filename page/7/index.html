@@ -390,7 +390,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/network/TCP-IP-2.html" class="post-title-link" itemprop="url">TCP/IP 协议栈系列（二）：协议概述</a>
+            <a href="/network/TCP-IP-2.html" class="post-title-link" itemprop="url">TCP/IP 协议栈系列（二）：TCP/IP协议概述</a>
         </h2>
 
         <div class="post-meta">
@@ -407,7 +407,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+                <time title="修改时间：2022-08-06 12:05:34 12:05:34" itemprop="dateModified" datetime="2022-08-06T12:05:34+08:00">2022-08-06 12:05:34</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -451,12 +451,12 @@
 <blockquote>
 <p>如何才能将 0 1 的电信号通过传输媒介传输到对方的主机？</p>
 </blockquote>
-<p>很好解决：我们将每个计算机都安装一个能接受数据和发送数据的设备，然后将 0 1 的电信号分组，也就是组成字节的形式发送出去。</p>
+<p>很好解决：我们将每个计算机都安装一个能接收数据和发送数据的设备，然后将 0 1 的电信号分组，也就是组成字节的形式发送出去。</p>
 <blockquote>
 <p>为什么要组成字节发送，因为单纯的 0 1 是没有意义的，计算机用 8 个 0 或 1 的二进制位来表示一个字节，字节才是我们发送数据的最小单位</p>
 </blockquote>
-<p>那么这里我们提到的接受数据和发送数据的设备，就是网卡。我们规定，数据包必须是从一块网卡到另一块网卡，而网卡的地址（即我们常说的MAC 地址）就是数据包要发送的地址和接受地址。<br>MAC 地址就像网卡的身份证一样，必须具有全球唯一性。MAC 地址采用 16 进制表示，共 6 个字节，前 3 个字节是厂商的编号，后三个字节是网卡流水号。例如：5C-0F-6E-13-D1-18  </p>
-<p>解决了发送设备，接下来解决如何发送，所以就有人设计出来了一种发送数据的规范，也就是以太网协议。  </p>
+<p>那么这里我们提到的接收数据和发送数据的设备，就是网卡。我们规定，数据包必须是从一块网卡到另一块网卡，而网卡的地址（即我们常说的 MAC 地址）就是数据包要发送的地址和接收的地址。<br>MAC 地址就像网卡的身份证一样，必须具有全球唯一性。MAC 地址采用 16 进制表示，共 6 个字节，前 3 个字节是厂商的编号，后三个字节是网卡流水号。例如：5C-0F-6E-13-D1-18  </p>
+<p>解决了数据传输设备，接下来解决如何发送，所以就有人设计出来了一套发送数据的规范，也就是以太网协议。  </p>
 <p>以太网协议规定，一组电信号就是一个数据包，一个数据包也被称为一帧。一个以太网数据包的格式如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+--------------+----------------------+--------------+</span><br><span class="line">| head(14 byte)| data(46 ~ 1500 byte) | end (4 byte) |</span><br><span class="line">+--------------+----------------------+--------------+</span><br></pre></td></tr></table></figure>
 <p>整个数据包由三部分组成，头部，数据，和尾部，头部占14个字节，包含原MAC地址，目标MAC地址和类型；数据区最短 46个字节，最大 1500 个字节，如果发送的数据大于 1500 个字节，则必须拆开多个数据包来发送。<br>尾部为 4 个字节，用来存数据帧的校验序列，用来验证整个数据包是否完整。  </p>
@@ -495,22 +495,22 @@
 <blockquote>
 <p>总结一下：网络层的工作主要是<strong>定义网络地址</strong>、<strong>划分网段</strong>、<strong>查询 MAC 地址</strong>、对不是同一网段的<strong>数据包进行路由转发</strong></p>
 </blockquote>
-<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>依靠传输层和链路层的工作，数据已经能够正常的从一台主机发送到另一台主机，但是，我们在一台主机中往往不可能只有一个网络程序，所以当又多个网络程序同时工作的时候，我们依然会发现有如下问题</p>
+<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><p>依靠传输层和链路层的工作，数据已经能够正常的从一台主机发送到另一台主机，但是，我们在一台主机中往往不可能只有一个网络程序，所以当有多个网络程序同时工作的时候，我们依然会发现有如下问题</p>
 <blockquote>
-<p> 如何在多个网络程序运行的主机间进行数据传输，更简单的来说，就是如何一个主机的某个应用程序发出，然后由对方主机的应用程序接收？</p>
+<p> 如何在多个网络程序运行的主机间进行数据传输，更简单的来说，就是如何实现一个主机的某个应用程序发出，然后由对方主机的应用程序接收？</p>
 </blockquote>
 <p>为了解决这个问题，聪明的前辈们又想到了解决办法，为每一个网络程序分配一个不同的数字来表示，发送数据的时候指定发送到某台主机的某个数字的网络程序不就可以了。这个数字就是端口。<br>端口用 2 个字节来表示，范围是 0 ～ 65535，也就是最大 65535 个端口。一般情况下是足够用了。有了端口，我们来简单介绍下传输层的两种协议。</p>
-<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>我们知道网络层的数据包 IP 数据包都是不保证可靠性的，也就是说将数据发送出去，并不保证数据可达，并且数据发送也不保证有序。所以，为了满足一些对数据可靠性和有序性的应用。前辈们设计了新的协议<br>TCP 协议。TCP 协议是保证了数据的可靠性，有序性，面向连接的传输协议。如果发现有一个数据包收不到确认，就重新发送数据包。  </p>
+<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p>我们知道网络层的数据包 IP 数据包都是不保证可靠性的，也就是说将数据发送出去，并不保证数据可达，并且数据发送也不保证有序。所以，为了满足一些对数据可靠性和有序性的应用。前辈们设计了新的协议 TCP 协议。TCP 协议保证了数据的可靠性，有序性，是面向连接的传输协议。如果发现有一个数据包收不到确认，就会重新发送数据包。  </p>
 <p>有了 TCP 协议，我们的应该程序可以将数据有序的，可靠的发送到对方指定端口的网络程序中。TCP 数据包格式</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+-----------------+--------------------+</span><br><span class="line">| head(20 byte)   | data               |</span><br><span class="line">+----------------=+--------------------+</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>TCP 建立连接需要经过 3 次握手，断开连接需要经过 4 次挥手。后面章节会详细来讲解整个过程，再次不详细讨论</p>
+<p>TCP 建立连接需要经过 3 次握手，断开连接需要经过 4 次挥手。后面章节会详细来讲解整个过程，在此不详细介绍</p>
 </blockquote>
 <h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><blockquote>
 <p>不一定是所有的场景都必须要求数据的可靠性和有序性，有些应用程序只要求数据能快速高效的发送出去，至于可靠性并不十分关系，那这个时候 TCP 协议似乎不能满足这种需求。</p>
 </blockquote>
 <p>其实 IP 协议的数据包就可以满足我们的新的需求，但是 IP 协议是网络层，不存在端口。而我们在传输层规定了端口，所以干脆就在传输层新设计一个协议 UDP 协议，UDP 协议其实就是在 IP 协议的基础上指定了端口（简单理解）。</p>
-<p>UDP 是面向用户的（非连接的）传输层协议，这是因为 UDP 不像 TCP 需要 3 次握手建立连接的机制。UDP 协议相较于 TCP 来说实现比较简单，没有确认机制，数据包一旦发出，不保证数据可达和有序。不过一般情况下 UDP<br>的数据包也不会有那么差的可靠性，还是能保证一定的可靠性。但是相较于 TCP ，UDP 的发送效率是比较快的。UDP 数据包的格式如下</p>
+<p>UDP 是面向用户的（非连接的）传输层协议，这是因为 UDP 不像 TCP 需要 3 次握手建立连接的机制。UDP 协议相较于 TCP 来说实现比较简单，没有确认机制，数据包一旦发出，不保证数据可达和有序。不过一般情况下 UDP的数据包也不会有那么差的可靠性，还是能保证一定的可靠性。但是相较于 TCP ，UDP 的发送效率是比较快的。UDP 数据包的格式如下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+-----------------+--------------------+</span><br><span class="line">| head(8 byte)    | data (65527 byte)  |</span><br><span class="line">+----------------=+--------------------+</span><br></pre></td></tr></table></figure>
 <h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>有了上面介绍的三层协议的支持，我们可以满足各种情况下，将我们的数据包发送到指定的端口的网络程序中，但是，传输的数据都是字节流，程序并不能很好的识别，操作性相对比较差。因此，在应用层<br>规范了各种各样的协议来规范我们的数据格式，同时也使得我们程序开发更为便利。常见的应用层协议有：HTTP、FTP、SMTP 等。针对不同类型的应用程序开发，可以使用不同的协议来开发。  </p>
 <p>每天在浏览器浏览网页，我们最熟悉的莫过于 HTTP 协议了。后面我会有专门的章节来详细讲解 HTTP 协议，这里不做过多介绍。</p>
@@ -584,7 +584,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+                <time title="修改时间：2022-08-06 11:36:18 11:36:18" itemprop="dateModified" datetime="2022-08-06T11:36:18+08:00">2022-08-06 11:36:18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1377,12 +1377,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">174k</span>
+    <span title="站点总字数">175k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:38</span>
+    <span title="站点阅读时长">2:39</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
