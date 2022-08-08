@@ -20,16 +20,21 @@
     var CONFIG = {"hostname":"phachon.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":20,"onmobile":false,"width":240},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="article">
-<meta property="og:title" content="TCP&#x2F;IP 协议栈系列（七）：HTTPS基础知识">
+  <meta name="description" content="本文从协议层详细描述了 TLS&#x2F;SSL 的握手过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP&#x2F;IP 协议栈系列（七）：TLS&#x2F;SSL 握手过程">
 <meta property="og:url" content="http://phachon.github.io/network/TCP-IP-7.html">
 <meta property="og:site_name" content="phachon&#39;s blog">
+<meta property="og:description" content="本文从协议层详细描述了 TLS&#x2F;SSL 的握手过程">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2018-09-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-07-11T01:59:03.323Z">
+<meta property="og:image" content="http://phachon.github.io/images/ssl.png">
+<meta property="og:image" content="http://phachon.github.io/images/tls-session.png">
+<meta property="article:published_time" content="2018-09-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-08-07T06:36:56.943Z">
 <meta property="article:author" content="phachon">
 <meta property="article:tag" content="tcp">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://phachon.github.io/images/ssl.png">
 
 <link rel="canonical" href="http://phachon.github.io/network/TCP-IP-7.html">
 
@@ -44,7 +49,7 @@
   };
 </script>
 
-  <title>TCP/IP 协议栈系列（七）：HTTPS基础知识 | phachon's blog</title>
+  <title>TCP/IP 协议栈系列（七）：TLS/SSL 握手过程 | phachon's blog</title>
   
 
 
@@ -214,7 +219,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          TCP/IP 协议栈系列（七）：HTTPS基础知识
+          TCP/IP 协议栈系列（七）：TLS/SSL 握手过程
         </h1>
 
         <div class="post-meta">
@@ -224,14 +229,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-16 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-16T00:00:00+08:00">2018-09-16 00:00:00</time>
+              <time title="创建时间：2018-09-17 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-17T00:00:00+08:00">2018-09-17 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+                <time title="修改时间：2022-08-07 14:36:56 14:36:56" itemprop="dateModified" datetime="2022-08-07T14:36:56+08:00">2022-08-07 14:36:56</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,14 +254,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>3.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -269,6 +274,98 @@
 
       
         <hr>
+<p>本文从协议层详细描述了 TLS/SSL 的握手过程</p>
+<span id="more"></span>
+<h2 id="TLS-与-SSL"><a href="#TLS-与-SSL" class="headerlink" title="TLS 与 SSL"></a>TLS 与 SSL</h2><p>TLS (Transport Layer Safe)是传输层安全的缩写<br>SSL (Safe Socket Layer)是安全套接字层的缩写</p>
+<p>TLS/SSL 都是加密数据和在 Internet 上移动数据时验证连接的加密协议。</p>
+<blockquote>
+<p>那么TLS与 SSL之间有什么区别呢？<br>TLS 实际上只是SSL的更新版本。它修复了早期SSL协议中的一些安全漏洞。</p>
+</blockquote>
+<p>总结：SSL 和 TLS 协议可以为通信双方提供识别和认证通道，从而保证通信的机密性和数据完整性。TLS 协议是从 Netscape SSL 3.0 协议演变而来的，不过这两种协议并不兼容，SSL 已经逐渐被 TLS 取代。</p>
+<h2 id="TLS-握手过程"><a href="#TLS-握手过程" class="headerlink" title="TLS 握手过程"></a>TLS 握手过程</h2><p>TLS 握手的目的是为了建立安全连接，具体做的工作可概括为：</p>
+<ul>
+<li>商定客户端和服务端所使用的 TLS 版本</li>
+<li>商定双方需要的密码组合</li>
+<li>客户端通过服务器的公匙和数字证书上的数字签名验证服务端的身份</li>
+<li>生成会话密匙，用于握手完成后的对称加密密匙</li>
+</ul>
+<h2 id="TLS-握手细节"><a href="#TLS-握手细节" class="headerlink" title="TLS 握手细节"></a>TLS 握手细节</h2><p>基于 TLS 的双向加密握手过程</p>
+<p><img src="/images/ssl.png" alt="tls"></p>
+<ol>
+<li>“client hello” 消息：客户端通过发送 “client hello” 消息向服务器发起握手请求，该消息包含了客户端所支持的 TLS 版本，支持的算法列表和密码组合以供服务器进行选择，还有一个 “client random” 随机字符串。</li>
+<li>“server hello” 消息：服务器发送 “server hello” 消息对客户端进行回应，该消息包含了服务器选择的加密算法，服务器选择的密码组合，数字证书和 “server random” 随机字符串。</li>
+<li>客户端验证：客户端对服务器发来的证书进行验证，确保对方的合法身份，验证过程分步骤：<ul>
+<li>检查数字签名：客户端采用相同的散列函数计算得到信息摘要，然后，利用对应 CA 的公钥解密签名数据，对比证书的信息摘要，如果一致，则可以确认证书的合法性，即公钥合法</li>
+<li>验证证书链</li>
+<li>检查证书的有效期</li>
+<li>检查证书状态是否是撤回、吊销状态</li>
+</ul>
+</li>
+<li>“premaster secret”字符串：3 步解密得到服务器的公匙，使用公钥加密另一个随机字符串 “premaster secret (预主密钥)”后发送给服务器，只有对应的服务器的私钥才能解密。</li>
+<li>服务器使用私钥：服务器使用私钥解密得到随机字符串 premaster secret。</li>
+<li>生成共享密钥：客户端和服务器均使用 client random，server random 和 premaster secret，并通过相同的算法生成相同的共享密钥 KEY。</li>
+<li>客户端就绪：客户端发送经过共享密钥 KEY 加密过的 “finished” 信号，为了防止握手过程遭到篡改，该消息的内容是前一阶段所有握手消息的MAC值。</li>
+<li>服务器就绪：服务器发送经过共享密钥 KEY 加密过的 “finished” 信号，该消息的内容是前一阶段所有握手消息的 MAC 值。</li>
+<li>达成安全通信：握手完成，双方使用对称加密进行安全通信。</li>
+</ol>
+<p>第 8 与第 9 步用以防止握手本身遭受篡改。</p>
+<h2 id="证书链"><a href="#证书链" class="headerlink" title="证书链"></a>证书链</h2><p>证书链 (certificate chain)：也称为证书路径，是用于认证实体合法身份的证书列表，具体到 HTTPS 通信中，就是为了验证服务器的合法身份。之所以使用证书链，是为了保证根证书 (root CA certificate) 的安全，中间层可以看做根证书的代理，起到了缓冲的作用。</p>
+<h2 id="会话缓存握手"><a href="#会话缓存握手" class="headerlink" title="会话缓存握手"></a>会话缓存握手</h2><p>为了加快建立握手的速度，减少协议带来的性能降低和资源消耗(具体分析在后文)，TLS 协议有两类会话缓存机制：会话标识 session ID 与会话记录 session ticket。</p>
+<p>session ID 由服务器端支持，协议中的标准字段，因此基本所有服务器都支持，服务器端保存会话ID以及协商的通信信息，Nginx 中 1M 内存约可以保存4000个 session ID 机器相关信息，占用服务器资源较多;</p>
+<p>session ticket 需要服务器和客户端都支持，属于一个扩展字段，支持范围约60%(无可靠统计与来源)，将协商的通信信息加密之后发送给客户端保存，密钥只有服务器知道，占用服务器资源很少。</p>
+<blockquote>
+<p>二者对比，主要是保存协商信息的位置与方式不同，类似与 http 中的 session 与 cookie。<br>二者都存在的情况下，(nginx 实现)优先使用 session_ticket。</p>
+</blockquote>
+<p><img src="/images/tls-session.png" alt="tls-session"></p>
+<ol>
+<li>会话标识 session ID<ul>
+<li>如果客户端和服务器之间曾经建立了连接，服务器会在握手成功后返回 session ID，并保存对应的通信参数在服务器中;</li>
+<li>如果客户端再次需要和该服务器建立连接，则在 client_hello 中 session ID 中携带记录的信息，发送给服务器;</li>
+<li>服务器根据收到的 session ID 检索缓存记录，如果没有检索到货缓存过期，则按照正常的握手过程进行;</li>
+<li>如果检索到对应的缓存记录，则返回 change_cipher_spec 与 encrypted_handshake_message 信息，两个信息作用类似，encrypted_handshake_message 是到当前的通信参数与 master_secret的hash 值;</li>
+<li>如果客户端能够验证通过服务器加密数据，则客户端同样发送 change_cipher_spec 与 encrypted_handshake_message 信息;</li>
+<li>服务器验证数据通过，则握手建立成功，开始进行正常的加密数据通信。</li>
+</ul>
+</li>
+<li>会话记录 session ticket<ul>
+<li>如果客户端和服务器之间曾经建立了连接，服务器会在 new_session_ticket 数据中携带加密的 session_ticket 信息，客户端保存;</li>
+<li>如果客户端再次需要和该服务器建立连接，则在 client_hello 中扩展字段 session_ticket 中携带加密信息，一起发送给服务器;</li>
+<li>服务器解密 sesssion_ticket 数据，如果能够解密失败，则按照正常的握手过程进行;</li>
+<li>如果解密成功，则返回 change_cipher_spec 与 encrypted_handshake_message 信息，两个信息作用与 session ID 中类似;</li>
+<li>如果客户端能够验证通过服务器加密数据，则客户端同样发送 change_cipher_spec与encrypted_handshake_message 信息;</li>
+<li>服务器验证数据通过，则握手建立成功，开始进行正常的加密数据通信。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>这里直接引用了 <a target="_blank" rel="noopener" href="https://blog.csdn.net/hherima/article/details/52469674">《HTTPS协议详解(四)：TLS/SSL握手过程》</a></p>
+</blockquote>
+<h2 id="重建连接"><a href="#重建连接" class="headerlink" title="重建连接"></a>重建连接</h2><p>重建连接是指放弃正在使用的 TLS 连接，从新进行身份认证和密钥协商的过程，特点是不需要断开当前的数据传输就可以重新身份认证、更新密钥或算法，因此服务器端存储和缓存的信息都可以保持。</p>
+<h3 id="服务器重建连接"><a href="#服务器重建连接" class="headerlink" title="服务器重建连接"></a>服务器重建连接</h3><p>服务器端重建连接一般情况是客户端访问受保护的数据时发生。基本过程如下：</p>
+<ul>
+<li>客户端和服务器之间建立了有效 TLS 连接并通信;</li>
+<li>客户端访问受保护的信息;</li>
+<li>服务器端返回 hello_request 信息;</li>
+<li>客户端收到 hello_request 信息之后发送 client_hello 信息，开始重新建立连接。</li>
+</ul>
+<h3 id="客户端重建连接"><a href="#客户端重建连接" class="headerlink" title="客户端重建连接"></a>客户端重建连接</h3><p>客户端重建连接一般是为了更新通信密钥。基本过程如下：</p>
+<ul>
+<li>客户端和服务器之间建立了有效 TLS 连接并通信;</li>
+<li>客户端需要更新密钥，主动发出 client_hello 信息;</li>
+<li>服务器端收到 client_hello 信息之后无法立即识别出该信息非应用数据，因此会提交给下一步处理，处理完之后会返回通知该信息为要求重建连接;</li>
+<li>在确定重建连接之前，服务器不会立即停止向客户端发送数据，可能恰好同时或有缓存数据需要发送给客户端，但是客户端不会再发送任何信息给服务器;</li>
+<li>服务器识别出重建连接请求之后，发送 server_hello 信息至客户端;</li>
+<li>客户端也同样无法立即判断出该信息非应用数据，同样提交给下一步处理，处理之后会返回通知该信息为要求重建连接;</li>
+<li>客户端和服务器开始新的重建连接的过程；</li>
+</ul>
+<h2 id="密钥计算"><a href="#密钥计算" class="headerlink" title="密钥计算"></a>密钥计算</h2><ol>
+<li>TLS/SSL 加密过程使用了对称加密+非对称加密和散列函数算法</li>
+<li>对称加密的密匙是由是那个随机数 random_C + random_S + random_secret 生成</li>
+</ol>
+<blockquote>
+<p>为什么要使用随机数？<br>不管是客户端还是服务器，都需要随机数，这样生成的密钥才不会每次都一样。由于 SSL 协议中证书是静态的，因此十分有必要引入一种随机因素来保证协商出来的密钥的随机性。<br>对于 RSA 密钥交换算法来说，pre-master-key 本身就是一个随机数，再加上 hello 消息中的随机，三个随机数通过一个密钥导出器最终导出一个对称密钥。</p>
+</blockquote>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hherima/article/details/52469674">HTTPS协议详解(四)：TLS/SSL握手过程</a><br><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15290941/3047521">HTTPS(二) – SSL/TLS 工作原理和详细握手过程</a></p>
 
     </div>
 
@@ -288,12 +385,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/network/TCP-IP-6.html" rel="prev" title="TCP/IP 协议栈系列（六）：HTTP2.0协议详解">
-      <i class="fa fa-chevron-left"></i> TCP/IP 协议栈系列（六）：HTTP2.0协议详解
+    <a href="/network/TCP-IP-6.html" rel="prev" title="TCP/IP 协议栈系列（六）：HTTPS 基础知识">
+      <i class="fa fa-chevron-left"></i> TCP/IP 协议栈系列（六）：HTTPS 基础知识
     </a></div>
       <div class="post-nav-item">
-    <a href="/network/TCP-IP-8.html" rel="next" title="TCP/IP 协议栈系列（八）：HTTPS证书原理">
-      TCP/IP 协议栈系列（八）：HTTPS证书原理 <i class="fa fa-chevron-right"></i>
+    <a href="/network/TCP-IP-8.html" rel="next" title="TCP/IP 协议栈系列（八）：HTTPS 性能与优化">
+      TCP/IP 协议栈系列（八）：HTTPS 性能与优化 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -353,6 +450,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-%E4%B8%8E-SSL"><span class="nav-number">1.</span> <span class="nav-text">TLS 与 SSL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">TLS 握手过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TLS-%E6%8F%A1%E6%89%8B%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">TLS 握手细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E9%93%BE"><span class="nav-number">4.</span> <span class="nav-text">证书链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%9A%E8%AF%9D%E7%BC%93%E5%AD%98%E6%8F%A1%E6%89%8B"><span class="nav-number">5.</span> <span class="nav-text">会话缓存握手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E5%BB%BA%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.</span> <span class="nav-text">重建连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%87%8D%E5%BB%BA%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.1.</span> <span class="nav-text">服务器重建连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E9%87%8D%E5%BB%BA%E8%BF%9E%E6%8E%A5"><span class="nav-number">6.2.</span> <span class="nav-text">客户端重建连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E8%AE%A1%E7%AE%97"><span class="nav-number">7.</span> <span class="nav-text">密钥计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -447,12 +545,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">179k</span>
+    <span title="站点总字数">201k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:43</span>
+    <span title="站点阅读时长">3:03</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
