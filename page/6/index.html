@@ -327,7 +327,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-08 11:04:24 11:04:24" itemprop="dateModified" datetime="2022-08-08T11:04:24+08:00">2022-08-08 11:04:24</time>
+                <time title="修改时间：2022-08-08 16:55:01 16:55:01" itemprop="dateModified" datetime="2022-08-08T16:55:01+08:00">2022-08-08 16:55:01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -345,7 +345,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>39</span>
+              <span>264</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -365,7 +365,19 @@
 
       
           <hr>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/aspirant/p/10833143.html">HTTP1.0 HTTP 1.1主要区别</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/iSZp41SRmh5b2bXIvzemIw">探究！一个数据包在网络中的心路历程</a></p>
+<p>当我们在浏览器输入网址回车后，首先就需要对网址解析，找到该网址对应的真正的服务地址，那么域名解析的过程就是 DNS 解析。</p>
+<h2 id="一次完整的请求"><a href="#一次完整的请求" class="headerlink" title="一次完整的请求"></a>一次完整的请求</h2><ol>
+<li>域名解析</li>
+<li>建立TCP连接，三次握手</li>
+<li>Web浏览器向Web服务端发送HTTP请求报文</li>
+<li>服务器响应HTTP请求</li>
+<li>浏览器解析HTML代码，并请求HTML代码中的资源（JS，CSS，图片）（这是自动向服务器请求下载的）</li>
+<li>浏览器对页面进行渲染呈现给客户</li>
+<li>断开TCP连接</li>
+</ol>
+<p>如何解析对应的IP地址？域名解析过程：</p>
+<p><img src="/images/dns.png" alt="dns"></p>
+<h2 id="dns-协议"><a href="#dns-协议" class="headerlink" title="dns 协议"></a>dns 协议</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/aspirant/p/10833143.html">HTTP1.0 HTTP 1.1主要区别</a><br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/iSZp41SRmh5b2bXIvzemIw">探究！一个数据包在网络中的心路历程</a><br><a target="_blank" rel="noopener" href="https://network.51cto.com/article/641655.html">万字长文爆肝 DNS 协议！</a></p>
 
       
     </div>
@@ -416,7 +428,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-07 14:41:26 14:41:26" itemprop="dateModified" datetime="2022-08-07T14:41:26+08:00">2022-08-07 14:41:26</time>
+                <time title="修改时间：2022-08-08 16:40:19 16:40:19" itemprop="dateModified" datetime="2022-08-08T16:40:19+08:00">2022-08-08 16:40:19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -434,14 +446,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>0</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -454,6 +466,28 @@
 
       
           <hr>
+<h2 id="UDP-协议简介"><a href="#UDP-协议简介" class="headerlink" title="UDP 协议简介"></a>UDP 协议简介</h2><p>UDP(User Datagram Protocol)传输与IP传输非常类似。你可以将UDP协议看作IP协议暴露在传输层的一个接口。UDP协议同样以数据包(datagram)的方式传输，它的传输方式也是”Best Effort”的，所以UDP协议也是不可靠的(unreliable)。那么，我们为什么不直接使用IP协议而要额外增加一个UDP协议呢？ 一个重要的原因是IP协议中并没有端口(port)的概念。</p>
+<p>UDP协议非常简单，但它的产生晚于更加复杂的TCP协议。早期的网络开发者开发出IP协议和TCP协议分别位于网络层和传输层，所有的通信都要先经过TCP封装，再经过IP封装(应用层-&gt;TCP-&gt;IP)。</p>
+<h2 id="UDP-报文格式"><a href="#UDP-报文格式" class="headerlink" title="UDP 报文格式"></a>UDP 报文格式</h2><p>UDP的数据包同样分为头部(header)和数据(payload)两部分。</p>
+<p>![udp-pakage]!(/images/udp-pakage.png)</p>
+<p>源端口：发送方的端口号；2个字节<br>目的端口：接收方的端口号；2个字节<br>数据报长度：长度是指包括报头和数据部分在内的总字节数。因为报头的长度是固定的，所以该域主要被用来计算可变长度的数据部分；2个字节<br>校验值：校验值来保证数据的安全。校验值首先在数据发送方通过特殊的算法计算得出，在传递到接收方之后，还需要再重新计算。如果某个数据报在传输过程中被第三方篡改或者由于线路噪音等原因受到损坏，发送和接收方的校验计算值将不会相符，由此UDP协议可以检测是否出错。2 个字节</p>
+<p>总共头部占 8个字节</p>
+<h2 id="UDP-协议特点"><a href="#UDP-协议特点" class="headerlink" title="UDP 协议特点"></a>UDP 协议特点</h2><p>UDP使用具有最小协议机制的简单无连接通信模型。UDP提供数据完整性的校验和，以及用于在数据报的源和目标寻址不同函数的端口号。它没有握手对话，因此将用户的程序暴露在底层网络的任何不可靠的方面。如果在网络接口级别需要纠错功能，应用程序可以使用为此目的设计的传输控制协议（TCP）。</p>
+<ul>
+<li>UDP无连接：UCP不维护连接状态，也不跟踪这些参数，开销小</li>
+<li>分组首部开销小：TCP首部20字节，UDP首部8字节。</li>
+<li>UDP没有拥塞控制：应用层能够更好的控制要发送的数据和发送时间，网络中的拥塞控制也不会影响主机的发送速率</li>
+<li>UDP提供尽最大努力的交付，不保证可靠交付：</li>
+<li>UDP是面向报文的：添加首部后直接乡下交付为IP层，既不合并，也不拆分，保留这些报文的边界。对IP层交上来UDP用户数据报，在去除首部后就原封不动地交付给上层应用进程，报文不可分割，是UDP数据报处理的最小单位。</li>
+<li>UDP 支持一对一、一对多、多对一和多对多的交互通信。</li>
+</ul>
+<blockquote>
+<p>UDP校验和的计算方法和IP数据报首部校验和的计算方法相似，都使用二进制反码运算求和再取反，但不同的是：IP数据报的校验和之检验IP数据报和首部，但UDP的校验和是把首部和数据部分一起校验。</p>
+</blockquote>
+<h2 id="UDP-适用场景"><a href="#UDP-适用场景" class="headerlink" title="UDP 适用场景"></a>UDP 适用场景</h2><p>UDP常用一次性传输比较少量数据且对数据丢失不敏感的网络应用。例如：DNS,SNMP等，因为对于这些应用，若是采用TCP，为连接的创建，维护和拆除带来不小的开销。UDP也常用于多媒体应用（如IP电话，实时视频会议，流媒体等）数据的可靠传输对他们而言并不重要，TCP的拥塞控制会使他们有较大的延迟，也是不可容忍的。</p>
+<h2 id="UDP-连接"><a href="#UDP-连接" class="headerlink" title="UDP 连接"></a>UDP 连接</h2><p>客户端：直接绑定端口就可以发送数据了<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line"><span class="comment"># 绑定端口:</span></span><br><span class="line">s.bind((<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">9999</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Bind UDP on 9999...&#x27;</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 接收数据:</span></span><br><span class="line">    data, addr = s.recvfrom(<span class="number">1024</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Received from %s:%s.&#x27;</span> % addr)</span><br><span class="line">    <span class="comment"># 返回数据给客户端</span></span><br><span class="line">    s.sendto(<span class="string">b&#x27;Hello, %s!&#x27;</span> % data, addr)</span><br></pre></td></tr></table></figure></p>
+<p>服务端：使用UDP时，创建基于UDP的 Socket，然后，不需要调用connect()，直接通过sendto()给服务器发数据：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> [<span class="string">b&#x27;Michael&#x27;</span>, <span class="string">b&#x27;Tracy&#x27;</span>, <span class="string">b&#x27;Sarah&#x27;</span>]:</span><br><span class="line">    <span class="comment"># 发送数据:</span></span><br><span class="line">    s.sendto(data, (<span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="number">9999</span>))</span><br><span class="line">    <span class="comment"># 接收数据:</span></span><br><span class="line">    <span class="built_in">print</span>(s.recv(<span class="number">1024</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">s.close()</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/HPAHPA/p/7737531.html">UDP协议总结</a></p>
 
       
     </div>
@@ -1282,12 +1316,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">201k</span>
+    <span title="站点总字数">204k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:03</span>
+    <span title="站点阅读时长">3:05</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
