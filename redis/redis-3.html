@@ -22,7 +22,7 @@
 
   <meta name="description" content="本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该模式下解决了主从同步和 哨兵模式 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis系列（三）：Redis Cluster集群模式">
+<meta property="og:title" content="Redis系列（三）：Redis Cluster 集群模式">
 <meta property="og:url" content="http://phachon.github.io/redis/redis-3.html">
 <meta property="og:site_name" content="phachon&#39;s blog">
 <meta property="og:description" content="本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该模式下解决了主从同步和 哨兵模式 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://phachon.github.io/images/redis_slot_qy.png">
 <meta property="og:image" content="http://phachon.github.io/images/redis_cluster3.png">
 <meta property="article:published_time" content="2018-09-24T10:09:10.000Z">
-<meta property="article:modified_time" content="2022-07-11T01:59:03.325Z">
+<meta property="article:modified_time" content="2022-08-20T15:26:58.224Z">
 <meta property="article:author" content="phachon">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
@@ -51,7 +51,7 @@
   };
 </script>
 
-  <title>Redis系列（三）：Redis Cluster集群模式 | phachon's blog</title>
+  <title>Redis系列（三）：Redis Cluster 集群模式 | phachon's blog</title>
   
 
 
@@ -221,7 +221,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Redis系列（三）：Redis Cluster集群模式
+          Redis系列（三）：Redis Cluster 集群模式
         </h1>
 
         <div class="post-meta">
@@ -238,7 +238,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+                <time title="修改时间：2022-08-20 23:26:58 23:26:58" itemprop="dateModified" datetime="2022-08-20T23:26:58+08:00">2022-08-20 23:26:58</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -256,14 +256,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.4k</span>
+              <span>5.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -278,15 +278,37 @@
         <hr>
 <p>本篇文章来介绍 Redis 的第三种集群模式 Cluster 集群模式，该模式也是 Redis3.x 之后才引入的，在该<br>模式下解决了<code>主从同步</code>和 <code>哨兵模式</code> 的不能水平扩容的问题，使得 Redis 集群的性能得到提高，也由此成为了Redis 官方推荐使用的集群方案。本篇文章来介绍如何搭建使用 Redis Cluster 集群并试图去探究 Redis Cluster 集群的实现原理。</p>
 <span id="more"></span>
-<h2 id="Redis-Cluster-介绍"><a href="#Redis-Cluster-介绍" class="headerlink" title="Redis Cluster 介绍"></a>Redis Cluster 介绍</h2><p>首先我们需要了解 Redis Cluster 的设计目标：</p>
+<h2 id="Redis主从架构-Sentinel仍存在问题"><a href="#Redis主从架构-Sentinel仍存在问题" class="headerlink" title="Redis主从架构+Sentinel仍存在问题"></a>Redis主从架构+Sentinel仍存在问题</h2><p>写并发的压力仍在：</p>
+<ul>
+<li>Redis单实例读写分离可以解决读操作的负载均衡，但对于写操作，仍然是全部落在了 master 节点上面，在海量数据高并发场景，一个节点写数据容易出现瓶颈，造成master节点的压力上升。</li>
+</ul>
+<p>海量数据的存储压力：</p>
+<ul>
+<li>（内存容量的限制）Redis的最大缺点和局限性就在于内存存储数据，这样子对容量而言会有相当大的限制。</li>
+<li>（持久化和硬盘的限制）Redis单实例本质上只有一台 Master 作为存储，如果面对海量数据的存储，一台 Redis 的服务器就应付不过来了，而且数据量太大意味着持久化成本高，严重时可能会阻塞服务器，造成服务请求成功率下降，降低服务的稳定性。</li>
+</ul>
+<h2 id="Redis-Cluster-设计"><a href="#Redis-Cluster-设计" class="headerlink" title="Redis Cluster 设计"></a>Redis Cluster 设计</h2><p>首先我们需要了解 Redis Cluster 的设计目标：</p>
 <ol>
 <li>高性能：高性能是 Redis 赖以生存的看家本领，增加集群之后不能对性能产生太大影响，否则会得不尝失。</li>
 <li>水平扩展：之前 Redis 集群不能水平扩展的缺点时常被人诟病，所以必须具备水平扩展。</li>
 <li>高可用：在之前，高可用主要是通过 Redis Sentinel 来保障，Cluster 集群也应该具备 Sentinel 的监控、提醒、自动故障转移等功能。</li>
 </ol>
-<p>有了 Cluster 的集群方案，使得 Redis 变成了真正的分布式 NoSql 数据库。</p>
-<h2 id="数据分区方案"><a href="#数据分区方案" class="headerlink" title="数据分区方案"></a>数据分区方案</h2><p>为了使得集群能够水平扩展，首要解决的问题就是<code>如何将整个数据集按照一定的规则分配到多个节点上</code>，常用的数据分区的方法有：</p>
-<h3 id="普通哈希分区"><a href="#普通哈希分区" class="headerlink" title="普通哈希分区"></a>普通哈希分区</h3><p>普通的哈希分区比较简单，就是根据规定的哈希函数将数据哈希到指定的节点上，例如：现在有 3 个 Redis 结点 node1、node2、node3。我们的哈希函数采用取余法哈希</p>
+<p>有了 Cluster 的集群方案，使得 Redis 变成了真正的分布式 NoSql 数据库。Redis Cluster 的集群实现：</p>
+<ul>
+<li>分片存储：Cluster 集群实现了分布式存储，对数据进行分片，将数据存储在不同的 master 节点上面，从而解决海量存储问题</li>
+<li>指令转换：Cluster 集群采用了去中心化思想，没有中心节点的说法，对于客户端来说，整个集群可以看作是一个整体，可以连接任何一个节点操作，当客户端操作的 key 并没有分配到该 node 上，集群会转向指令，指向正确的节点。</li>
+<li>高可用机制：Cluster 集群也内置了高可用机制，支持 N 个 master 节点，每个 master 节点都可以挂载多个 slave 节点，当 master 节点挂掉时，集群会提升它的某个 slave 节点作为新的 master 节点。</li>
+</ul>
+<h2 id="数据分片实现"><a href="#数据分片实现" class="headerlink" title="数据分片实现"></a>数据分片实现</h2><p>为了使得集群能够水平扩展，首要解决的问题就是 <code>如何将整个数据集按照一定的规则分配到多个节点上</code>，实现数据分片的方案有以下几种：</p>
+<h3 id="1-客户端实现"><a href="#1-客户端实现" class="headerlink" title="1. 客户端实现"></a>1. 客户端实现</h3><p>在客户度实现数据分片方案，在客户端用取模或者一致性哈希对 key 进行分片，查询和修改都先在客户端先通过哈希算法判断 key 的指向的路由。</p>
+<ul>
+<li>java 中的 Jedis 客户端提供了 Redis Sharding 的方案，并且支持连接池。</li>
+<li>Sharded 分片的原理？怎么连接到某一个Redis服务：提供了一致性 hash 和 md5 散列两种 hash 算法，默认使用一致性hash算法。<br>并且为了使得请求能均匀的落在不同的节点上，Sharded Jedis会使用节点的名称（如果节点没有名称使用默认名称）虚拟化出160个虚拟节点。也可以根据不同节点的weight，虚拟化出160，weight个节点。</li>
+<li>当客户端访问 redis 时，首先根据 key 计算出其落在哪个节点上，然后找到节点的 ip 和端口进行连接访问。</li>
+</ul>
+<h3 id="2-中间代理负载"><a href="#2-中间代理负载" class="headerlink" title="2. 中间代理负载"></a>2. 中间代理负载</h3><p>这种方案的实现和第一种类似，对比第一种方案的区别有优势是将 key 哈希逻辑抽象成单独的服务，客户端不需要再感知 key 查找的逻辑，和单个 redis key 操作没有任何区别。代理服务负责 key 哈希的查找和流量的转发。典型的代理分区方案有 Twitter 开源的 Twemproxy 和国内的豌豆荚开源的 Codis。</p>
+<h3 id="3-服务端负载"><a href="#3-服务端负载" class="headerlink" title="3. 服务端负载"></a>3. 服务端负载</h3><p>第三种方式就是纯服务端实现，客户端不需要关心，也不需要代理层，只需要服务端内部实现，这种方式需要服务端内部实现。 redis cluster 的方式就是这种方式。</p>
+<h2 id="数据哈希方案"><a href="#数据哈希方案" class="headerlink" title="数据哈希方案"></a>数据哈希方案</h2><h3 id="普通哈希分区"><a href="#普通哈希分区" class="headerlink" title="普通哈希分区"></a>普通哈希分区</h3><p>普通的哈希分区比较简单，就是根据规定的哈希函数将数据哈希到指定的节点上，例如：现在有 3 个 Redis 结点 node1、node2、node3。我们的哈希函数采用取余法哈希</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function hash(key) &#123;</span><br><span class="line">    return key % 3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当写数据的时候，根据哈希函数写到对应的节点中，读数据的时候先计算出数据在哪个节点，然后再去对应的节点去取。我们发现当节点数固定的时候，该种数据分区的方案没有问题，当增加一个节点或删除一个节点的时候。<br>取余哈希函数的分母会改变，导致之前已分配的数据分区大量改变，并且造成大量的数据获取不到。所以该种方案很少使用。</p>
 <h3 id="一致性哈希分区"><a href="#一致性哈希分区" class="headerlink" title="一致性哈希分区"></a>一致性哈希分区</h3><p>为了解决普通的哈希分区的缺点，提出了一致性哈希的概念。一致性哈希的核心原理是：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">将数据 key 和节点都通过哈希函数映射到 2^32 次方的环上</span><br></pre></td></tr></table></figure><br>关于一致性哈希的原理，超出了本文探讨的范围，后续再写专门的文章来详解。<br>一致性哈希尽最大限度的解决了节点数改变带来的数据不一致的问题。</p>
@@ -332,13 +354,55 @@
 </li>
 <li><p>节点增加和删除的过程中，数据会不会丢失？<br>节点在数据迁移的时候数据会有备份，不会丢失</p>
 </li>
+<li><p>redis cluster 执行 get 命令之后是如何操作的？</p>
+</li>
 </ol>
+<ul>
+<li>执行命令，指令到达任意一个服务端节点，redis 先检查是否是集群状态</li>
+<li>如果是非集群状态就直接执行命令返回</li>
+<li>如果是集群状态，会根据 key 执行哈希操作计算得到对应的哈希槽位</li>
+<li>根据每个节点本地保持的节点和槽位的映射关系，判断计算得到的槽位所在节点<ul>
+<li>如果是本节点，则直接执行命令查找对应 redis 数据返回</li>
+<li>如果不是本节点，则 <code>内部直接转发到对应的正确的节点</code></li>
+</ul>
+</li>
+<li>返回节点的查找数据</li>
+</ul>
+<p>那么节点之间是如何不同步节点的信息的（节点状态、节点和槽位的映射关系、槽位迁移状态）？请看下面的节点通信</p>
+<ol start="4">
+<li>redis cluster 执行 mget 命令之后如何操作？<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; MGET k1 k2 k3</span><br></pre></td></tr></table></figure>
+假设 k1,k2,k3 不在一个槽位且存储的数据不在一个一个节点上，mget 命令执行失败会发生异常：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(error) CROSSSLOT Keys in request don&#x27;t hash to the same slot</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>首先，cluster 是不支持 mutlikey 操作的，例如：mget，Redis cluster 集群模式下对于哈希结果算出来的slot不一致时，会执行失败。</p>
+<p>如何优化或者支持 mget ？首先必须在原来 cluster 之上包装一层来实现，包装逻辑可采用如下几种方案：</p>
+<ol>
+<li>传统的串行 IO 操作，也就说 n 个 key，分n次串行操作来获取key，复杂度是o(n)。</li>
+<li>将 Mget 操作(n个key)，利用已知的hash函数算出key对应的节点，这样就可以得到一个这样的关系：Map&lt;node, somekeys&gt;，也就是每个节点对应的一些keys，这样将之前的o(n)的效率降低到o(node.size())。</li>
+<li>在方案二的基础上将串行取数据改为并行取数据，进一步提高效率。</li>
+<li>在key里面加入{hash tag}即可。Redis 在计算槽编号的时候只会获取{}之间的字符串进行槽编号计算，这样由于上面两个不同的键，{}里面的字符串是相同的，因此他们可以被计算出相同的槽。</li>
+</ol>
+<h2 id="节点通信"><a href="#节点通信" class="headerlink" title="节点通信"></a>节点通信</h2><p> Redis Cluster 中，节点间是如何通信的呢？又是如何保障一致性、可用性的呢？欲知答案，必先了解 Gossip 算法。</p>
+<h3 id="Gossip-简介"><a href="#Gossip-简介" class="headerlink" title="Gossip 简介"></a>Gossip 简介</h3><p>Gossip 算法源自流行病学的研究，经过不断的发展演化，作为一种分布式一致性协议而得到广泛应用，如 Cassandra、Akka、Redis 都有用到。</p>
+<h3 id="Gossip-原理"><a href="#Gossip-原理" class="headerlink" title="Gossip 原理"></a>Gossip 原理</h3><p>Gossip 算法如其名，在办公室，只要一个人八卦一下，在有限的时间内所有的人都会知道该八卦的信息，这种方式也与病毒传播类似。实现原理简单解释是，在一个有届网络中，每个节点都随机的与其他节点通信，经过<code>一段时间</code>杂乱无章的通讯，最终各个节点的状态会保持一致。所以 Gossip 协议本质上是一种带冗余的容错算法，更近一步，Gossip 是一个最终一致性算法。虽然无法保证在某个时刻所有节点状态一致，但可以保证在“最终”所有节点一致，“最终”是一个现实中存在，但理论上无法证明的时间点。但 Gossip 的缺点也很明显，冗余通信会对网路带宽、CUP 资源造成很大的负载。总结有如下特点：</p>
+<ul>
+<li>每个节点随机选择节点通信，通信存在冗余</li>
+<li>同步到所有节点的最终数据一致的状态需要一段时间</li>
+<li>需要单独的 tcp 端口进行通信，需要消耗一定的网络带宽</li>
+</ul>
+<h3 id="Gossip-消息种类"><a href="#Gossip-消息种类" class="headerlink" title="Gossip 消息种类"></a>Gossip 消息种类</h3><p>Gossip 协议的主要职责就是信息交换。信息交换的载体就是节点彼此发送的 Gossip 消息，常用的 Gossip 消息可分为：Ping 消息、Pong 消息、Meet 消息、Fail 消息。</p>
+<ul>
+<li>Meet 消息：用于通知新节点加入。消息发送者通知接收者加入到当前集群，Meet 消息通信正常完成后，接收节点会加入到集群中并进行周期性的 Ping、Pong 消息交换；</li>
+<li>Ping 消息：集群内交换最频繁的消息，集群内每个节点每秒向多个其它节点发送 Ping 消息，用于检测节点是否在线和交换彼此状态信息。Ping 消息发送封装了自身节点和部分其它节点的状态数据；</li>
+<li>Pong 消息：当接收到 Ping、Meet 消息时，作为响应消息回复给发送方确认消息正常通信。Pong 消息内部封装了自身状态数据。节点也可以向集群内广播自身的 Pong 消息来通知整个集群对自身状态进行更新；</li>
+<li>Fail 消息：当节点判定集群内另一个节点下线时，会向集群内广播一个 Fail 消息，其他节点接收到 Fail 消息之后把对应节点更新为下线状态。</li>
+</ul>
+<h3 id="通信时机"><a href="#通信时机" class="headerlink" title="通信时机"></a>通信时机</h3><p>由于集群内部需要频繁地进行节点信息交换，而 Ping/Pong 消息携带当前节点和部分其它节点的状态数据，势必会加重带宽和计算的负担。Redis 集群内节点通信采用固定频率（定时任务每秒执行10次），因此，节点每次选择需要通信的节点列表变得非常重要。通信节点选择过多虽然可以做到信息及时交换但成本过高。节点选择过少则会降低集群内所有节点彼此信息交换的频率，从而影响故障判定、新节点发现等需求的速度。因此 Redis 集群的 Gossip 协议需要兼顾信息交换实时性和成本开销。</p>
 <h2 id="主从同步"><a href="#主从同步" class="headerlink" title="主从同步"></a>主从同步</h2><p>我们已经了解了 Cluster 的集群的工作方式，那使用 Cluster 模式如何来实现主从同步？</p>
 <p>其实主从同步还是使用的 Redis 本身的主从复制模式，将主从同步和 Cluster 模式结合起来的架构如下：</p>
 <p><img src="/images/redis_cluster3.png" alt="主从同步+Cluster集群（图片来源于网络）"></p>
 <p>从图中可以看出，将多个 Master 节点作为 Cluster 的节点，每个 Master 的节点又增加多个 Slave 节点。并且数据读写分离。<br>如果想水平扩展读的并发能力，可以增加多个 Slave, 想水平扩展写的并发能力，可以增加多个 Master, 并且任何一个 Master 和 Slave 宕掉都不会影响服务稳定性。</p>
-<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><p>Redis Cluster 搭建这里篇幅有限，暂不介绍，需要请自行查找相关资料</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yejingtao703/article/details/78484151">三张图秒懂Redis集群设计原理</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/PatrickLiu/p/8458788.html">Redis的Cluster集群搭建</a></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yejingtao703/article/details/78484151">三张图秒懂Redis集群设计原理</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/PatrickLiu/p/8458788.html">Redis的Cluster集群搭建</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6964792208989896740">Cluster (集群) 下的操作的变化</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1862406">Redis Cluster 模式分析，哈希槽</a></p>
 
     </div>
 
@@ -423,7 +487,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-Cluster-%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">Redis Cluster 介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%8C%BA%E6%96%B9%E6%A1%88"><span class="nav-number">2.</span> <span class="nav-text">数据分区方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">2.1.</span> <span class="nav-text">普通哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">2.2.</span> <span class="nav-text">一致性哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E5%8C%BA"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟槽分区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%A2%9E%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">3.</span> <span class="nav-text">节点增加和删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">4.</span> <span class="nav-text">数据迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A7%BD%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">4.1.</span> <span class="nav-text">槽的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E7%A9%BA%E9%97%B4%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">4.2.</span> <span class="nav-text">键空间的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E6%8C%96%E7%BB%86%E8%8A%82"><span class="nav-number">4.3.</span> <span class="nav-text">深挖细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5"><span class="nav-number">5.</span> <span class="nav-text">主从同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA"><span class="nav-number">6.</span> <span class="nav-text">搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84-Sentinel%E4%BB%8D%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">Redis主从架构+Sentinel仍存在问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis-Cluster-%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">Redis Cluster 设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">数据分片实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%AE%9E%E7%8E%B0"><span class="nav-number">3.1.</span> <span class="nav-text">1. 客户端实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%90%86%E8%B4%9F%E8%BD%BD"><span class="nav-number">3.2.</span> <span class="nav-text">2. 中间代理负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E8%B4%9F%E8%BD%BD"><span class="nav-number">3.3.</span> <span class="nav-text">3. 服务端负载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%93%88%E5%B8%8C%E6%96%B9%E6%A1%88"><span class="nav-number">4.</span> <span class="nav-text">数据哈希方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%99%AE%E9%80%9A%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">4.1.</span> <span class="nav-text">普通哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E5%88%86%E5%8C%BA"><span class="nav-number">4.2.</span> <span class="nav-text">一致性哈希分区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%A7%BD%E5%88%86%E5%8C%BA"><span class="nav-number">4.3.</span> <span class="nav-text">虚拟槽分区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E5%A2%9E%E5%8A%A0%E5%92%8C%E5%88%A0%E9%99%A4"><span class="nav-number">5.</span> <span class="nav-text">节点增加和删除</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">6.</span> <span class="nav-text">数据迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A7%BD%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">6.1.</span> <span class="nav-text">槽的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%AE%E7%A9%BA%E9%97%B4%E7%9A%84%E8%BF%81%E7%A7%BB"><span class="nav-number">6.2.</span> <span class="nav-text">键空间的迁移</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E6%8C%96%E7%BB%86%E8%8A%82"><span class="nav-number">6.3.</span> <span class="nav-text">深挖细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E7%82%B9%E9%80%9A%E4%BF%A1"><span class="nav-number">7.</span> <span class="nav-text">节点通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip-%E7%AE%80%E4%BB%8B"><span class="nav-number">7.1.</span> <span class="nav-text">Gossip 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip-%E5%8E%9F%E7%90%86"><span class="nav-number">7.2.</span> <span class="nav-text">Gossip 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gossip-%E6%B6%88%E6%81%AF%E7%A7%8D%E7%B1%BB"><span class="nav-number">7.3.</span> <span class="nav-text">Gossip 消息种类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E6%97%B6%E6%9C%BA"><span class="nav-number">7.4.</span> <span class="nav-text">通信时机</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5"><span class="nav-number">8.</span> <span class="nav-text">主从同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">9.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -439,7 +503,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">109</span>
+          <span class="site-state-item-count">111</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -518,12 +582,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">206k</span>
+    <span title="站点总字数">210k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:08</span>
+    <span title="站点阅读时长">3:11</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
