@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/knowledage.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-bootstrap.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -214,7 +214,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/summary/knowledage.html" class="post-title-link" itemprop="url">后端知识点总结</a>
+            <a href="/go/go-runtime-bootstrap.html" class="post-title-link" itemprop="url">Go runtime 系列之 - 启动过程</a>
         </h2>
 
         <div class="post-meta">
@@ -224,14 +224,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2017-09-05 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2017-09-05T00:00:00+08:00">2017-09-05 00:00:00</time>
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-14 11:43:38 11:43:38" itemprop="dateModified" datetime="2022-08-14T11:43:38+08:00">2022-08-14 11:43:38</time>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +239,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
                 </span>
             </span>
 
@@ -249,7 +249,682 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.9k</span>
+              <span>362</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p>通过查阅资料，了解 Go 语言的启动过程。</p>
+<h2 id="启动总体顺序"><a href="#启动总体顺序" class="headerlink" title="启动总体顺序"></a>启动总体顺序</h2><ol>
+<li>命令行参数解析</li>
+<li>操作系统相关初始化</li>
+<li>调度器初始化</li>
+<li>创建 main.goroutine</li>
+<li>运行 main 函数</li>
+</ol>
+<h3 id="命令行参数初始化"><a href="#命令行参数初始化" class="headerlink" title="命令行参数初始化"></a>命令行参数初始化</h3><p>主要是解析命令行参数并保存</p>
+<h3 id="操作系统相关初始化"><a href="#操作系统相关初始化" class="headerlink" title="操作系统相关初始化"></a>操作系统相关初始化</h3><p>主要是确定操作系统的 CPU 核数，CPU 核数决定默认的了 P 的数量</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-bootstrap.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-defer.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-defer.html" class="post-title-link" itemprop="url">Go runtime 系列之 - defer 机制</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>23</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-defer.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-gc.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-gc.html" class="post-title-link" itemprop="url">Go runtime 系列之 - 垃圾回收</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>58</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-gc.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-goroutine.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-goroutine.html" class="post-title-link" itemprop="url">Go runtime 系列之 - goroutine 过程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>0</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-goroutine.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-mem.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-mem.html" class="post-title-link" itemprop="url">Go runtime 系列之 - 内存分配</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-16 14:51:16 14:51:16" itemprop="dateModified" datetime="2022-08-16T14:51:16+08:00">2022-08-16 14:51:16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>92</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-mem.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-signal.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-signal.html" class="post-title-link" itemprop="url">Go runtime 系列之 - 信号处理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-signal.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-timer.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/go/go-runtime-timer.html" class="post-title-link" itemprop="url">Go runtime 系列之 - Timer 机制</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>36</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/go/go-runtime-timer.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/network/concurrrent-server.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/network/concurrrent-server.html" class="post-title-link" itemprop="url">并发服务器的实现方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-09T00:00:00+08:00">2018-09-09 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-26 16:32:30 16:32:30" itemprop="dateModified" datetime="2022-08-26T16:32:30+08:00">2022-08-26 16:32:30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Network/" itemprop="url" rel="index"><span itemprop="name">Network</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -269,431 +944,119 @@
 
       
           <hr>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/LinearList/SequenceList.md">顺序表</a></li>
-<li><a href="">链表</a><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/LinearList/SinglyLinkedList.md">单向链表</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/LinearList/DoublyLinkedList.md">双向链表</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/LinearList/LoopLinkedList.md">循环链表</a></li>
-</ul>
-</li>
-<li>队列<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Queue/LoopQueue.md">循环队列</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Queue/LinkedQueue.md">链队列</a></li>
-</ul>
-</li>
-<li>栈<ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Stack/SequenceStack.md">顺序栈</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Stack/LinkedStack.md">链栈</a></li>
-</ul>
-</li>
-<li><a href="">集合</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Tree/README.md">树</a><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/data-structure/blob/master/Tree/BinaryTree.md">二叉树</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liujinghuan/p/5842487.html">二叉树遍历</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/yangecnu/p/Introduce-Binary-Search-Tree.html">二叉查找树</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/polly333/p/4798944.html">平衡二叉树</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/sun_tttt/article/details/65445754">红黑树</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/aqzwss/article/details/53074186">B 树</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tiancai/p/9024351.html">B 树的应用</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dbanote/article/details/8897599">LSM 树</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jiangyanting2011/article/details/70325215/">常见面试算法</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/eldn__/article/details/79797236">算法</a></li>
-<li><a target="_blank" rel="noopener" href="http://baike.renwuyi.com/2018-02/22397.html">常被问到的算法题</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1011030">面试算法题</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/column/details/15795.html">剑指 OFFER</a></li>
-</ul>
-<h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gane_cheng/article/details/52652705">各种排序算法复杂度分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/ProgramingBooks/algorithm/tree/master/Sort">排序算法</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/p/7674659.html">十大经典的排序算法</a></li>
-</ul>
-<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><ul>
-<li><a href="">二分查找</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014581901/article/details/50133913">插值查找</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bethunebtj/p/4839576.html">斐波那契查找</a></li>
-<li><a href="">二叉查找树查找</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_33363493/article/details/52693668">哈希查找</a></li>
-</ul>
-<h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yangjiannr/p/da-shu-ju-chu-libitmap.html">大数据处理-Bitmap</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000002729689">布隆过滤器</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_30242609/article/details/71024458">基于 Redis 的 Bitmap 数据结构</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lemon_tree12138/article/details/47973715">网络爬虫：URL去重策略之布隆过滤器(BloomFilter)的使用</a></li>
-</ul>
-<h3 id="字符串匹配"><a href="#字符串匹配" class="headerlink" title="字符串匹配"></a>字符串匹配</h3><ul>
-<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2013/05/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm.html">KMP 字符串匹配</a></li>
-</ul>
-<h3 id="图遍历"><a href="#图遍历" class="headerlink" title="图遍历"></a>图遍历</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/0kk470/p/7555033.html">深度优先遍历和广度优先遍历</a></li>
-</ul>
-<h3 id="贪心算法"><a href="#贪心算法" class="headerlink" title="贪心算法"></a>贪心算法</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/MrSaver/p/8641971.html">《算法：贪婪算法基础》</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/a345017062/article/details/52443781">《常见算法及问题场景——贪心算法》</a></li>
-</ul>
-<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/bntX2jSQfEHy7/article/details/79549368">一致性哈希在Redis集群中的应用</a></li>
-</ul>
-<h2 id="网络知识"><a href="#网络知识" class="headerlink" title="网络知识"></a>网络知识</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Robin-YB/p/6668762.html">七层协议</a></li>
-</ul>
-<h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/p/7092302.html">TCP 协议</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/whuslei/article/details/6667471/">TCP 三次握手</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/qingergege/p/6603488.html">TCP中11种状态</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-26833883-id-3627644.html">TCP/IP/UDP协议详解</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/xuanku/p/tcpip.html">TCP/IP网络协议栈</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/luoquan/p/4886345.html">TCP滑动窗口详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/slforeverlove/article/details/47018015">TCP 知识点总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/obama/p/3292335.html">TCP面试题集</a></li>
-</ul>
-<h3 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/HPAHPA/p/7737531.html">UDP 协议总结</a></li>
-</ul>
-<h3 id="KDP"><a href="#KDP" class="headerlink" title="KDP"></a>KDP</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36748278/article/details/80171575">KCP 原理及源码解析</a></li>
-</ul>
-<h3 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wangning528/p/6388464.html">Http 协议详细讲解</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gofighting/p/5421890.html">Http1.0 和 Http1.1区别</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhuyiquan/article/details/69257126">Http2.0 原理详细分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012657197/article/details/77877840">Http2.0 二进制帧</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/endlessdream/p/4699273.html">Session 和 Cookie</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/andy-zhou/p/5360107.html">理解 Session 和 Cookie机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000007078606">跨域问题</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/04/cors.html">跨域问题2</a></li>
-</ul>
-<h3 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h3><ul>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/noKing/p/9334243.html">Https 总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangshitong/p/6478721.html">Https 通俗了解</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hherima/article/details/52469267">HTTPS协议详解(一)：HTTPS基础知识</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hherima/article/details/52469360">HTTPS协议详解(二)：TLS/SSL工作原理</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hherima/article/details/52469488">HTTPS协议详解(三)：PKI 体系</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hherima/article/details/52469674">HTTPS协议详解(四)：TLS/SSL握手过程</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/hherima/article/details/52469787">HTTPS协议详解(五)：HTTPS性能与优化</a></li>
-</ul>
-<h2 id="进程线程协程"><a href="#进程线程协程" class="headerlink" title="进程线程协程"></a>进程线程协程</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/work115/p/5620272.html">进程、线程、协程之概念理解</a></li>
-</ul>
-<h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><ul>
-<li><a href="">进程的概念</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9218692cb209">进程间的同步机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Anker/p/3271773.html">僵尸进程</a></li>
-</ul>
-<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><ul>
-<li><a href="">线程的基本概念</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gatieme/article/details/51892437">线程的三种实现方式</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/losing-1216/p/5083097.html">进程和线程的区别和联系</a></li>
-</ul>
-<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.tuicool.com/articles/BNvUfeb">协程的历史，现在和未来</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/diegodu/p/5607627.html">以goroutine为例看协程的相关概念</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.laruence.com/2015/05/28/3038.html">PHP中协程的使用</a></li>
-</ul>
-<h3 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h3><ul>
-<li><a target="_blank" rel="noopener" href="http://legendtkl.com/2015/12/11/go-memory/">TCMalloc介绍</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/29216091">图解TCMalloc</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/junlon2006/article/details/77854898">内存优化总结</a></li>
-</ul>
-<h2 id="Linux命令"><a href="#Linux命令" class="headerlink" title="Linux命令"></a>Linux命令</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://gywbd.github.io/posts/2014/8/50-linux-commands.html">50个最常用的命令</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chenpingzhao/p/9108570.html">Tcpdump使用抓包总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ginvip/p/6352157.html">Linux三剑客之awk命令</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hellolingyun/article/details/8725991">使用awk,wc,sort,uniq,grep对nginx日志进行分析</a></li>
-</ul>
-<h2 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h2><h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liujiacai/p/7605612.html">学习MySQL优化原理，这一篇就够了</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wmbg/p/6800354.html">数据库优化</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gitchat/article/details/80326842">MySQL 数据库索引优化项目实战</a></li>
-<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/mysql_index.html">MySQL索引原理及慢查询优化</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39322743/article/details/79701420">mysql面试</a></li>
-<li><a target="_blank" rel="noopener" href="http://app.myzaker.com/news/article.php?pk=5a114dd51bc8e03a2d000007">mysql面试集锦</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lonelyxmas/p/4594624.html">索引区别</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1004367">数据库优化</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cxyxiaowu.com/16302.html">32道MySQL面试题总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1900238">图解 MySQL 索引，清晰易懂，写得太好了！</a></li>
-<li><a target="_blank" rel="noopener" href="https://opensource.actionsky.com/category/%e6%8a%80%e6%9c%af%e4%b8%93%e6%a0%8f/mysql-%e8%b0%83%e4%bc%98/">mysql调优系列</a></li>
-</ul>
-<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hjm4702192/article/details/80518856">Redis总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wcf373722432/article/details/78678504">Redis底层原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/l_bestcoder/article/details/79336986">Redis 实现分布式锁</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wenxiong/p/3954174.html">PHP Redis实现分布式锁</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1NDQ3MjQxNA==&amp;mid=2247485424&amp;idx=1&amp;sn=ba52c4e9616605b4093096b43e9a7f0e&amp;chksm=e9c5fe41deb27757cef63bd50ee792a96036444605a21b7a42aad15743b254e0b782ef8d89d0&amp;scene=21#wechat_redirect">为什么 Redis 是单线程的</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010412301/article/details/64923131">理解 redis 跳表</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wcf373722432/article/details/78678504">redis 底层数据结构</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/varyall/article/details/81205183">Redis面试”刁难”问题</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAwMDU1MTE1OQ==&amp;mid=2653548432&amp;idx=1&amp;sn=ac120e1ffca7c2007c0bc5df51e03d7b&amp;chksm=813a7e08b64df71ec7b8b6afc2a36a8ff1d780db54a395b58a9f18f084080c09de514e999834&amp;scene=21#wechat_redirect">Redis 防止雪崩或穿透</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000012038561">redis总结篇</a></li>
-</ul>
-<h3 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dreamchasering/article/details/77653512">RabbitMQ基础知识详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/samxx8/article/details/47417133">RabbitMQ概念总结</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/vipstone/p/9275256.html">深入了解RabbitMQ</a></li>
-</ul>
-<h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/linguoguo/p/5511293.html">Nginx原理和优化</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010209217/article/details/77854929">Nginx基础配置详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_25797077/article/details/52200722">Nginx基本学习</a></li>
-</ul>
-<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ghosth/p/7502197.html">浅析 Apache 工作原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hguisu/article/details/7395181">Apache运行机制剖析</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cunkouzh/p/5410154.html">Nginx与Apache的对比及优缺点</a></li>
-</ul>
-<h3 id="Memcache"><a href="#Memcache" class="headerlink" title="Memcache"></a>Memcache</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zls986992484/article/details/52737974">基本使用</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/chenleixing/article/details/47035453">深入理解 memcache 原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/JavaBlackHole/p/7726195.html">Redis和Memcache区别，优缺点对比</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/endlu/article/details/51385336">Memcached实现机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000012950110">MemCache 基础介绍与工作原理</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000004053366">memcache的介绍与应用场景</a></li>
-</ul>
-<h3 id="Sphinx"><a href="#Sphinx" class="headerlink" title="Sphinx"></a>Sphinx</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yk19851111/article/details/51553351">Sphinx 的介绍和原理探索</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/phachon/article/details/52451000">Sphinx 在网站架构中的应用</a></li>
-</ul>
-<h3 id="ELK"><a href="#ELK" class="headerlink" title="ELK"></a>ELK</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wenlixing110/article/details/56277603">ELK多种架构及优势</a></li>
-</ul>
-<h2 id="Go语言"><a href="#Go语言" class="headerlink" title="Go语言"></a>Go语言</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013739000">Golang 新手可能会踩的 50 个坑</a></li>
-</ul>
-<h3 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://studygolang.com/articles/10065">常见知识点</a></li>
-<li><a target="_blank" rel="noopener" href="https://goquiz.github.io/">笔试网站</a></li>
-<li><a target="_blank" rel="noopener" href="https://studygolang.com/articles/1642">make和new区别</a></li>
-<li><a target="_blank" rel="noopener" href="https://studygolang.com/articles/13359?fr=sidebar">golang中的引用类型</a></li>
-</ul>
-<h3 id="高级"><a href="#高级" class="headerlink" title="高级"></a>高级</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ghj1976/article/details/27996095">Golang适合高并发场景的原因分析</a></li>
-</ul>
-<h4 id="内存分配-1"><a href="#内存分配-1" class="headerlink" title="内存分配"></a>内存分配</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhonglinzhang/article/details/74626412">内存分配与管理</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ldaniel/p/8502867.html?utm_source=debugrun&amp;utm_medium=referral">内存管理</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_17612199/article/details/80278632">内存管理和垃圾回收</a></li>
-</ul>
-<h4 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://phachon.com/2018/09/09/go_bootstrap/">go语言启动过程</a></li>
-</ul>
-<h4 id="并发机制"><a href="#并发机制" class="headerlink" title="并发机制"></a>并发机制</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://phachon.com/2018/09/03/go_concurrent/">go语言并发机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://studygolang.com/articles/1855">go 调度器</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37579159/article/details/79345831">golang并发原理分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pmlpml/article/details/78850661">理解 goroutine 的并发</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangzhiyang/article/details/52669851">Goroutine调度机制</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/williamjie/p/9267741.html">Goroutine并发调度模型深度解析之手撸一个协程池</a></li>
-<li><a target="_blank" rel="noopener" href="https://tonybai.com/2017/06/23/an-intro-about-goroutine-scheduler/">也谈goroutine调度器</a></li>
-<li><a target="_blank" rel="noopener" href="http://blog.cyeam.com/">go源码分析博客</a></li>
-</ul>
-<h3 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://wangzhezhe.github.io/2017/02/12/go-routine-using-scenarios/">channel的底层实现</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/justaipanda/article/details/43155949">深入理解 interface</a></li>
-</ul>
-<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/screscent/article/details/79697992">fasthhtp 的优化</a></li>
-</ul>
-<h2 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://gitee.com/phachon/review-information/tree/master/php">基本知识点总结</a></li>
-<li><a target="_blank" rel="noopener" href="https://github.com/wanglelecc/interview">综合</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34625397/article/details/51785421">知识回顾</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000004124429">变量在 PHP7 内部的实现（一）</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000004173452">变量在 PHP7 内部的实现（二）</a></li>
-</ul>
-<h2 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/foryang/p/5849402.html">23中设计模式深入理解</a></li>
-</ul>
-<h2 id="项目总结"><a href="#项目总结" class="headerlink" title="项目总结"></a>项目总结</h2><h3 id="实现短网址项目"><a href="#实现短网址项目" class="headerlink" title="实现短网址项目"></a>实现短网址项目</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/43eea66a2235">https://www.jianshu.com/p/43eea66a2235</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lovekingly/p/5505308.html">https://www.cnblogs.com/lovekingly/p/5505308.html</a><br><a target="_blank" rel="noopener" href="https://www.jb51.net/article/136554.htm">https://www.jb51.net/article/136554.htm</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/flying1819/articles/8832640.html">https://www.cnblogs.com/flying1819/articles/8832640.html</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/php/php-kernel.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/php/php-kernel.html" class="post-title-link" itemprop="url">PHP 内核知识点总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-07-23 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2017-07-23T00:00:00+08:00">2017-07-23 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/PHP/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="PHP-的基本架构"><a href="#PHP-的基本架构" class="headerlink" title="PHP 的基本架构"></a>PHP 的基本架构</h2><ul>
-<li>Zend引擎：Zend 整体用纯C实现，是 PHP 的内核部分，它将 PHP 代码翻译（词法、语法解析等一系列编译过程）为可执行 opcode 的处理并实现相应的处理方法、实现了基本的数据结构（如hashtable、oo）、内存分配及管理、提供了相应的 api 方法供外部调用，是一切的核心，所有的外围功能均围绕 Zend 实现。</li>
-<li>Extensions：围绕着 Zend 引擎，extensions 通过组件式的方式提供各种基础服务，我们常见的各种内置函数（如 array 系列）、标准库等都是通过 extension 来实现，用户也可以根据需要实现自己的 extension 以达到功能扩展、性能优化等目的（如贴吧正在使用的 PHP 中间层、富文本解析就是 extension 的典型应用）。</li>
-<li>Sapi：Sapi 全称是 Server Application Programming Interface，也就是服务端应用编程接口，Sapi 通过一系列钩子函数，使得 PHP 可以和外围交互数据，这是 PHP 非常优雅和成功的一个设计，通过 sapi 成功的将PHP本身和上层应用解耦隔离，PHP 可以不再考虑如何针对不同应用进行兼容，而应用本身也可以针对自己的特点实现不同的处理方式。<ul>
-<li>apache2handler：这是以apache作为webserver，采用mod_PHP模式运行时候的处理方式，也是现在应用最广泛的一种。</li>
-<li>cgi：这是webserver和PHP直接的另一种交互方式，也就是大名鼎鼎的fastcgi协议，在最近今年fastcgi+PHP得到越来越多的应用，也是异步webserver所唯一支持的方式。</li>
-<li>cli：命令行调用的应用模式</li>
-</ul>
-</li>
-<li>上层应用：这就是我们平时编写的 PHP 程序，通过不同的 sapi 方式得到各种各样的应用模式，如通过 webserver 实现 web 应用、在命令行下以脚本方式运行等等。</li>
-</ul>
-<h2 id="PHP-执行过程"><a href="#PHP-执行过程" class="headerlink" title="PHP 执行过程"></a>PHP 执行过程</h2><ul>
-<li>第一步：启动 web 服务器，如果是 apache, apache 通过 mod_php5.so 调用 sapi 接口启动 php 解释器，如果是 nginx, nginx 调用 php-fpm(php fast-cgi进程管理器)启动 php-fpm，php 内核调用各个扩展的初始化方法，使之处于激活状态</li>
-<li>第二部：当发生请求时候, SAPI 将控制权交给 php 核心层, php 设置了本次请求的变量</li>
-<li>第三部：php 核心层调用 zend 引擎将 php 源代码编译成 opcode 码，并在 zend 虚拟机运行得出结果，将结果返回给 php 核心层<ul>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>生成 opcode 码</li>
-<li>执行 opcode 码</li>
-</ul>
-</li>
-<li>第四部：php 核心层将返回结果通过 sapi 返回给 web 服务器，web 服务器将结果渲染在浏览器</li>
-</ul>
-<h2 id="PHP-SAPI-生命周期"><a href="#PHP-SAPI-生命周期" class="headerlink" title="PHP SAPI 生命周期"></a>PHP SAPI 生命周期</h2><p>PHP开始执行以后会经过两个主要的阶段：</p>
+<p>并发服务器的实现方式一般有三种：多进程服务器，多线程服务器，多路复用服务器</p>
+<h2 id="多进程服务器"><a href="#多进程服务器" class="headerlink" title="多进程服务器"></a>多进程服务器</h2><p>实现原理：当父进程 accept 一个请求之后，立即 Fork 出一个子进程去处理请求。而父进程则继续循环等待 accept 接受到新的请求。没有请求的情况下，父进程处于阻塞状态。</p>
 <ul>
-<li>处理请求之前的开始阶段<ul>
-<li>第一个过程是模块初始化阶段（MINIT），在整个SAPI生命周期内 (例如 Apache 启动以后的整个生命周期内或者命令行程序整个执行过程中)， 该过程只进行一次。</li>
-<li>第二个过程是模块激活阶段（RINIT），该过程发生在请求阶段，例如通过 url 请求某个页面，则在每次请求之前都会进行模块激活（RINIT请求开始）。</li>
+<li>创建套接字</li>
+<li>绑定（bind）服务器端口</li>
+<li>监听（listen）端口</li>
+<li>受理（accept）连接请求</li>
+<li>给获取到新的请求创建网络套接字传递(fork)给子进程</li>
+<li>子进程处理连接</li>
+<li>继续（accept）等待新的连接</li>
 </ul>
-</li>
-</ul>
-<p>请求处理完后就进入了结束阶段，一般脚本执行到末尾或者通过调用 exit() 或 die() 函数， PHP 都将进入结束阶段。和开始阶段对应，结束阶段也分为两个环节。</p>
-<ul>
-<li>请求之后的结束阶段<ul>
-<li>一个在请求结束后停用模块(RSHUTDOWN，对应RINIT)</li>
-<li>一个在 SAPI 生命周期结束（Web服务器退出或者命令行脚本执行完毕退出）时关闭模块(MSHUTDOWN，对应MINIT)</li>
-</ul>
-</li>
-</ul>
-<p>例如执行 test.php</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -f test.php</span><br></pre></td></tr></table></figure>
-<p><img src="/images/php_life.png" alt="单进程 SAPI 生命周期"></p>
-<p>调用每个模块的初始化前，初始化过程：</p>
-<ul>
-<li>初始化若干全局变量</li>
-<li>初始化若干常量</li>
-<li>初始化Zend引擎和核心组件</li>
-<li>解析 php.ini</li>
-<li>全局操作函数的初始化</li>
-<li>初始化静态构建的模块和共享模块(MINIT)</li>
-</ul>
-<h2 id="多进程SAPI生命周期"><a href="#多进程SAPI生命周期" class="headerlink" title="多进程SAPI生命周期"></a>多进程SAPI生命周期</h2><p>通常PHP是编译为apache的一个模块来处理PHP请求。Apache一般会采用多进程模式， Apache启动后会fork出多个子进程，每个进程的内存空间独立，每个子进程都会经过开始和结束环节， 不过每个进程<br>的开始阶段只在进程fork出来以来后进行，在整个进程的生命周期内可能会处理多个请求。 只有在Apache关闭或者进程被结束之后才会进行关闭阶段，在这两个阶段之间会随着每个请求重复请求开始-请求关闭的<br>环节。</p>
-<h2 id="多线程的SAPI生命周期"><a href="#多线程的SAPI生命周期" class="headerlink" title="多线程的SAPI生命周期"></a>多线程的SAPI生命周期</h2><p>多线程模式和多进程中的某个进程类似，不同的是在整个进程的生命周期内会并行的重复着 请求开始-<br>请求关闭的环节</p>
-<h2 id="Apache-加载-PHP-模块"><a href="#Apache-加载-PHP-模块" class="headerlink" title="Apache 加载 PHP 模块"></a>Apache 加载 PHP 模块</h2><p>当PHP需要在Apache服务器下运行时，一般来说，它可以mod_php5模块的形式集成， 此时mod_php5模块的作用是接收Apache传递过来的PHP⽂件请求，并处理这些请求， 然后将处理后的结果返<br>回给Apache。如果我们在Apache启动前在其配置⽂件中配置好了PHP模块（mod_php5）， PHP模块通过注册apache2的ap_hook_post_config挂钩，在Apache启动的时候启动此模块以接受PHP文件的请求。</p>
-<ul>
-<li><p>静态加载</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LoadModule php5_module modules/mod_php5.so</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>动态加载<br>如果需要在服务器运行时加载模块， 可以通过发送信号HUP或者AP_SIG_GRACEFUL给服务器，一旦接受到该信号，Apache将重新装载模块， ⽽不需要重新启动服务<br>器。</p>
-</li>
-</ul>
-<h2 id="Apache-运行过程"><a href="#Apache-运行过程" class="headerlink" title="Apache 运行过程"></a>Apache 运行过程</h2><p>Apache的运行分为启动阶段和运行阶段。</p>
-<h3 id="启动阶段"><a href="#启动阶段" class="headerlink" title="启动阶段"></a>启动阶段</h3><p>Apache为了获得系统资源最⼤的使用权限，将以特权用户root（*nix系统）或超级管理员Administrator(Windows系统)完成启动， 并且整个过程处于一<br>个单进程单线程的环境中。 这个阶段包括配置⽂件解析(如http.conf⽂件)、模块加载(如mod_php，mod_perl)和系统资源初始化（例如⽇志⽂件、共享内存段、数据库连接等）等⼯作。<br>Apache的启动阶段执行了⼤量的初始化操作，并且将许多⽐较慢或者花费⽐较⾼的操作都集中在这个阶段完成，以减少了后⾯处理请求服务的压⼒。</p>
-<h3 id="运行阶段"><a href="#运行阶段" class="headerlink" title="运行阶段"></a>运行阶段</h3><p>Apache主要⼯作是处理用户的服务请求。 在这个阶段，Apache放弃特权用户级别，使用普通权限，这主要是基于安全性的考虑，防⽌由于代码的缺陷引起的安全漏洞。 Apache对HTTP的请求<br>可以分为连接、处理和断开连接三个⼤的阶段。</p>
-<h2 id="PHP-的几种运行方式"><a href="#PHP-的几种运行方式" class="headerlink" title="PHP 的几种运行方式"></a>PHP 的几种运行方式</h2><p><a target="_blank" rel="noopener" href="https://phachon.com/2016/07/29/php-run-type/">https://phachon.com/2016/07/29/php-run-type/</a></p>
-<h2 id="PHP-程序的执行过程"><a href="#PHP-程序的执行过程" class="headerlink" title="PHP 程序的执行过程"></a>PHP 程序的执行过程</h2><ol>
-<li>如上例中， 传递给php程序需要执行的⽂件， php程序完成基本的准备⼯作后启动PHP及Zend引<br>擎，加载注册的扩展模块。</li>
-<li>初始化完成后读取脚本⽂件，Zend引擎对脚本⽂件进行词法分析，语法分析。然后编译成opcode执<br>行。 如过安装了apc之类的opcode缓存， 编译环节可能会被跳过⽽直接从缓存中读取opcode执<br>行。</li>
+<p>子进程会复制父进程的所有资源，多个子进程之间相互独立，互不影响。</p>
+<h3 id="多进程服务器的优点"><a href="#多进程服务器的优点" class="headerlink" title="多进程服务器的优点"></a>多进程服务器的优点</h3><ol>
+<li>由操作系统进行调度，运行相对稳定健壮</li>
+<li>通过操作系统可以方便的进行监控和管理</li>
+<li>比较好的隔离性，每个进程相互独立，不影响主程序的稳定性。</li>
+<li>充分利用多核 CPU , 实现并行处理</li>
 </ol>
-<h3 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h3><p>PHP的词法分析器是通过 lex 生成的， 词法规则⽂件在$PHP_SRC/Zend/zend_language_scanner.l， 这一阶段lex会会将源代码按照词法规则切分一个一个<br>的标记(token)。PHP中提供了一个函数 token_get_all()， 该函数接收一个字符串参数， 返回一个按照词法<br>规则切分好的数组。</p>
-<h2 id="PHP-变量类型及存储结构"><a href="#PHP-变量类型及存储结构" class="headerlink" title="PHP 变量类型及存储结构"></a>PHP 变量类型及存储结构</h2><p>变量的值存储到以下所⽰ zval 结构体中。变量的 key 和指向 zval 的指针存储在符号表里。 zval 结构体定义在Zend/zend.h⽂件，其结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _zval_struct zval;</span><br><span class="line"></span><br><span class="line">struct _zval_struct &#123;</span><br><span class="line">    /* Variable information */</span><br><span class="line">    zvalue_value value; /* value */</span><br><span class="line">    zend_uint refcount__gc;</span><br><span class="line">    zend_uchar type; /* active type */</span><br><span class="line">    zend_uchar is_ref__gc;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>变量的值存储在 zvalue_value 联合体中<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef union _zvalue_value &#123;</span><br><span class="line">    long lval; /* long value */</span><br><span class="line">    double dval; /* double value */</span><br><span class="line">    struct &#123;</span><br><span class="line">        char *val;</span><br><span class="line">        int len;</span><br><span class="line">    &#125; str;</span><br><span class="line">    HashTable *ht; /* hash table value */</span><br><span class="line">    zend_object_value obj;</span><br><span class="line">&#125; zvalue_value;</span><br></pre></td></tr></table></figure></p>
-<p>使用联合体⽽不是用结构体是出于空间利用率的考虑，因为一个变量同时只能属于一种类型。 如果使用结构体的话将会不必要的浪费空间，⽽PHP中的所有逻辑都围绕变量来进行的，这样的话， 内存浪费将是⼗分⼤的。这种做法成本⼩但收益⾮常⼤。</p>
-<h2 id="PHP-哈希表实现"><a href="#PHP-哈希表实现" class="headerlink" title="PHP 哈希表实现"></a>PHP 哈希表实现</h2><p>PHP内核中的哈希表是⼗分重要的数据结构，PHP的⼤部分的语⾔特性都是基于哈希表实现的，例如：变量的作用域、函数表、类的属性、⽅法等，Zend引擎内部的很多数据都是保存在哈希表中的。</p>
-<p>PHP中的哈希表是使用拉链法来解决冲突的，具体点讲就是使用链表来存储哈希到同一个槽位的数据， Zend为了保存数据之间的关系使用了双向列表来链接元素。</p>
-<p>PHP 哈希表实现中的数据结构，PHP使用两个数据结构来实现哈希表，HashTable结构体用于保存整个哈希表需要的基本信息，⽽ Bucket 结构体用于保存具体的数据内容</p>
+<h3 id="多进程服务器的缺点"><a href="#多进程服务器的缺点" class="headerlink" title="多进程服务器的缺点"></a>多进程服务器的缺点</h3><ol>
+<li>进程的创建和销毁比较消耗资源，每个进程都独立加载完整的应用环境，内存消耗比较大。</li>
+<li>CPU 消耗高，高并发下，进程之间频繁的进行调度切换，需要大量的内存操作</li>
+<li>进程数量限制了并发处理数，使得 I/O 的并发处理能力比较低</li>
+</ol>
+<h2 id="多线程服务器"><a href="#多线程服务器" class="headerlink" title="多线程服务器"></a>多线程服务器</h2><p>通常在一个进程中可以包含若干个线程，当然一个进程中至少有一个线程，不然没有存在的意义。线程可以利用进程所拥有的资源，在引入线程的操作系统中，通常都是把进程作为分配资源的基本单位，而把线程作为独立运行和独立调度的基本单位，由于线程比进程更小，基本上不拥有系统资源，故对它的调度所付出的开销就会小得多，能更高效的提高系统多个程序间并发执行的程度。</p>
+<p>多线程服务器的实现：</p>
 <ul>
-<li>HashTable 结构</li>
+<li>创建套接字</li>
+<li>绑定（bind）服务器端口</li>
+<li>监听（listen）端口</li>
+<li>受理（accept）连接请求</li>
+<li>服务器通过 accept 受理连接请求</li>
+<li>每当有新连接时，创建新的线程来处理用户请求</li>
+<li>处理完成后，销毁线程</li>
+<li>继续（accept）接收新的连接请求</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef struct _hashtable &#123;</span><br><span class="line">     uint nTableSize; //表长度，并非元素个数</span><br><span class="line">     uint nTableMask;//表的掩码，始终等于nTableSize-1</span><br><span class="line">     uint nNumOfElements;//存储的元素个数</span><br><span class="line">     ulong nNextFreeElement;//指向下一个空的元素位置</span><br><span class="line">     Bucket *pInternalPointer;//foreach循环时，用来记录当前遍历到的元素位置</span><br><span class="line">     Bucket *pListHead;</span><br><span class="line">     Bucket *pListTail;</span><br><span class="line">     Bucket **arBuckets;//存储的元素数组</span><br><span class="line">     dtor_func_t pDestructor;//析构函数</span><br><span class="line">     zend_bool persistent;//是否持久保存。从这可以发现，PHP数组是可以实现持久保存在内存中的，而无需每次请求都重新加载。</span><br><span class="line">     unsigned char nApplyCount;</span><br><span class="line">     zend_bool bApplyProtection;</span><br><span class="line">&#125; HashTable;</span><br></pre></td></tr></table></figure>
+<h3 id="多线程服务器的优点"><a href="#多线程服务器的优点" class="headerlink" title="多线程服务器的优点"></a>多线程服务器的优点</h3><ol>
+<li>对内存消耗小，线程之间共享进程的堆内存和数据，每个线程的栈都比较小，不超过 1M</li>
+<li>CPU 上下文切换比较快</li>
+<li>线程的切换开销远低于进程，I/O 的并发能力强</li>
+</ol>
+<h3 id="多线程服务器的缺点"><a href="#多线程服务器的缺点" class="headerlink" title="多线程服务器的缺点"></a>多线程服务器的缺点</h3><ol>
+<li>不方便操作系统的管理</li>
+<li>由于线程存在对资源的共享操作，一旦出现死锁和线程阻塞，使得影响整个应用的稳定性</li>
+</ol>
+<h2 id="多路复用服务器"><a href="#多路复用服务器" class="headerlink" title="多路复用服务器"></a>多路复用服务器</h2><p>多路复用即 I/O 多路复用，是指内核一旦发现进程指定的一个或者多个 I/O 条件准备读取，它就通知该进程。<br>I/O复用原理：让应用程序可以同时对多个I/O端口进行监控以判断其上的操作是否可以进行，达到时间复用的目的。</p>
+<h3 id="select-模型"><a href="#select-模型" class="headerlink" title="select 模型"></a>select 模型</h3><p>使用 select 函数时，可以将多个文件描述符集中到一起进行监视：</p>
 <ul>
-<li>Bucket 结构</li>
+<li>是否存在套接字接受数据</li>
+<li>无需阻塞传输数据的套接字有哪些</li>
+<li>哪些套接字发生了异常</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef struct bucket &#123;</span><br><span class="line">     ulong h; //数组索引</span><br><span class="line">     uint nKeyLength; //字符串索引的长度</span><br><span class="line">     void *pData; //实际数据的存储地址</span><br><span class="line">     void *pDataPtr; //引入的数据存储地址</span><br><span class="line">     struct bucket *pListNext;</span><br><span class="line">     struct bucket *pListLast;</span><br><span class="line">     struct bucket *pNext; //双向链表的下一个元素的地址</span><br><span class="line">     struct bucket *pLast;//双向链表的下一个元素地址</span><br><span class="line">     char arKey[1]; /* Must be last element */</span><br><span class="line">&#125; Bucket;</span><br></pre></td></tr></table></figure>
-<p>PHP中初始化一个空数组或不足8个元素的数组，都会被创建8个长度的 HashTable。同样创建100个元素的数组，也会被分配128长度的HashTable。依次类推。</p>
-<h3 id="PHP-哈希算法"><a href="#PHP-哈希算法" class="headerlink" title="PHP 哈希算法"></a>PHP 哈希算法</h3><p>PHP内核哈希表的散列函数很简单，直接使用 （HashTable-&gt;nTableSize &amp; HashTable-&gt;nTableMask）的结果作为散列函数的实现。这样做的目的可能也是为了降低Hash算法的复杂度和提高性能。</p>
-<h3 id="PHP-对字符串索引处理方式"><a href="#PHP-对字符串索引处理方式" class="headerlink" title="PHP 对字符串索引处理方式"></a>PHP 对字符串索引处理方式</h3><p>与数字索引相比，只是多了一步将字符串转换为整型。用到的算法是time33，就是对字符串的每个字符转换为ASCII码乘上33并且相加得到的结果。</p>
-<h2 id="PHP7-中-HashTable-优化"><a href="#PHP7-中-HashTable-优化" class="headerlink" title="PHP7 中 HashTable 优化"></a>PHP7 中 HashTable 优化</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaolei1982/article/details/52292866#t0">blog</a></p>
-<h2 id="PHP7-变量存储的优化"><a href="#PHP7-变量存储的优化" class="headerlink" title="PHP7 变量存储的优化"></a>PHP7 变量存储的优化</h2><h2 id="内存管理机制"><a href="#内存管理机制" class="headerlink" title="内存管理机制"></a>内存管理机制</h2><p>PHP的内存管理可以被看作是分层（hierarchical）的。 它分为三层：存储层（storage）、堆层（heap）和接⼝层（emalloc/efree）。 存储层通过 malloc()、mmap() 等函数向系统真正的申请内存，并通过 free() 函数释放所申请的内存。 存储层通常申请的内存块都⽐较⼤，这⾥申请的内存⼤并不是指<br>storage层结构所需要的内存⼤， 只是堆层通过调用存储层的分配⽅法时，其以⼤块⼤块的⽅式申请的内存，存储层的作用是将内存分配的⽅式对堆层透明化。</p>
-<p>初始化内存管理顺序：</p>
+<h3 id="利用-select-函数实现-I-O-复用服务器"><a href="#利用-select-函数实现-I-O-复用服务器" class="headerlink" title="利用 select 函数实现 I/O 复用服务器"></a>利用 select 函数实现 I/O 复用服务器</h3><p>实现过程描述：</p>
 <ul>
-<li>初始化 storage 层的分配方案</li>
-<li>初始化 heap 堆层</li>
+<li>创建套接字</li>
+<li>绑定（bind）服务器端口</li>
+<li>监听（listen）端口</li>
+<li>注册服务端套接字到 fd_set 变量</li>
+<li>while 循环<ul>
+<li>调用 select 函数监听 fd_set 里的套接字 </li>
+<li>监听发生状态变化的（有接受数据的）网络套接字</li>
+<li>首先发生变化的是否是验证服务端套接字，如果是，则说明有新的连接请求，accept 新的请求，并将客户端连接的套接字注册到 fd_set 变量中</li>
+<li>如果发生变化不是服务端套接字，则说明是客户端连接套接字，则读取客户端数据</li>
+<li>读取的数据是 EOF，则证明套接需要关闭套接字，并从 select 注册的套接字中删除该套接字</li>
 </ul>
-<p>PHP中的内存管理主要⼯作就是维护三个列表：⼩块内存列表（free_buckets）、 ⼤块内存列表（large_free_buckets）和剩余内存列表（rest_buckets）<br>从内存分配的过程中可以看出，内存块查找判断顺序依次是⼩块内存列表，⼤块内存列表，剩余内存列表。<br>ZendMM向系统进行的内存申请，并不是有需要时向系统即时申请， ⽽是由ZendMM的最底层（heap层）先向系统申请一⼤块的内存，通过对上⾯三种列表的填充， 建立一个类似于内存池的管理机制。 在程序运行需要使用<br>内存的时候，ZendMM会在内存池中分配相应的内存供使用。 这样做的好处是避免了PHP向系统频繁的内存申请操作</p>
-<h2 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h2><p>引用计数、引用计数的问题。如何解决。</p>
-
+</li>
+</ul>
+<p>select 的几大缺点：</p>
+<ol>
+<li>每次调用select，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大</li>
+<li>同时每次调用select都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大</li>
+<li>select支持的文件描述符数量太小了，默认是1024</li>
+</ol>
+<h3 id="利用-poll-实现-I-O-复用服务器"><a href="#利用-poll-实现-I-O-复用服务器" class="headerlink" title="利用 poll 实现 I/O 复用服务器"></a>利用 poll 实现 I/O 复用服务器</h3><p>实现过程和 select 函数大致相同，区别在于 select 使用的结构是集合 fd_set 结构，poll 使用的结构是 pollsd  结构。</p>
+<h3 id="利用-epoll-实现-I-O-复用服务器"><a href="#利用-epoll-实现-I-O-复用服务器" class="headerlink" title="利用 epoll 实现 I/O 复用服务器"></a>利用 epoll 实现 I/O 复用服务器</h3><p>基于 select 的 I/O 复用服务器，有比较明显的不合理：</p>
+<ol>
+<li>每次调用 select 函数后针对所有文件描述符分循环</li>
+<li>每次调用 select 函数都需要向该函数传递监视对象的信息（fd_set）</li>
+</ol>
+<p>每次调用 select 函数时是向操作系统传递监视对象信息，那必然会发生系统调用，需要把 fd 集合从用户态拷贝到内核态。开销太大</p>
+<p>Linux 下的 epoll 具有如下优点：</p>
+<ol>
+<li>无需编写以监视状态变化为目的针对所有文件描述符的循环语句</li>
+<li>调用对应于 select 函数的 epoll_wait 函数无需每次都传递监视对象信息</li>
+</ol>
+<p>epoll 提供了三个函数：</p>
+<ul>
+<li>epoll_create：是创建一个 epoll 句柄</li>
+<li>epoll_ctl：是注册要监听的事件类型</li>
+<li>epoll_wait：则是等待事件的产生</li>
+</ul>
+<p>实现过程描述：</p>
+<ul>
+<li>创建套接字</li>
+<li>绑定（bind）服务器端口</li>
+<li>监听（listen）端口</li>
+<li>epoll_create 创建 epoll 例程</li>
+<li>epoll_ctl(add) 注册事件到 epoll 句柄</li>
+<li>while 循环<ul>
+<li>调用 epoll_wait 函数监听套接字 </li>
+<li>监听发生状态变化的（有接受数据的）网络套接字</li>
+<li>首先发生变化的是否是验证服务端套接字，如果是，则说明有新的连接请求，accept 新的请求，并调用 epoll_ctl 将客户端连接的套接字注册到 epoll 句柄</li>
+<li>如果发生变化不是服务端套接字，则说明是客户端连接套接字，则读取客户端数据</li>
+<li>读取的数据是 EOF，则证明套接需要关闭套接字，调用 epoll_ctl(del) 注册事件到 epoll 句柄</li>
+</ul>
+</li>
+</ul>
+<p>epoll 和 selectp/poll 最大的区别：</p>
+<ul>
+<li>epoll_ctl 函数，每次注册新的事件到 epoll 句柄时，会把所有的 fd 拷贝进内核，而不是在 epoll_wait 的时候重复拷贝。epoll 保证了每一个 fd 在整个过程中只会拷贝一次</li>
+<li>epoll 的解决方案不像 select 或 poll 一样每次都把需要监听的套接字加入 fd 对应的设备等待队列中，而只在 epoll_ctl 时挂载一遍，并为每个 fd 设置一个回调函数，当设备就绪，唤醒等待队列的等待者时，就会调用这个函数，而这个毁掉函数就会把 fd 加入一个有序链表。</li>
+<li>epoll_wait 的工作实际上就是在这个就绪的链表中查看有没有就绪的 fd。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
       
     </div>
 
@@ -712,7 +1075,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/html/firefox-input.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-runtime-concurrent.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -726,7 +1089,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/html/firefox-input.html" class="post-title-link" itemprop="url">火狐浏览器下刷新不清除表单问题</a>
+            <a href="/go/go-runtime-concurrent.html" class="post-title-link" itemprop="url">Go runtime 系列之 - 并发机制</a>
         </h2>
 
         <div class="post-meta">
@@ -736,7 +1099,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-12-30 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-12-30T00:00:00+08:00">2016-12-30 00:00:00</time>
+              <time title="创建时间：2018-09-03 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-09-03T00:00:00+08:00">2018-09-03 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -751,7 +1114,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Html/" itemprop="url" rel="index"><span itemprop="name">Html</span></a>
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
                 </span>
             </span>
 
@@ -761,304 +1124,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>278</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>js 控制表单重新刷新</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">location.href = url;</span><br><span class="line">location.reload();</span><br></pre></td></tr></table></figure>
-<p>测试时发现谷歌，360均正常，但是在火狐浏览器，刷新完之后，表单的数据还在，并没有清除，刚开始以为是浏览器的设置问题。查找资料后找到一些解决办法</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/html/firefox-input.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/opensource/phaChat.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/opensource/phaChat.html" class="post-title-link" itemprop="url">一个基于 node.js 搭建的web聊天系统</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-10-11 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-10-11T00:00:00+08:00">2016-10-11 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OpenSource/" itemprop="url" rel="index"><span itemprop="name">OpenSource</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>392</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><blockquote>
-<p>一个简单的 web 聊天室, 采用 node.js 编写，基于 express + mysql + socket 实现的在线多人web 聊天系统，包括用户的登陆注册，用户的个人信息修改,目的是为了更加深入学习了解 node.js 和 websocket 技术，给初学者一个练习的小项目。有兴趣的同学可以继续完善（用户的头像上传，创建聊天群，消息保存等）</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/opensource/phaChat.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/elk/elk-install.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/elk/elk-install.html" class="post-title-link" itemprop="url">ELK 实时日志分析系统平台的学习与使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-22 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-22T00:00:00+08:00">2016-09-22 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ELK/" itemprop="url" rel="index"><span itemprop="name">ELK</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>10k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>9 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>工作工程中，不论是开发还是运维，都会遇到各种各样的日志，主要包括系统日志、应用程序日志和安全日志，对于开发人员来说，查看日志，可以实时查看程序的运行错误，以及性能分析，通常，一个大中型的应用程序会被部署到多台服务器，那日志文件也会分散到不同的机器上，这样查看日志难道要一台一台去查看？显然是太麻烦了，开源的日志分析系统 ELK 完美的解决了这个问题。<br>ELK  并不是一个独立的系统，她是由 ElasticSearch、Logstash、Kibana 三个开源的工具组成。</p>
-<ul>
-<li>ElasticSearch<br>ElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是当前流行的企业级搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。</li>
-<li>Logstash<br>Logstash 是一个开源的日志分析、收集工具，并将日志存储以供以后使用。</li>
-<li>Kibana<br>Kibana 是一个为 Logstash 和 ElasticSearch 提供的日志分析的 Web 接口。可使用它对日志进行高效的搜索、可视化、分析等各种操作。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/elk/elk-install.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/live/hls.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/live/hls.html" class="post-title-link" itemprop="url">点直播流媒体传输协议之 —— HLS（HTTP Live Streaming）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-13 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-13T00:00:00+08:00">2016-09-13 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Live/" itemprop="url" rel="index"><span itemprop="name">Live</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.2k</span>
+              <span>3.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1078,10 +1144,12 @@
 
       
           <hr>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>在最近一年的工作中接触比较多的是视频点播和直播，也了解到了一些点直播的后端技术，这段时间希望将了解到的一些技术总结下来，这篇文章主要介绍流媒体协议 HLS</p>
+<p>在操作系统的搭建的内核线程之上，go 语言搭建了一个特有的两极线程模型。首先来了解一下线程实现模型，然后再详细了解 go 语言实现的</p>
+<h2 id="线程实现模型"><a href="#线程实现模型" class="headerlink" title="线程实现模型"></a>线程实现模型</h2><p>线程的实现模型主要有三种：用户级线程模型、内核级线程模型、两极线程模型。它们之间的区别主要是线程与内核调度对象之间的的对应关系。内核调度象也就是内核线程。</p>
+<h3 id="用户级线程模型"><a href="#用户级线程模型" class="headerlink" title="用户级线程模型"></a>用户级线程模型</h3><p>用户级线程模型是由用户级别的线程库来全权管理的。也就是说，用户级线程模型下的线程是往往是通过应用程序的线程库来创建、切换、销毁的。与操作系统内核的线程没有关系。操作系统内核的线程调度器也无法<br>调度用户级线程模型创建的线程。内核线程调度器只能调度创建此线程的的应用程序的进程。一个进程对应多个用户级线程，所以这种线程模型又称为多对一（M:1）的线程模型, 如下图所示：<br>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/live/hls.html#more" rel="contents">
+              <a class="btn" href="/go/go-runtime-concurrent.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1105,7 +1173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/you-get-install.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/go/go-app-mysql-table.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -1119,7 +1187,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/install/you-get-install.html" class="post-title-link" itemprop="url">You-get 的安装与使用</a>
+            <a href="/go/go-app-mysql-table.html" class="post-title-link" itemprop="url">Go 应用之 - mysql 建表问题的解决办法</a>
         </h2>
 
         <div class="post-meta">
@@ -1129,7 +1197,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-09-12 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-12T00:00:00+08:00">2016-09-12 00:00:00</time>
+              <time title="创建时间：2018-02-05 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-05T00:00:00+08:00">2018-02-05 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -1144,7 +1212,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Install/" itemprop="url" rel="index"><span itemprop="name">Install</span></a>
+                  <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
                 </span>
             </span>
 
@@ -1154,7 +1222,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1k</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1174,324 +1242,11 @@
 
       
           <hr>
-<h2 id="You-get-介绍"><a href="#You-get-介绍" class="headerlink" title="You-get 介绍"></a>You-get 介绍</h2><p>You-Get 是一款命令行工具，用来下载网页中的视频、音频、图片，支持众多网站，包含 41 家国内主流视频、音乐网站，如 网易云音乐、AB 站、百度贴吧、斗鱼、熊猫、爱奇艺、凤凰视频、酷狗音乐、乐视、荔枝FM、秒拍、腾讯视频、优酷土豆、央视网、芒果TV 等等，只需一个命令就能直接下载视频、音频以及图片回来，并且可以自动合并视频。而对于有弹幕的网站，比如 B 站，还可以将弹幕下载回来。本篇文章介绍  you-get 的安装</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>开发中需要利用 go 读取 sql 文件自动创建表。</p>
+<p>table.sql 文件内容如下<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DROP TABLE IF EXISTS `user`;</span><br><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT &#x27;主键ID&#x27;,</span><br><span class="line">  `name` varchar(30) NOT NULL COMMENT &#x27;姓名&#x27;,</span><br><span class="line">  PRIMARY KEY (`user_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=&#x27;用户表&#x27;;</span><br></pre></td></tr></table></figure></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/install/you-get-install.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/interview.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/interview.html" class="post-title-link" itemprop="url">Interview</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-09T00:00:00+08:00">2016-09-09 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>138</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<ol>
-<li>括号匹配问题</li>
-<li>1000w 个 URL，只有 1M 的内存怎么排序</li>
-<li>写出 10 个 array 相关的方法</li>
-<li>写出 5 个魔术方法</li>
-<li>__autoload 魔术方法的使用</li>
-<li>PHP 的垃圾回收机制</li>
-<li>redis 的持久化方法及实现</li>
-<li>redis 的主从同步的实现</li>
-<li>10w 的库存，4wqps 的秒杀实现</li>
-<li>golang 的垃圾回收</li>
-<li>进程线程协程</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/sphinx/sphinx-install.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/sphinx/sphinx-install.html" class="post-title-link" itemprop="url">Sphinx 在 Linux 下的安装与基本配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-06 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-06T00:00:00+08:00">2016-09-06 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Sphinx/" itemprop="url" rel="index"><span itemprop="name">Sphinx</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>Sphinx 官网：<a target="_blank" rel="noopener" href="http://sphinxsearch.com/">http://sphinxsearch.com/</a><br>wget <a target="_blank" rel="noopener" href="http://sphinxsearch.com/files/sphinx-2.2.10-release.tar.gz">http://sphinxsearch.com/files/sphinx-2.2.10-release.tar.gz</a></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="解压压缩包"><a href="#解压压缩包" class="headerlink" title="解压压缩包"></a>解压压缩包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf sphinx-2.2.10-release.tar.gz</span><br><span class="line">cd sphinx-2.2.10-release</span><br></pre></td></tr></table></figure>
-<p>找到 mysql 的安装目录，我的是在 /usr/bin/mysql 执行 /usr/lcoal/sphinx 为 sphinx 的安装目录。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=/usr/local/sphinx --with-mysql=/usr/local/mysql</span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<p>不出问题的话应该已经安装成功了</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/sphinx/sphinx-install.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/sphinx/sphinx-web.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/sphinx/sphinx-web.html" class="post-title-link" itemprop="url">Sphinx 在网站应用中的服务架构设计</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-06 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-06T00:00:00+08:00">2016-09-06 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Sphinx/" itemprop="url" rel="index"><span itemprop="name">Sphinx</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="Sphinx-简单介绍"><a href="#Sphinx-简单介绍" class="headerlink" title="Sphinx 简单介绍"></a>Sphinx 简单介绍</h2><ol>
-<li><p>介绍<br>Sphinx 是一个基于 SQL 的全文检索引擎，可以给 Mysql、PostgreSQL 做检索，提供比数据库更加专业的搜索功能。Sphinx 的搜索API接口支持 PHP,Python,Ruby,等。Sphinx 单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度为：创建100万条记录的索引只需 3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒</p>
-</li>
-<li><p>主要特性</p>
-</li>
-</ol>
-<ul>
-<li>高速索引</li>
-<li>高速搜索</li>
-<li>支持分布式搜索</li>
-<li>提供从Mysql 内部的插件式存储引擎上搜索</li>
-<li>采用 UTF-8 字符集</li>
-<li>支持 Windows/Linux/MacOX</li>
-</ul>
-<ol start="3">
-<li>使用场景<br>如果数据库的数据量不是很多，百万级的数据，可以采用数据库索引来进行检索，但是对于上千万的数据量的话就用数据库直接检索的效率就会有所下降，特别对于采用分库分表的数据库设计，如果要检索非主键的字段的话，将会非常麻烦。<br>比如用户表 user，用户量大的时候，我们一般会采用分表的方式来提高应用的访问性能。user_0 ~ user_63 ,总共 64 张表,user_id 作为 主键<br>表结构如下。<br>user_id    name    password    age<br>int    char(100)    char(32)    int<br>如果知道 user_id = 65，那我们很容易找到用户的信息, 65 % 64 = 1，那就在 user_1 表中，采用 select <em> from user_1 ….<br>但是如果我想检索名字叫 “phachon” 的用户，这个就比较麻烦了，最笨的办法就是每一张表都去查找 select </em>  from user_* where name LIKE %phchon% ,这样要循环 64 次，再将数据合并起来，这样显然是不可行的，数据库的开销太大，造成应用程序的性能下降。</li>
-</ol>
-<p>Sphinx 就可以帮我们解决上面所说的问题。当然，Sphinx 可以应用的场景很多，上面只是其中的一种。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/sphinx/sphinx-web.html#more" rel="contents">
+              <a class="btn" href="/go/go-app-mysql-table.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1514,7 +1269,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1582,20 +1337,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">51</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1661,12 +1416,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">210k</span>
+    <span title="站点总字数">213k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:11</span>
+    <span title="站点阅读时长">3:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

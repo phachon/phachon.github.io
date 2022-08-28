@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-5.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-11.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -214,7 +214,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/mysql/mysql-index-5.html" class="post-title-link" itemprop="url">Mysql 索引系列（五）：覆盖索引</a>
+            <a href="/redis/redis-11.html" class="post-title-link" itemprop="url">Redis系列（十一）：Redis 的 ZSet 性能分析</a>
         </h2>
 
         <div class="post-meta">
@@ -224,14 +224,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-28 20:25:15 20:25:15" itemprop="dateCreated datePublished" datetime="2018-09-28T20:25:15+08:00">2018-09-28 20:25:15</time>
+              <time title="创建时间：2019-01-07 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2019-01-07T12:22:10+08:00">2019-01-07 12:22:10</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-14 14:10:14 14:10:14" itemprop="dateModified" datetime="2022-08-14T14:10:14+08:00">2022-08-14 14:10:14</time>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,7 +239,566 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/redis/redis-11.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-book.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-book.html" class="post-title-link" itemprop="url">Redis系列（十二）：Redis 设计与实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-07 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2019-01-07T12:22:10+08:00">2019-01-07 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>48</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p><a target="_blank" rel="noopener" href="https://www.kancloud.cn/kancloud/redisbook/63822">https://www.kancloud.cn/kancloud/redisbook/63822</a></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/redis/redis-book.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-10.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-10.html" class="post-title-link" itemprop="url">Redis系列（十）：Redis 的 Mget 性能分析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-06 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2019-01-06T12:22:10+08:00">2019-01-06 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-9.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-9.html" class="post-title-link" itemprop="url">Redis系列（久）：Redis 数据结构之整数集合</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-01-05 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2019-01-05T12:22:10+08:00">2019-01-05 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-7.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-7.html" class="post-title-link" itemprop="url">Redis系列（七）：Redis 数据结构之 dict</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-30 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2018-12-30T12:22:10+08:00">2018-12-30 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p>redis 作为 key value 的数据库，字典是 redis 使用非常多的数据结构之一，本篇文章简单来了解一下 redis 的内部字典的实现</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/redis/redis-7.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-8.html" class="post-title-link" itemprop="url">Redis系列（八）：Redis 数据结构之 SkipList</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-30 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2018-12-30T12:22:10+08:00">2018-12-30 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>560</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p>SkipList 跳跃表是一种有序的数据结构，通过每个节点中维持多个指向其他节点的指针，从而达到快速访问的目的。跳跃表是有序集合数据类型的底层实现之一。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/redis/redis-8.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/redis/redis-6.html" class="post-title-link" itemprop="url">Redis系列（六）：Redis 数据结构之 SDS</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-17 12:22:10 12:22:10" itemprop="dateCreated datePublished" datetime="2018-12-17T12:22:10+08:00">2018-12-17 12:22:10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
                 </span>
             </span>
 
@@ -268,274 +827,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>覆盖索引并不是一种索引类型，也不是索引结构，只能算是一种索引策略。</p>
-<h2 id="什么是覆盖索引"><a href="#什么是覆盖索引" class="headerlink" title="什么是覆盖索引"></a>什么是覆盖索引</h2><p>覆盖索引：SQL只需要通过索引就可以返回查询所需要的数据，而不必通过二级索引查到主键之后再去查询数据。</p>
-<p>首先要了解覆盖索引之前，你必须要了解什么是聚簇索引和非聚簇索引，还有一个必须要了解的就是回表，覆盖索引其实就是跟到底需不需要回表有直接的关系的。</p>
-<p>什么是回表呢?<br>通俗的讲就是，如果索引的列在 select 所需获得的列中或者根据一次索引查询就能获得记录就不需要回表，如果 select 所需获得列中有大量的非索引列，索引就需要到表中找到相应的列的信息，这就叫回表。只有非聚簇索引是需要回表的，所以如果你懂得非聚簇索引的存储的结构，你自然就知道为啥需要回表了。</p>
-<h2 id="为什么需要覆盖索引"><a href="#为什么需要覆盖索引" class="headerlink" title="为什么需要覆盖索引"></a>为什么需要覆盖索引</h2><p>举例我们建了一张学生表，其中包含字段id设置主键索引、name设置普通索引、age(无处理)，并向数据库中插入 4 条数据：</p>
-<ul>
-<li>（”小赵”, 10）</li>
-<li>（”小王”, 11）</li>
-<li>（”小李”, 12）</li>
-<li>（”小陈”, 13）</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `student` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;自增主键&#x27;</span>,</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">COLLATE</span> utf8_bin <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;名称&#x27;</span>,</span><br><span class="line">  `age` <span class="type">int</span>(<span class="number">3</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;1&#x27;</span> COMMENT <span class="string">&#x27;年龄&#x27;</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">  KEY `I_name` (`name`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (name, age) <span class="keyword">VALUES</span>(&quot;小赵&quot;, <span class="number">10</span>),(&quot;小王&quot;, <span class="number">11</span>),(&quot;小李&quot;, <span class="number">12</span>),(&quot;小陈&quot;, <span class="number">13</span>);</span><br></pre></td></tr></table></figure>
-<p>这里我们设置了主键为自增，那么此时数据库里数据为：</p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>小赵</td>
-<td>10</td>
-</tr>
-<tr>
-<td>2</td>
-<td>小王</td>
-<td>11</td>
-</tr>
-<tr>
-<td>3</td>
-<td>小李</td>
-<td>12</td>
-</tr>
-<tr>
-<td>4</td>
-<td>小陈</td>
-<td>13</td>
-</tr>
-</tbody>
-</table>
-<p>每一个索引在 InnoDB 里面对应一棵B+树，那么此时就存着两棵B+树。</p>
-<p><img src="/images/mysql-fg.png" alt="索引结构"></p>
-<p>可以发现区别在与叶子节点中，主键索引存储了整行数据，而非主键索引中存储的值为主键id, 在我们执行如下sql后：</p>
-<p>SELECT age FROM student WHERE name = ‘小李’；</p>
-<p>流程为：</p>
-<ul>
-<li>在 name 索引树上找到名称为小李的节点 id 为03</li>
-<li>从 id 索引树上找到id为 03 的节点 获取所有数据</li>
-<li>从数据中获取字段命为 age 的值返回 12</li>
-</ul>
-<p>在流程中从非主键索引树搜索回到主键索引树搜索的过程称为：回表，在本次查询中因为查询结果只存在主键索引树中，我们必须回表才能查询到结果；</p>
-<p>如何优化，不需要回表呢？</p>
-<p>以name和age两个字段建立联合索引，sql命令与建立后的索引树结构如下：</p>
-<p>ALTER TABLE student ADD INDEX I_name_age(name, age);</p>
-<p><img src="/images/mysql-fg2.png" alt="联合索引"></p>
-<p>那在我们再次执行如下sql后：</p>
-<p>SELECT age FROM student WHERE name = ‘小李’；</p>
-<p>流程为：</p>
-<ul>
-<li>在name,age联合索引树上找到名称为小李的节点</li>
-<li>此时节点索引里包含信息age 直接返回 12</li>
-</ul>
-<p>此时不再需要回表</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>覆盖索引即从非主键索引中就能查到的记录，而不需要查询主键索引中的记录，避免了回表的产生减少了树的搜索次数，显著提升性能。覆盖索引并不是一种索引类型，而是一种建索引的策略。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903967365791752">MySQL 覆盖索引详解</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-4.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/mysql/mysql-index-4.html" class="post-title-link" itemprop="url">Mysql 索引系列（四）：前缀索引</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-28 19:25:15 19:25:15" itemprop="dateCreated datePublished" datetime="2018-09-28T19:25:15+08:00">2018-09-28 19:25:15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-14 12:25:12 12:25:12" itemprop="dateModified" datetime="2022-08-14T12:25:12+08:00">2022-08-14 12:25:12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="什么是前缀索引？"><a href="#什么是前缀索引？" class="headerlink" title="什么是前缀索引？"></a>什么是前缀索引？</h2><p>前缀索引也叫局部索引，比如给身份证的前 10 位添加索引，类似这种给某列部分信息添加索引的方式叫做前缀索引。</p>
-<h2 id="为什么要使用前缀索引？"><a href="#为什么要使用前缀索引？" class="headerlink" title="为什么要使用前缀索引？"></a>为什么要使用前缀索引？</h2><p>前缀索引能有效减小索引文件的大小，让每个索引页可以保存更多的索引值，从而提高了索引查询的速度。但前缀索引也有它的缺点，不能在 order by 或者 group by 中触发前缀索引，也不能把它们用于覆盖索引。</p>
-<h2 id="什么情况下适合使用前缀索引？"><a href="#什么情况下适合使用前缀索引？" class="headerlink" title="什么情况下适合使用前缀索引？"></a>什么情况下适合使用前缀索引？</h2><p>当字符串本身可能比较长，而且前几个字符就开始不相同，适合使用前缀索引；</p>
-<p>举例：如果有一个字段是一串 md5 加密后的字符串，那么就适合建前缀索引。</p>
-<h2 id="如何选择前缀索引的长度？"><a href="#如何选择前缀索引的长度？" class="headerlink" title="如何选择前缀索引的长度？"></a>如何选择前缀索引的长度？</h2><p>建立前缀索引的语法为：</p>
-<p><code>ALTER TABLE table_name ADD KEY(column_name(prefix_length));</code></p>
-<p>建立索引之前，我们要关注字段的区分度，区分度越大，性能越高，意味着重复的值就越少。</p>
-<p>这里最关键的参数就是 prefix_length，这个值需要根据实际表的内容，得到合适的索引选择性（Index Selectivity）。索引选择性就是不重复的个数与总个数的比值。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select 1.0*count(distinct column_name)/count(*)</span><br><span class="line">from table_name</span><br></pre></td></tr></table></figure>
-<p>比如我们现在有个Employee表，其中有个FirstName字段，是varchar(50)的，我们查询该字段的索引选择性：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select 1.0*count(distinct FirstName)/count(*)</span><br><span class="line">from Employee</span><br></pre></td></tr></table></figure>
-<p>得到结果0.7500，然后我们希望对FirstName建立前缀索引，希望前缀索引的选择性能够尽量贴近于对整个字段建立索引时的选择性。我们先看看3个字符，如何：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select 1.0*count(distinct left(FirstName,3))/count(*)</span><br><span class="line">from Employee</span><br></pre></td></tr></table></figure>
-<p>得到的结果是0.58784，好像差距有点大，我们再试一试4个字符呢：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select 1.0*count(distinct left(FirstName,4))/count(*)</span><br><span class="line">from Employee</span><br></pre></td></tr></table></figure>
-<p>得到0.68919，已经提升了很多，再试一试5个字符，得到的结果是0.72297，这个结果与0.75已经很接近了，所以我们这里认为前缀长度5是一个合适的取值。所以我们可以为FirstName建立前缀索引：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table test.Employee add key(FirstName(5))</span><br></pre></td></tr></table></figure>
-<p>建立前缀索引后查询语句并不需要更改，如果我们要查询所有FirstName为Devin的Employee，那么SQL仍然写成：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select *</span><br><span class="line">from Employee e</span><br><span class="line">where e.FirstName=&#x27;Devin&#x27;;</span><br></pre></td></tr></table></figure></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1704706">Mysql如何给字符串添加索引(前缀索引)</a><br><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/39841">前缀索引，一种优化索引大小的解决方案</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-3.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/mysql/mysql-index-3.html" class="post-title-link" itemprop="url">Mysql 索引系列（三）：索引的策略</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-28 18:25:15 18:25:15" itemprop="dateCreated datePublished" datetime="2018-09-28T18:25:15+08:00">2018-09-28 18:25:15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>11k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
           <hr>
-<p>Mysql 的索引使用的是 B Tree 索引，B Tree 索引适用于全健值、键值范围、键前缀查询。所以在创建索引的时候，我们必须了解存储引擎的索引的策略。这样才能使得查询效率尽量达到最优。</p>
-<p>本示例中使用的 Mysql 版本是： <code>5.7.23</code></p>
+<p>Redis 没有直接使用 C 语言的字符串数组，而是自己构建了一个简单动态字符串用于 Redis 底层的字符串表示，即 SDS (Simple Dynamic String)</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/mysql/mysql-index-3.html#more" rel="contents">
+              <a class="btn" href="/redis/redis-6.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -559,7 +855,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-2.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/consul/consul-1.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -573,7 +869,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/mysql/mysql-index-2.html" class="post-title-link" itemprop="url">Mysql 索引系列（二）：了解并使用 EXPLAIN 命令</a>
+            <a href="/consul/consul-1.html" class="post-title-link" itemprop="url">Consul系列（一）：Consul 的介绍与使用</a>
         </h2>
 
         <div class="post-meta">
@@ -583,7 +879,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-28 10:25:15 10:25:15" itemprop="dateCreated datePublished" datetime="2018-09-28T10:25:15+08:00">2018-09-28 10:25:15</time>
+              <time title="创建时间：2018-11-26 13:51:00 13:51:00" itemprop="dateCreated datePublished" datetime="2018-11-26T13:51:00+08:00">2018-11-26 13:51:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -598,104 +894,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9.9k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>9 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>上一篇文章讲解了 Mysql 在不同的存储引擎下索引的实现，在开始讲解索引的策略以及如何优化索引之<br>前，我觉得有必要先来了解以下如何去使用 <code>EXPLAIN</code> 命令来查看sql 语句的查询方式，因为在后续的<br>文章中，我们会经常使用该命令来调试和分析。除此之外，我们在工作中，也应该习惯去使用 <code>EXPLAIN</code><br>命令来分析和优化索引。</p>
-<p>本示例中使用的 Mysql 版本是： <code>5.7.23</code></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/mysql/mysql-index-2.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-index-1.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/mysql/mysql-index-1.html" class="post-title-link" itemprop="url">Mysql 索引系列（一）：索引的实现</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-28 09:15:45 09:15:45" itemprop="dateCreated datePublished" datetime="2018-09-28T09:15:45+08:00">2018-09-28 09:15:45</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-14 11:34:10 11:34:10" itemprop="dateModified" datetime="2022-08-14T11:34:10+08:00">2022-08-14 11:34:10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                  <a href="/categories/Consul/" itemprop="url" rel="index"><span itemprop="name">Consul</span></a>
                 </span>
             </span>
 
@@ -725,10 +924,10 @@
 
       
           <hr>
-<p>Mysql 数据库是目前最流行使用最广泛的关系型数据库，通过本系列来复习一下 Mysql 索引相关的知识。<br>本篇文章来讲解一下索引的具体实现。</p>
+<p>Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key/Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/mysql/mysql-index-1.html#more" rel="contents">
+              <a class="btn" href="/consul/consul-1.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -752,7 +951,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-kernel-begin.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/consul/consul-5.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -766,7 +965,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/mysql/mysql-kernel-begin.html" class="post-title-link" itemprop="url">Mysql 内核系列 - 事务</a>
+            <a href="/consul/consul-5.html" class="post-title-link" itemprop="url">Consul系列（五）：Consul 的一致性算法</a>
         </h2>
 
         <div class="post-meta">
@@ -776,7 +975,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-28 09:15:45 09:15:45" itemprop="dateCreated datePublished" datetime="2018-09-28T09:15:45+08:00">2018-09-28 09:15:45</time>
+              <time title="创建时间：2018-11-26 13:51:00 13:51:00" itemprop="dateCreated datePublished" datetime="2018-11-26T13:51:00+08:00">2018-11-26 13:51:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -791,7 +990,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                  <a href="/categories/Consul/" itemprop="url" rel="index"><span itemprop="name">Consul</span></a>
                 </span>
             </span>
 
@@ -801,7 +1000,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>28</span>
+              <span>88</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -821,9 +1020,10 @@
 
       
           <hr>
+<p>Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key/Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/mysql/mysql-kernel-begin.html#more" rel="contents">
+              <a class="btn" href="/consul/consul-5.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -847,7 +1047,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-kernel-lock.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/consul/consul-6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -861,7 +1061,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/mysql/mysql-kernel-lock.html" class="post-title-link" itemprop="url">Mysql 内核系列 - 锁机制</a>
+            <a href="/consul/consul-6.html" class="post-title-link" itemprop="url">Consul系列（六）：Consul 的介绍与使用</a>
         </h2>
 
         <div class="post-meta">
@@ -871,7 +1071,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-09-28 09:15:45 09:15:45" itemprop="dateCreated datePublished" datetime="2018-09-28T09:15:45+08:00">2018-09-28 09:15:45</time>
+              <time title="创建时间：2018-11-26 13:51:00 13:51:00" itemprop="dateCreated datePublished" datetime="2018-11-26T13:51:00+08:00">2018-11-26 13:51:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -886,7 +1086,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                  <a href="/categories/Consul/" itemprop="url" rel="index"><span itemprop="name">Consul</span></a>
                 </span>
             </span>
 
@@ -896,7 +1096,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>36</span>
+              <span>88</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -916,296 +1116,10 @@
 
       
           <hr>
+<p>Consul 用于实现分布式的服务发现和配置，内置了服务注册与发现框架，分布一致性协议实现，健康检查，Key/Value 存储，多数据中心方案，不再依赖其他工具。使用相对比较简单。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/mysql/mysql-kernel-lock.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/mysql/mysql-kernel-select.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/mysql/mysql-kernel-select.html" class="post-title-link" itemprop="url">Mysql 内核系列 - 查询流程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-28 09:15:45 09:15:45" itemprop="dateCreated datePublished" datetime="2018-09-28T09:15:45+08:00">2018-09-28 09:15:45</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/mysql/mysql-kernel-select.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-5.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/redis/redis-5.html" class="post-title-link" itemprop="url">Redis系列（五）：Redis 缓存机制与淘汰策略</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-26 17:41:47 17:41:47" itemprop="dateCreated datePublished" datetime="2018-09-26T17:41:47+08:00">2018-09-26 17:41:47</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>3.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>Redis 是基于内存的 Key Value 的 NoSql 数据库，由于其高性能，高可用，支持分布式集群的优点被广泛应用于缓存的业务场景。本篇文章就来详细了解下 Redis 缓存机制及内存淘汰策略。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/redis/redis-5.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/redis/redis-4.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/redis/redis-4.html" class="post-title-link" itemprop="url">Redis系列（四）：Redis 持久化机制</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-09-25 17:41:47 17:41:47" itemprop="dateCreated datePublished" datetime="2018-09-25T17:41:47+08:00">2018-09-25 17:41:47</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>4.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>Redis 作为最流行的非关系型数据库之一，既然是数据库就应该具备数据持久化的机制，本篇文章将针对 Redis 的数据持久化与数据恢复来进行讨论。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/redis/redis-4.html#more" rel="contents">
+              <a class="btn" href="/consul/consul-6.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1228,7 +1142,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1296,20 +1210,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">51</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1375,12 +1289,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">210k</span>
+    <span title="站点总字数">213k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:11</span>
+    <span title="站点阅读时长">3:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

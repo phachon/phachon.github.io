@@ -200,7 +200,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/lamp-yum-install.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/you-get-install.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -214,7 +214,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/install/lamp-yum-install.html" class="post-title-link" itemprop="url">Lump yum 安装与搭建</a>
+            <a href="/install/you-get-install.html" class="post-title-link" itemprop="url">You-get 的安装与使用</a>
         </h2>
 
         <div class="post-meta">
@@ -224,7 +224,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2016-07-25 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-25T00:00:00+08:00">2016-07-25 00:00:00</time>
+              <time title="创建时间：2016-09-12 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-12T00:00:00+08:00">2016-09-12 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -249,109 +249,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><h3 id="配置防火墙，开启-80，3306-端口"><a href="#配置防火墙，开启-80，3306-端口" class="headerlink" title="配置防火墙，开启 80，3306 端口"></a>配置防火墙，开启 80，3306 端口</h3><p>打开iptables</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/iptables</span><br></pre></td></tr></table></figure>
-<p>允许80端口通过防火墙</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT </span><br></pre></td></tr></table></figure>
-<p>允许3306端口通过防火墙</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT</span><br></pre></td></tr></table></figure>
-<p>允许21端口通过防火墙<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 21 -j ACCEPT</span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/install/lamp-yum-install.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/linux/linux-network-config.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/linux/linux-network-config.html" class="post-title-link" itemprop="url">Linux网络配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-07-24 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-24T00:00:00+08:00">2016-07-24 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>401</span>
+              <span>1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -371,21 +269,10 @@
 
       
           <hr>
-<h2 id="配置网络信息"><a href="#配置网络信息" class="headerlink" title="配置网络信息"></a>配置网络信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/network-scripts/ifcfg-eth0</span><br></pre></td></tr></table></figure>
-<p>打开ifcfg-eth0这个文件</p>
-<p><img src="http://img.blog.csdn.net/20160724180749720" alt="这里写图片描述"></p>
-<p>在这个文件中，保存了第一块网卡的配置信息</p>
-<ul>
-<li>DEVICE    ：设备名</li>
-<li>ONBOOT    ：当系统启动后是否自动启动网卡设备   </li>
-<li>BOOTPROTO    ：获取IP方式   static：静态获取</li>
-<li>IPADDR    ：ip地址</li>
-<li>NETMASK    ：子网掩码</li>
-<li>GATEWAY    ：网关</li>
-</ul>
+<h2 id="You-get-介绍"><a href="#You-get-介绍" class="headerlink" title="You-get 介绍"></a>You-get 介绍</h2><p>You-Get 是一款命令行工具，用来下载网页中的视频、音频、图片，支持众多网站，包含 41 家国内主流视频、音乐网站，如 网易云音乐、AB 站、百度贴吧、斗鱼、熊猫、爱奇艺、凤凰视频、酷狗音乐、乐视、荔枝FM、秒拍、腾讯视频、优酷土豆、央视网、芒果TV 等等，只需一个命令就能直接下载视频、音频以及图片回来，并且可以自动合并视频。而对于有弹幕的网站，比如 B 站，还可以将弹幕下载回来。本篇文章介绍  you-get 的安装</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/linux/linux-network-config.html#more" rel="contents">
+              <a class="btn" href="/install/you-get-install.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -409,7 +296,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_8_go.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/interview.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -423,7 +310,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/summary/my_summary_8_go.html" class="post-title-link" itemprop="url">知识点总结系列之：（八）GO</a>
+            <a href="/summary/interview.html" class="post-title-link" itemprop="url">Interview</a>
         </h2>
 
         <div class="post-meta">
@@ -433,7 +320,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2015-07-21 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-21T00:00:00+08:00">2015-07-21 00:00:00</time>
+              <time title="创建时间：2016-09-09 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-09T00:00:00+08:00">2016-09-09 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -458,14 +345,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>138</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -478,57 +365,19 @@
 
       
           <hr>
-<p>go 相关的知识点总结</p>
-<ul>
-<li>Go基本数据类型及占用的字节？</li>
-<li>Go 值类型有哪些？</li>
-<li>Go 引用类型有哪些？</li>
-<li>常量的声明？</li>
-<li>错误处理？（error, panic, recover）</li>
-<li>基本命令（build,get,run,test）</li>
-<li>除了 mutex 以外还有那些方式安全读写共享变量？</li>
-<li>JSON 标准库对 nil slice 和 空 slice 的处理是一致的吗？</li>
-<li>1.9/1.10中，time.Now()返回的是什么时间？这样做的决定因素是什么?</li>
-<li>golang的sync.atomic和C++11的atomic最显著的在golang doc里提到的差别在哪里，如何解决或者说规避？</li>
-<li>1.10为止，sync.RWMutex最主要的性能问题最容易在什么常见场景下暴露。有哪些解决或者规避方法？</li>
-<li>如何做一个逻辑正确但golang调度器(1.10)无法正确应对，进而导致无法产生预期结果的程序。调度器如何改进可以解决此问题？</li>
-<li>列出下面操作延迟数量级(1ms, 10us或100ns等)，cgo调用c代码，c调用go代码，channel在单线程单case的select中被选中，high contention下对未满的buffered channel的写延迟。</li>
-<li>如何设计实现一个简单的goroutine leak检测库，可用于在测试运行结束后打印出所测试程序泄露的goroutine的stacktrace以及goroutine被创建的文件名和行号。</li>
-<li>选择三个常见golang组件（channel, goroutine, [], map, sync.Map等），列举它们常见的严重伤害性能的anti-pattern。</li>
-<li>一个C/C++程序需要调用一个go库，某一export了的go函数需高频率调用，且调用间隔需要调用根据go函数的返回调用其它C/C++函数处理，无法改变调用次序、相互依赖关系的前提下，如何最小化这样高频调用的性能损耗？</li>
-<li>不考虑调度器修改本身，仅考虑runtime库的API扩展，如果要给调度器添加NUMA awareness且需要支持不同拓扑，runtime库需要添加哪些函数，哪些函数接口必须改动。</li>
-<li>stw的pause绝大多数情况下在100us量级，但有时跳增一个数量级。描述几种可能引起这一现象的触发因素和他们的解决方法。</li>
-<li>已经对GC做了较充分优化的程序，在无法减小内存使用量的情况下，如何继续显著减低stw pause长度。</li>
-<li>有一个常见说法是“我能用channel简单封装出一个类似sync.Pool功能的实现”。在多线程、high contention、管理不同资源的前提下，两者各方面性能上有哪些显著不同</li>
-<li>无缓冲 chan 的发送和接收是否同步？</li>
-<li>Data Race问题怎么解决？能不能不加锁解决这个问题？</li>
-<li>使用goroutine以及channel设计TCP链接的消息收发，以及消息处理？</li>
-<li>使用go语言，编写并行计算的快速排序算法？</li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013739000">golang新手可能会踩的50大坑</a></li>
-<li>uint不能直接相减，结果是负数会变成一个很大的uint，这点对动态语言出身的会可能坑</li>
-<li>channel一定记得close</li>
-<li>goroutine记得return或者中断，不然容易造成goroutine占用大量CPU</li>
-<li>从slice创建slice的时候，注意原slice的操作可能导致底层数组变化</li>
-<li>如果你要创建一个很长的slice，尽量创建成一个slice里存引用，这样可以分批释放，避免gc在低配机器上stop the world</li>
-<li>面试的时候尽量了解协程，线程，进程的区别。</li>
-<li>什么是channel，为什么它可以做到线程安全？</li>
-<li>channel 的实现机制？（通过注册相关goroutine id实现消息通知的）</li>
-<li>如何用channel实现一个令牌桶？</li>
-<li>如何调试一个go程序？</li>
-<li>如何写单元测试和基准测试？</li>
-<li>slice 底层数据结构的实现？</li>
-<li>抢占式goroutine调用？</li>
-<li>了解读写锁吗，原理是什么样的，为什么可以做到？</li>
-<li>golang的内存模型，知道多小才是小对象，为什么小对象多了会造成gc压力？</li>
-<li>Devops 用过吗？</li>
-<li>golang 采用什么并发模型？体现在哪里？</li>
-<li>goroutine 的调度是怎样的？</li>
-<li>golang 的内存回收是如何做到的？</li>
-<li>cap和len分别获取的是什么？</li>
-<li>netgo，cgo有什么区别？</li>
-<li>什么是interface？</li>
-<li>在 Vendor 特性之前包管理工具是怎么实现的？</li>
-</ul>
+<ol>
+<li>括号匹配问题</li>
+<li>1000w 个 URL，只有 1M 的内存怎么排序</li>
+<li>写出 10 个 array 相关的方法</li>
+<li>写出 5 个魔术方法</li>
+<li>__autoload 魔术方法的使用</li>
+<li>PHP 的垃圾回收机制</li>
+<li>redis 的持久化方法及实现</li>
+<li>redis 的主从同步的实现</li>
+<li>10w 的库存，4wqps 的秒杀实现</li>
+<li>golang 的垃圾回收</li>
+<li>进程线程协程</li>
+</ol>
 
       
     </div>
@@ -548,7 +397,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_7_php.html">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/sphinx/sphinx-install.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -562,7 +411,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/summary/my_summary_7_php.html" class="post-title-link" itemprop="url">知识点总结系列之：（七）PHP</a>
+            <a href="/sphinx/sphinx-install.html" class="post-title-link" itemprop="url">Sphinx 在 Linux 下的安装与基本配置</a>
         </h2>
 
         <div class="post-meta">
@@ -572,7 +421,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2015-07-20 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-20T00:00:00+08:00">2015-07-20 00:00:00</time>
+              <time title="创建时间：2016-09-06 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-06T00:00:00+08:00">2016-09-06 00:00:00</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -587,7 +436,107 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
+                  <a href="/categories/Sphinx/" itemprop="url" rel="index"><span itemprop="name">Sphinx</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>Sphinx 官网：<a target="_blank" rel="noopener" href="http://sphinxsearch.com/">http://sphinxsearch.com/</a><br>wget <a target="_blank" rel="noopener" href="http://sphinxsearch.com/files/sphinx-2.2.10-release.tar.gz">http://sphinxsearch.com/files/sphinx-2.2.10-release.tar.gz</a></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="解压压缩包"><a href="#解压压缩包" class="headerlink" title="解压压缩包"></a>解压压缩包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf sphinx-2.2.10-release.tar.gz</span><br><span class="line">cd sphinx-2.2.10-release</span><br></pre></td></tr></table></figure>
+<p>找到 mysql 的安装目录，我的是在 /usr/bin/mysql 执行 /usr/lcoal/sphinx 为 sphinx 的安装目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo ./configure --prefix=/usr/local/sphinx --with-mysql=/usr/local/mysql</span><br><span class="line">make </span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>不出问题的话应该已经安装成功了</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/sphinx/sphinx-install.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/sphinx/sphinx-web.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/sphinx/sphinx-web.html" class="post-title-link" itemprop="url">Sphinx 在网站应用中的服务架构设计</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-09-06 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-06T00:00:00+08:00">2016-09-06 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sphinx/" itemprop="url" rel="index"><span itemprop="name">Sphinx</span></a>
                 </span>
             </span>
 
@@ -617,951 +566,639 @@
 
       
           <hr>
-<p>php  相关的知识点总结</p>
-<ul>
-<li>简述 private、 protected、 public修饰符的访问权限。  </li>
-<li>使用过的魔术方法有哪些，及如何使用？</li>
-<li>__call() 方法的使用场景？</li>
-<li>__callStatic() 方法的使用场景？</li>
-<li><strong>get() 和 </strong>set()  方法的使用场景？</li>
-<li>__autoload() 什么时候使用？</li>
-<li>合并两个数组怎么合并？区别？</li>
-<li>有哪些全局变量？并说明这些全局变量的意义？</li>
-<li>数组排序的函数有哪些？区别是什么？</li>
-<li>魔术常量有使用过么？有哪些，并介绍是什么意思？</li>
-<li>php 文件处理？</li>
-<li>echo print print_r的区别？</li>
-<li>mysql_fetch_array() 与mysql_fetch_row()区别？</li>
-<li>PHP面向对象中 _set() 与 _construct的作用？</li>
-<li>PHP中session与cookie的区别？</li>
-<li>PHP中session与cookie的区别？</li>
-<li>什么是PHP的MVC,MVC的作用及原理？</li>
-<li>PHP中 include, include_once, require,, require_once 的区别？</li>
-<li>php 中字符串使用单引号和双引号的区别？</li>
-<li>字符串常用函数有哪些？</li>
-<li>PHP处理数组的常用函数？</li>
-<li>PHP处理时间的常用函数？</li>
-<li>如何定义常量？区别是什么？</li>
-<li>定义变量区分大小写吗？定义函数区分大小写吗？</li>
-<li>php中函数传递参数的方式有哪些？两者有什么区别？</li>
-<li>堆和栈的区别？ </li>
-<li>PHP 多态的实现？</li>
-<li>抽象类和接口的概念以及区别？</li>
-<li>什么是构造函数，什么是析构函数，作用是什么？ </li>
-<li>如何重载父类的方法，举例说明？</li>
-<li>$this和self、parent这三个关键词分别代表什么？在哪些场合下使用？</li>
-<li>final关键字能定义类中的成员属性吗？</li>
-<li>final关键字定义的类能够被继承吗？</li>
-<li>什么是抽象方法？</li>
-<li>如果一个类是抽象类，而类中的方法都是非抽象的方法，会报错吗？</li>
-<li>如果一个类既要继承一个父类，又要实现多个接口，该如何写？</li>
-<li>什么是 SQL 注入？如何防止 sql 注入？</li>
-<li>分页原理是什么？</li>
-<li>php session 共享怎么做？怎么修改？session 相关的函数有哪些？</li>
-<li>正则表达式？</li>
-<li>HEREDOC 是什么？</li>
-<li>一些编译php时的configure 参数？</li>
-<li>向php传入参数的三种方法？</li>
-<li>error_reporting 等调试函数使用？</li>
-<li>Safe_mode 打开后哪些地方受限？</li>
-<li>不用新变量直接交换现有两个变量的值？</li>
-<li>PHP 如何获取客户端的IP地址？</li>
-<li>写一个函数，可以遍历文件夹下的所有文件和文件夹。</li>
-<li>strlen()与mb_strlen的作用与区别？</li>
-<li>写一个函数，尽可能高效的从一个标准url中取出扩展名？</li>
-<li>Isset() 、empty()与is_null的区别？</li>
-<li>sessionId 如何保证唯一？</li>
-<li>什么是CSRF攻击？XSS攻击？如何防范？</li>
-<li><p>请写出自少两个支持回调处理的PHP函数，并自己实现一个支持回调的PHP函数？</p>
+<h2 id="Sphinx-简单介绍"><a href="#Sphinx-简单介绍" class="headerlink" title="Sphinx 简单介绍"></a>Sphinx 简单介绍</h2><ol>
+<li><p>介绍<br>Sphinx 是一个基于 SQL 的全文检索引擎，可以给 Mysql、PostgreSQL 做检索，提供比数据库更加专业的搜索功能。Sphinx 的搜索API接口支持 PHP,Python,Ruby,等。Sphinx 单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度为：创建100万条记录的索引只需 3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒</p>
 </li>
-<li><p>PHP 的基本架构</p>
+<li><p>主要特性</p>
 </li>
-<li>PHP 执行过程</li>
-<li>PHP SAPI生命周期</li>
-<li>Apache 加载 PHP 模块</li>
-<li>Apache 运行过程</li>
-<li>PHP 的几种运行方式</li>
-<li>PHP 程序的执行过程（内核）</li>
-<li>PHP5 变量存储结构</li>
-<li>PHP7 变量存储优化</li>
-<li>PHP5 HashTable 实现</li>
-<li>PHP7 HashTable 优化</li>
-<li>PHP5 内存管理架构</li>
-<li>PHP 垃圾回收机制(refcount__gc, is_ref__gc)</li>
-<li>PHP-FPM 的优化</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_6_network.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary_6_network.html" class="post-title-link" itemprop="url">知识点总结系列之：（六）网络</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-19 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-19T00:00:00+08:00">2015-07-19 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>网络相关知识点总结</p>
-<ul>
-<li>OSI七层模型是什么？哪七层？</li>
-<li>TCP/IP 4 层协议栈是哪 4 层？每一层具体的工作是什么，每一层有哪些协议？</li>
-<li>TCP 和 UDP 的区别？</li>
-<li>TCP 包头的组成？</li>
-<li>TCP 网络状态查看？</li>
-<li>TCP 的三次握手过程？并描述客户端和服务端状态的变化</li>
-<li>为什么要三次握手？如果不是三次有什么问题？</li>
-<li>DDOS 攻击了解吗？如何预防 DDOS 攻击？</li>
-<li>TCP 四次挥手的过程？</li>
-<li>为什么要四次挥手？否则的话有什么问题？</li>
-<li>Time_Wait状态是什么,为什么会有time_wait状态？哪一方会有time_wait状态，如何避免？</li>
-<li>time_wait状态占用资源（尽可能的详细）?</li>
-<li>TCP 包为什么需要 Seq</li>
-<li>数据包为什么会乱序？</li>
-<li>TCP 如何实现的可靠传输？</li>
-<li>TCP 的拥塞控制是怎样的？</li>
-<li>TCP 几种拥塞机制的重传机制？</li>
-<li>什么是滑动窗口？</li>
-<li>TCP 中客户端发送 SYN 后客户端和服务器分别处在什么状态？</li>
-<li>服务器调用 send 后返回发送数据大小，是否可以认为客户端已收到？如何确保客户端收到数据？</li>
-<li>TCP 对网络拥堵的判断？</li>
-<li>TCP 和 UDP 分别的使用场景有哪些？</li>
-<li>UDP 包头的格式是什么？</li>
-<li><p>UDP 协议的优点和缺点是什么？</p>
-</li>
-<li><p>说说 HTTP 协议？</p>
-</li>
-<li>什么是分块传输编码？</li>
-<li>HTTP 和 TCP 有什么关系？</li>
-<li>HTTP 1.0 和 HTTP 1.1 的差别？</li>
-<li>HTTP pipeline 流水线机制？</li>
-<li>理解 HTTP 2.0 协议吗？</li>
-<li>如何使用 HTTP2.0 协议？</li>
-<li>HTTP 头部常见字段有哪些？</li>
-<li>为什么 HTTP 是无连接的？</li>
-<li>GET 和 POST 区别？</li>
-<li>GET请求中URL编码的意义？</li>
-<li>有没有保持长连接的 HTTP ？</li>
-<li>HTTP 常见状态码及原因短语？</li>
-<li>304 状态码的意义？在 HTTP 协议中的实现？</li>
-<li>如何判断服务器文件是否已修改？知道浏览器缓存的文件与服务器文件不一致？在 HTTP 中哪个字段？</li>
-<li>Session 和 Cookie 机制？产生原因？对比一下？</li>
-<li>用过 HTTPS 吗？HTTPS 和 HTTP 的区别是什么？</li>
-<li>对称加密与非对称加密区别？</li>
-<li>TLS/SSL 协议的握手过程？</li>
-<li>CA 证书的签发原理？</li>
-<li>SSL 握手需要几个随机数？</li>
-<li><p>HTTPS 性能如何优化？</p>
-</li>
-<li><p>IP 有几类地址，A 类地址和 B 类地址的区别是什么？</p>
-</li>
-<li>局域网没有 IP 时如何通信？如何得知 mac 地址？</li>
-<li>什么是网络虚拟化？</li>
-<li>简单描述一下 VPN 工作原理？</li>
-<li>简单描述一下 DNS 工作原理？</li>
-<li>了解代理服务吗？什么是代码服务？</li>
-<li>代理请求的过程？</li>
-<li>代理协议有哪些？</li>
-<li>代理的功能有哪些？</li>
-<li>什么是反向代理？</li>
-<li>反向代理的作用？</li>
-<li>如何抓包？</li>
-<li>netstat、tcpdump、ipcs、ipcrm 命令使用过吗？</li>
-<li>大规模连接上来，并发模型怎么设计怎么选择？（并发服务器实现）</li>
-<li>select, poll 和 epoll 的区别？</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_5_jiagou.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary_5_jiagou.html" class="post-title-link" itemprop="url">知识点总结系列之：（五）架构</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-18 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-18T00:00:00+08:00">2015-07-18 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>321</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>架构相关知识点总结</p>
-<ul>
-<li>Nginx 的工作原理？</li>
-<li>Nginx 的进程模型？</li>
-<li>Master 进程工作方式？</li>
-<li>Worker 进程的工作方式？</li>
-<li>Nginx + Fastcgi 运行原理？</li>
-<li>Nginx + PHP-fpm 配置？</li>
-<li>Nginx采用多进程模型好处？</li>
-<li>Nginx支持的事件模型如下？</li>
-<li>Nginx.conf 的优化？</li>
-<li><p>Nginx 为什么高性能？</p>
-</li>
-<li><p>Apache 的工作原理</p>
-</li>
-<li><p>Apache 和 Nginx 网络模型比较</p>
-</li>
-<li><p>什么是Memcache？</p>
-</li>
-<li>Memcache 使用场景？</li>
-<li>Memcache 工作原理？</li>
-<li>Memcache 内存管理</li>
-<li>Memcache 分布式</li>
-<li>Memcache 线程管理</li>
-<li>Memcached 特性与限制</li>
-<li><p>Redis 和 Memcache 对比方案</p>
-</li>
-<li><p>单点登录</p>
-</li>
-<li>OAuth2.0 认证</li>
-<li>常见设计模式，应用场景</li>
-<li>MVC</li>
-<li>IOC</li>
-<li>AOP</li>
-<li>微服务思想</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_4_redis.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary_4_redis.html" class="post-title-link" itemprop="url">知识点总结系列之：（四）Redis</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-17 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-17T00:00:00+08:00">2015-07-17 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>584</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>Redis 相关知识点总结</p>
-<ul>
-<li>为什么使用redis？</li>
-<li>使用redis有什么缺点？</li>
-<li>单线程的redis为什么这么快？</li>
-<li>redis的数据类型，以及每种数据类型的使用场景？</li>
-<li>redis的过期策略以及内存淘汰机制？</li>
-<li>redis和数据库双写一致性问题？</li>
-<li>如何应对缓存穿透问题？</li>
-<li>如何应对缓存雪崩问题？</li>
-<li>如何解决 redis 的并发竞争问题？</li>
-<li>redis 底层的数据结构有哪些？各自有什么用？</li>
-<li>redis 的主从复制原理？</li>
-<li>redis 存储的实现方法？</li>
-<li>redis 相对 memcached 有哪些优势？</li>
-<li>如何实现 redis 集群？</li>
-<li>redis_cluster 的实现机制？</li>
-<li>redis 集群的最大结点个数？</li>
-<li>怎么用 redis 实现分布式锁？</li>
-<li>假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如果将它们全部找出来？</li>
-<li>使用过Redis做异步队列么，你是怎么用的？</li>
-<li>redis 能不能生产一次消费多次呢？</li>
-<li>pub/sub有什么缺点？</li>
-<li>redis如何实现延时队列？</li>
-<li>有大量的key需要设置同一时间过期，一般需要注意什么？</li>
-<li>Pipeline 有什么好处，为什么要用pipeline？</li>
-<li>为什么redis小等于39字节的字符串是embstr编码，大于39是raw编码？</li>
-<li>redis 中 zset 数据结构的实现？</li>
-<li>为什么 zset 用跳表而不用平衡树？</li>
-<li>redis 常用配置？</li>
-<li>redis 主从复制的实现原理？</li>
-<li>redis 内存管理和优化？</li>
-<li>redis 持久化方案？</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_3_mysql.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary_3_mysql.html" class="post-title-link" itemprop="url">知识点总结系列之：（三）Mysql</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-16 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-16T00:00:00+08:00">2015-07-16 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>MySQL 常见知识点总结</p>
-<ul>
-<li>Mysql的技术特点是什么？</li>
-<li>MySQL 逻辑架构？每一部门的具体作用？</li>
-<li>MySQL 的查询过程？</li>
-<li>MySQL 常用的存储引擎有哪些？</li>
-<li>Heap 表是什么？</li>
-<li>Heap 表的大小可通过称为max_heap_table_size的Mysql配置变量来控制？</li>
-<li>InnoDB 存储引擎的特点？</li>
-<li>MyISAM 存储引擎的特点？</li>
-<li>一张表，里面有ID自增主键，当insert了17 条记录之后，删除了第15,16,17条记录，再把Mysql重启，再insert一条记录，这条记录的ID是18还是15？</li>
-<li>使用过哪些 Mysql 的索引？</li>
-<li>覆盖索引的使用？</li>
-<li>唯一索引的使用？</li>
-<li>Mysql 有哪些锁？</li>
-<li>什么时候会发生表锁？</li>
-<li>什么时候用行锁？</li>
-<li>FLOAT 和 DOUBLE 的区别？</li>
-<li>CHAR 和 VARCHAR 的区别？</li>
-<li>区分CHAR_LENGTH和LENGTH？</li>
-<li>在 Mysql 中ENUM的用法是什么？</li>
-<li>请简洁描述 Mysql 中InnoDB支持的四种事务隔离级别名称，以及逐级之间的区别？</li>
-<li>如何定义REGEXP？</li>
-<li>列的字符串类型有哪些？</li>
-<li>如何获取当前的 Mysql 版本？</li>
-<li>TIMESTAMP在UPDATE CURRENT_TIMESTAMP数据类型上做什么？</li>
-<li>主键和候选键有什么区别？</li>
-<li>MyISAMchk是用来做什么的？</li>
-<li>MYSQL数据库服务器性能分析的方法命令有哪些？</li>
-<li>federated 表是什么？</li>
-<li>如果一个表有一列定义为TIMESTAMP，将发生什么？</li>
-<li>列设置为AUTO INCREMENT时，如果在表中达到最大值，会发生什么情况？</li>
-<li>怎样才能找出最后一次插入时分配了哪个自动增量？</li>
-<li>你怎么看到为表格定义的所有索引？</li>
-<li>LIKE声明中的％和_是什么意思？</li>
-<li>如何在Unix和Mysql时间戳之间进行转换？</li>
-<li>LIKE和REGEXP操作有什么区别？</li>
-<li>BLOB和TEXT有什么区别？</li>
-<li>Mysql如何优化DISTINCT？</li>
-<li>可以使用多少列创建索引？</li>
-<li>解释访问控制列表？</li>
-<li>MYSQL支持事务吗？</li>
-<li>Mysql里记录货币用什么字段类型好？</li>
-<li>MYSQL数据表在什么情况下容易损坏？</li>
-<li>Mysql中有哪几种锁？如何使用？什么时候发生？</li>
-<li>索引实现机制？</li>
-<li>数据库查询过慢的优化？</li>
-<li>建立 A 列和 B 列的索引需要考虑什么？</li>
-<li>高并发访问 MYSQL 时，如何保持数据一致性？</li>
-<li>什么时候 MySQL 会对表上锁？对一行上锁？</li>
-<li>怎么保证主从服务器中数据库的同步？</li>
-<li>怎么保证数据库同时操作几个表的一致性？</li>
-<li>数据库之间如何同步？</li>
-<li>数据库三大范式？</li>
-<li>字符编码选择？</li>
-<li>熟悉基本 SQL 操作</li>
-<li>db 的各种性能指标？</li>
-<li>怎么进行数据库优化？</li>
-<li>Mysql 主从复制的原理是什么？</li>
-<li>主从复制中断了怎么办？</li>
-<li>主从复制出现延迟怎么处理？</li>
-<li>主库崩溃了怎么办？</li>
-<li>聚集索引和非聚集索引区别？</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary_2_linux.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary_2_linux.html" class="post-title-link" itemprop="url">知识点总结系列之：（二）Linux 与操作系统</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-15 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-15T00:00:00+08:00">2015-07-15 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<p>Linux 与操作系统的知识点总结</p>
-<h2 id="操作系统内核"><a href="#操作系统内核" class="headerlink" title="操作系统内核"></a>操作系统内核</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Anker/p/3271773.html">什么是孤儿进程僵尸进程?</a></li>
-<li>指针对应的地址是不是物理地址？</li>
-<li>物理地址和虚拟地址通常叫做什么？缩写是什么？</li>
-<li>操作系统的寻址方式？</li>
-<li>Linux 中如何计算可用内存？</li>
-<li>Linux 中如何用 top 命令中查看虚地址和实地址的信息？</li>
-<li>如何用搜索引擎去了解 top 中的虚地址？不用搜索引擎怎么知道？</li>
-<li>top 的输出中哪些是表明了内存？</li>
-<li>根据 top 计算可用内存有多少？</li>
-<li>用 top 看耗性能的线程？</li>
-<li>还有哪些命令可以找出性能瓶颈？</li>
-<li>epoll 与 select 比较？</li>
-<li>epoll 的缺点，如何克服缺点？</li>
-<li>epoll 机制中文件描述符就绪时如何从内核态通知到用户态的进程？</li>
-<li>epoll 实现？</li>
-<li>说说同步异步的区别？</li>
-<li>进程间通信的方式？</li>
-<li>进程间的通信有哪些机制？在资源内存方面比较如何？</li>
-<li>同一进程线程间的通信；不同进程线程间的通信；</li>
-<li>如何判断系统在哪些地方耗费性能？</li>
-<li>cpu 调度的单位是什么？</li>
-<li>如何让多核 cpu 更好的利用资源？</li>
-<li>什么是缺页？缺页的算法？缺页中断时操作系统怎么做？</li>
-<li>如何控制两个进程对一个数据的访问？怎么处理加锁问题？</li>
-<li>说一说协程？</li>
-<li>是否了解 netstat？</li>
-<li>在 shell 中用 ./a.out | wc- l 结果是多少？管道的输入是哪个进程的？</li>
-<li>谈谈 Linux 的文件权限。让只有拥有者才能读写？让拥有者只能读和执行？ 删除文件需要什么权限？</li>
-<li>假如一个进程在对文件进行读写，管理员把文件删除了怎么办？</li>
-<li>协程与进程线程比较有什么优势？</li>
-<li>计算机从电源加载开始的启动过程？</li>
-<li>什么是中断调用？中断程序的分类？</li>
-<li>内核态和用户态的区别？</li>
-<li>为什么需要内核态？</li>
-<li>什么时候进入内核态？</li>
-<li>多线程需要加锁的变量？</li>
-<li>程序在内存中的布局？</li>
-<li>什么是死锁，如何防止死锁？</li>
-<li>lsof作用和使用？</li>
-<li>strace作用和使用？</li>
-<li>ptrace作用和使用？</li>
-<li>什么是内存管理？</li>
-<li>Linux 内存管理的方案有哪些？</li>
-<li>内存池的理解？</li>
-<li>什么是内存泄漏？如何发现内存泄漏？如何避免内存泄漏？</li>
-<li>栈空间的大小？</li>
-<li>操作系统自旋锁？</li>
-<li>进程调度的算法？</li>
-<li>文件被如何加载到内存中？</li>
-<li>linux中各种 I/O 模型原理 —— select 和 epoll</li>
-<li>阻塞和非阻塞 I/O 区别</li>
-<li>linux系统文件机制</li>
-<li>多进程同步方式</li>
-<li>使用过哪些进程间通讯机制，并详细说明（重点）</li>
-<li>linux系统的各类异步机制</li>
-<li>信号：列出常见的信号，信号怎么处理？</li>
-<li>i++ 是否原子操作？</li>
-<li>exit() _exit()的区别？</li>
-<li>linux的内存管理机制是什么？</li>
-<li>linux的任务调度机制是什么？</li>
-<li>系统如何将一个信号通知到进程？</li>
-<li>什么是死锁？如何避免死锁？</li>
-<li>共享内存的使用实现原理？</li>
-<li>多线程和多进程的区别（从cpu调度，上下文切换，数据共享，多核cup利用率，资源占用，等等各方面回答。哪些东西是一个线程私有的？答案中必须包含寄存器）；</li>
-<li>标准库函数和系统调用的区别？</li>
-<li>地址空间的栈和堆的大小限制？ </li>
-<li>静态库和动态库的区别？</li>
-</ul>
-<h2 id="Linux-命令"><a href="#Linux-命令" class="headerlink" title="Linux 命令"></a>Linux 命令</h2><ul>
-<li>ln 硬链接和软链接区别？</li>
-<li>kill 进程杀不掉的原因？</li>
-<li>linux 查看日志文件的方式？</li>
-<li>常用的命令<ul>
-<li>ls</li>
-<li>-l</li>
-<li>-a</li>
-<li>mkdir (-p)</li>
-<li>cd</li>
-<li>touch</li>
-<li>echo </li>
-<li>cat</li>
-<li>cp</li>
-<li>mv</li>
-<li>rm (-r,-f)</li>
-<li>find</li>
-<li>wc</li>
-<li>grep</li>
-<li>rmdir</li>
-<li>tree</li>
-<li>pwd</li>
-<li>ln</li>
-<li>more,less</li>
-<li>head,tail</li>
-</ul>
-</li>
-<li><p>系统管道命令</p>
-<ul>
-<li>stat</li>
-<li>who</li>
-<li>whoami</li>
-<li>hostname</li>
-<li>top</li>
-<li>ps</li>
-<li>du</li>
-<li>df</li>
-<li>ifconfig</li>
-<li>ping</li>
-<li>netstat</li>
-<li>man</li>
-<li>clear</li>
-<li>alias</li>
-<li>kill</li>
-</ul>
-</li>
-<li><p>解压缩</p>
-<ul>
-<li>gzip</li>
-<li>bzip</li>
-<li>tar(c,x,z,j,v,f)</li>
-</ul>
-</li>
-<li><p>关机重启</p>
-<ul>
-<li>shutdown(-r,-h now)</li>
-<li>halt</li>
-<li>reboot</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/summary/my_summary.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="phachon">
-      <meta itemprop="description" content="I am a free Goper/Phper">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="phachon's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/summary/my_summary.html" class="post-title-link" itemprop="url">知识点总结系列</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2015-07-14 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2015-07-14T00:00:00+08:00">2015-07-14 00:00:00</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Summary/" itemprop="url" rel="index"><span itemprop="name">Summary</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>36</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <hr>
-<ol>
-<li><a href="./my_summary_1_data.html">数据结构与算法</a></li>
-<li><a href="./my_summary_2_linux.html">Linux 与操作系统</a></li>
-<li><a href="./my_summary_3_mysql.html">Mysql</a></li>
-<li><a href="./my_summary_4_redis.html">Redis</a></li>
-<li><a href="./my_summary_5_jiagou.html">架构</a></li>
-<li><a href="./my_summary_6_network.html">网络</a></li>
-<li><a href="./my_summary_7_php.html">PHP</a></li>
-<li><a href="./my_summary_8_go.html">Go</a></li>
 </ol>
+<ul>
+<li>高速索引</li>
+<li>高速搜索</li>
+<li>支持分布式搜索</li>
+<li>提供从Mysql 内部的插件式存储引擎上搜索</li>
+<li>采用 UTF-8 字符集</li>
+<li>支持 Windows/Linux/MacOX</li>
+</ul>
+<ol start="3">
+<li>使用场景<br>如果数据库的数据量不是很多，百万级的数据，可以采用数据库索引来进行检索，但是对于上千万的数据量的话就用数据库直接检索的效率就会有所下降，特别对于采用分库分表的数据库设计，如果要检索非主键的字段的话，将会非常麻烦。<br>比如用户表 user，用户量大的时候，我们一般会采用分表的方式来提高应用的访问性能。user_0 ~ user_63 ,总共 64 张表,user_id 作为 主键<br>表结构如下。<br>user_id    name    password    age<br>int    char(100)    char(32)    int<br>如果知道 user_id = 65，那我们很容易找到用户的信息, 65 % 64 = 1，那就在 user_1 表中，采用 select <em> from user_1 ….<br>但是如果我想检索名字叫 “phachon” 的用户，这个就比较麻烦了，最笨的办法就是每一张表都去查找 select </em>  from user_* where name LIKE %phchon% ,这样要循环 64 次，再将数据合并起来，这样显然是不可行的，数据库的开销太大，造成应用程序的性能下降。</li>
+</ol>
+<p>Sphinx 就可以帮我们解决上面所说的问题。当然，Sphinx 可以应用的场景很多，上面只是其中的一种。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/sphinx/sphinx-web.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/linux/io.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/linux/io.html" class="post-title-link" itemprop="url">IO 模型简介</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-09-05 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-09-05T00:00:00+08:00">2016-09-05 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<p>最近工作中接触到关于网络编程的一些东西，发现对于网络、IO编程、socket、进程、线程、协程、TCP/IP等基本知识理解不够深入。所以需要从头到尾总结一下。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/linux/io.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/linux/crontab.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/linux/crontab.html" class="post-title-link" itemprop="url">CronTab 解决周期内未执行完重复执行</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-08-23 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-08-23T00:00:00+08:00">2016-08-23 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="crontab-执行-php-脚本"><a href="#crontab-执行-php-脚本" class="headerlink" title="crontab 执行 php 脚本"></a>crontab 执行 php 脚本</h2><p>linux 下的 crontab 定时任务服务，可以用来定时运行脚本。工作中经常会用到这样的服务，使用起来比较简单。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/sbin/service crond start  # 开启服务</span><br><span class="line">/sbin/service crond stop  # 停止服务</span><br><span class="line">/sbin/service crond restart #重启服务</span><br><span class="line">/sbin/service crond reload #重新加载服务</span><br><span class="line"></span><br><span class="line">sudo crontab -e #插入一条定时任务</span><br><span class="line">sudo crontab -l #查看所有的 root 用户下的定时任务列表</span><br><span class="line">tail -f /var/log/cron # 实时查看定时任务日志</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/linux/crontab.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/install/lump-install.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/install/lump-install.html" class="post-title-link" itemprop="url">CentOS6.3+Apache2.2+php5.3.8+Mysql5.5.4源码搭建Lump环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-29 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-29T00:00:00+08:00">2016-07-29 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Install/" itemprop="url" rel="index"><span itemprop="name">Install</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="系统环境"><a href="#系统环境" class="headerlink" title="系统环境"></a>系统环境</h2><ul>
+<li>虚拟机VMware 下CentOS 6.3最小化安装。</li>
+<li>PHP版本：php-5.3.8.tar.gz</li>
+<li>Apache版本：httpd-2.2.31.tar.gz</li>
+<li>MySql版本：MySql-5.5.45.tar.gz</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/install/lump-install.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/php/php-run-type.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/php/php-run-type.html" class="post-title-link" itemprop="url">浅析 PHP 的几种运行方式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-29 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-29T00:00:00+08:00">2016-07-29 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="PHP-的几种运行方式"><a href="#PHP-的几种运行方式" class="headerlink" title="PHP 的几种运行方式"></a>PHP 的几种运行方式</h2><ol>
+<li>CGI</li>
+<li>FAST-CGI</li>
+<li>Web-module</li>
+<li>CLI</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/php/php-run-type.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/linux/linux-command.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/linux/linux-command.html" class="post-title-link" itemprop="url">Linux 常用命令总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-28 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-28T00:00:00+08:00">2016-07-28 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="系统相关"><a href="#系统相关" class="headerlink" title="系统相关"></a>系统相关</h2><ul>
+<li>who 显示在线登录用户</li>
+<li>whoami 显示当前操作的用户</li>
+<li>hostname 主机名</li>
+<li>top 显示当前耗费最多的进程以及内存消耗</li>
+<li>ps -aux 显示所有的进程信息</li>
+<li>df 查看磁盘所占大小</li>
+<li>-h 带单位</li>
+<li>ifconfig 网络信息</li>
+<li>ping 测试网络连接</li>
+<li>netstat 网络状态信息</li>
+<li>kill 杀死进程</li>
+<li>clear 清屏</li>
+<li>shutdown<ul>
+<li>-r 关机重启</li>
+<li>-h 关机不重启</li>
+<li>now  立刻关机</li>
+</ul>
+</li>
+<li>reboot   重启</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/linux/linux-command.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://phachon.github.io/php/php-call-callStatic.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="phachon">
+      <meta itemprop="description" content="I am a free Goper/Phper">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="phachon's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/php/php-call-callStatic.html" class="post-title-link" itemprop="url">PHP 魔术方法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-07-28 00:00:00 00:00:00" itemprop="dateCreated datePublished" datetime="2016-07-28T00:00:00+08:00">2016-07-28 00:00:00</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 09:59:03 09:59:03" itemprop="dateModified" datetime="2022-07-11T09:59:03+08:00">2022-07-11 09:59:03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/PHP/" itemprop="url" rel="index"><span itemprop="name">PHP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="call-方法的使用"><a href="#call-方法的使用" class="headerlink" title="__call 方法的使用"></a>__call 方法的使用</h2><p>定义：在对象中调用一个不可访问方法时，__call() 会被调用。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/php/php-call-callStatic.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1579,7 +1216,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1647,20 +1284,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">111</span>
+          <span class="site-state-item-count">125</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">51</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1726,12 +1363,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">210k</span>
+    <span title="站点总字数">213k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:11</span>
+    <span title="站点阅读时长">3:14</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
